@@ -37,7 +37,8 @@ export default function Home(): JSX.Element | null {
     return {
       callbacks: {
         signInSuccessWithAuthResult: (authResult: any): boolean => {
-          ;(async (): Promise<void> => {
+          // eslint-disable-next-line prettier/prettier
+          (async (): Promise<void> => {
             cookies.set("auth-token", authResult.credential.accessToken)
 
             const isNewUser = authResult.additionalUserInfo.isNewUser
