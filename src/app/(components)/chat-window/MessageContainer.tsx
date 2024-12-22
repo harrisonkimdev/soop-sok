@@ -2,8 +2,8 @@
 
 import ChatMessage from "@/app/(components)/chat-window/ChatMessage"
 import { TMessage } from "@/types"
-import { auth, firestore } from "@/utils/firebase/firebase"
-import { onAuthStateChanged } from "firebase/auth"
+import { firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection } from "firebase/firestore"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -25,13 +25,10 @@ const MessageContainer = (): JSX.Element => {
     },
   )
 
+  useAuthCheck(setIsAuthenticated)
+
   // If it's an authenticated user, fetch messages.
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) router.push("/")
-      else setIsAuthenticated(true)
-    })
-
     if (isAuthenticated && value) {
       const messageList = value.docs.map(
         (doc) =>
@@ -42,11 +39,6 @@ const MessageContainer = (): JSX.Element => {
       )
 
       setMessages(messageList)
-    }
-
-    // Cleanup subscription on unmount
-    return () => {
-      unsubscribe()
     }
   }, [isAuthenticated, value, router])
 

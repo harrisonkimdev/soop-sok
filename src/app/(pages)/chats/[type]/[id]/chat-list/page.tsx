@@ -3,7 +3,7 @@
 import Chat from "@/app/(pages)/chats/[type]/[id]/chat-list/Chat"
 import { TChat } from "@/types"
 import { auth, firestore } from "@/utils/firebase/firebase"
-import { onAuthStateChanged } from "firebase/auth"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection } from "firebase/firestore"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -31,16 +31,10 @@ const ChatListPage = ({ params }: pageProps): JSX.Element => {
     },
   )
 
+  useAuthCheck(setIsAuthenticated)
+
   // Authenticate a user
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push("/")
-      } else {
-        setIsAuthenticated(true)
-      }
-    })
-
     if (isAuthenticated && value) {
       const chatList = value.docs.map(
         (doc) =>
@@ -51,11 +45,6 @@ const ChatListPage = ({ params }: pageProps): JSX.Element => {
       )
 
       setChats(chatList)
-    }
-
-    // Cleanup subscription on unmount
-    return () => {
-      unsubscribe()
     }
   }, [isAuthenticated, value, router])
 

@@ -3,6 +3,7 @@ import useDialogs from "@/utils/dispatcher"
 import { auth, firestore } from "@/utils/firebase/firebase"
 import { updateChat } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { doc } from "firebase/firestore"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -21,18 +22,11 @@ const Chat = (props: ChatProps): JSX.Element => {
 
   const { messageDialog } = useDialogs()
 
-  // Authorize users before rendering the page.
-  useEffect(() => {
-    if (!auth) {
-      router.push("/")
-    } else {
-      setIsAuthenticated(true)
-    }
-  }, [router])
-
   // Fetch channle data in real time only if a user is authorized.
   const chatRef = doc(firestore, "chats", props.chat.id)
   const [value, error] = useDocumentData(isAuthenticated ? chatRef : null)
+
+  useAuthCheck(setIsAuthenticated)
 
   useEffect(() => {
     if (value?.numMembers < value?.capacity) {

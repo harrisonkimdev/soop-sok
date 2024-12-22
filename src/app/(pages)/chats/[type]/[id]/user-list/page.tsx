@@ -3,6 +3,7 @@
 import User from "@/app/(pages)/chats/[type]/[id]/user-list/User"
 import useDialogs from "@/utils/dispatcher"
 import { auth, firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { doc } from "firebase/firestore"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -24,14 +25,7 @@ const UserListPage = ({ params }: userListPageProps): JSX.Element => {
 
   const { messageDialog } = useDialogs()
 
-  // Authenticate a user
-  useEffect(() => {
-    if (!auth) {
-      router.push("/")
-    } else {
-      setIsAuthenticated(true)
-    }
-  }, [router])
+  useAuthCheck(setIsAuthenticated)
 
   const chatRef = doc(firestore, "chats", params.id)
   const [snapshot, loading, error] = useDocument(

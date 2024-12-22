@@ -4,9 +4,9 @@ import PageTitle from "@/app/(components)/PageTitle"
 import { Channel } from "@/app/(pages)/channels/Channel"
 import { TChannel } from "@/types"
 import useDialogs from "@/utils/dispatcher" // Adjust the import path as necessary
-import { auth, firestore } from "@/utils/firebase/firebase"
+import { firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection } from "firebase/firestore"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import type { JSX } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
@@ -16,7 +16,6 @@ const ChannelPage = (): JSX.Element => {
   // const [isLoading, setIsLoading] = useState(true);
   const [channels, setChannels] = useState<TChannel[]>([])
 
-  const router = useRouter()
   const { messageDialog } = useDialogs()
 
   const channelsRef = collection(firestore, "channels")
@@ -24,18 +23,7 @@ const ChannelPage = (): JSX.Element => {
     snapshotListenOptions: { includeMetadataChanges: true },
   })
 
-  // TODO: custom hook
-  // Authenticate a user
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsAuthenticated(!!user)
-      if (!user) {
-        router.push("/")
-      }
-    })
-
-    return () => unsubscribe()
-  }, [router])
+  useAuthCheck(setIsAuthenticated)
 
   useEffect(() => {
     if (!isAuthenticated || loading) return
