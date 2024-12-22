@@ -1,5 +1,5 @@
-import { getToken } from "@/app/api/(utils)/functions"
 import { firestore } from "@/utils/firebase/firebaseAdmin"
+import { getToken } from "@/utils/serverFunctions"
 import { Filter } from "firebase-admin/firestore"
 import { type NextRequest, NextResponse } from "next/server"
 

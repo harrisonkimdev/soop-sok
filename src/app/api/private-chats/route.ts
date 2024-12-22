@@ -1,5 +1,5 @@
-import { getToken } from "@/app/api/(utils)/functions"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
+import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 /**
