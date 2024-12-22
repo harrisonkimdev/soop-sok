@@ -3,13 +3,13 @@
 import "firebaseui/dist/firebaseui.css"
 
 import useDialogs from "@/utils/dispatcher"
-import { auth as firebaseAuth } from "@/utils/firebase/firebase"
+import { auth } from "@/utils/firebase/firebase"
 import {
   registerUserWithUID,
   updateUserStatus,
 } from "@/utils/firebase/firestore"
 import { GoogleAuthProvider } from "firebase/auth"
-import firebaseui, { auth } from "firebaseui"
+import firebaseui from "firebaseui"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
@@ -113,7 +113,9 @@ export default function Home(): JSX.Element | null {
 
   useEffect(() => {
     if (firebaseui) {
-      const ui = auth.AuthUI.getInstance() || new auth.AuthUI(firebaseAuth)
+      const ui =
+        // eslint-disable-next-line import/no-named-as-default-member
+        firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth)
       ui.start("#firebaseui-auth-container", uiConfig)
     }
   }, [firebaseui, uiConfig])
