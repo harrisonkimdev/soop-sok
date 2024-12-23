@@ -1,73 +1,54 @@
 import { TChannel } from "@/types"
 import useDialogs from "@/utils/dispatcher"
-import { auth, firestore } from "@/utils/firebase/firebase"
+import { auth } from "@/utils/firebase/firebase"
 import { updateChannel } from "@/utils/firebase/firestore"
-import useAuthCheck from "@/utils/hooks/useAuthCheck"
-import { doc } from "firebase/firestore"
+import useFetchChannelInRealTime from "@/utils/hooks/fetchData/useFetchChannelInRealTime"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 import type { JSX } from "react"
-import { useDocumentData } from "react-firebase-hooks/firestore"
 
 interface ChannelProps {
   channel: TChannel
 }
 
 export const Channel = (props: ChannelProps): JSX.Element => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isFull, setIsFull] = useState(false)
-
   const router = useRouter()
 
   const { messageDialog, channelState } = useDialogs()
 
-  // Fetch channle data in real time only if a user is authorized.
-  const channelRef = doc(firestore, "channels", props.channel.id)
-  const [value, error] = useDocumentData(isAuthenticated ? channelRef : null)
+  const channelData: { isFull: boolean; numMembers: number } | null =
+    useFetchChannelInRealTime({ channelId: props.channel.id })
 
-  useAuthCheck(setIsAuthenticated)
+  const isFull =
+    channelData && "isFull" in channelData ? channelData.isFull : false
+  const numMembers =
+    channelData && "numMembers" in channelData ? channelData.numMembers : 0
 
-  useEffect(() => {
-    if (value?.numMembers >= value?.capacity) {
-      setIsFull(true)
-    }
-  }, [value])
-
-  // Error: real time data fetching
-  useEffect(() => {
-    if (error !== undefined) {
-      messageDialog.show("data_retrieval")
-    }
-  }, [error, messageDialog])
-
-  // When users join a channel, add them to the 'members' subcollection of the associated channel document and update the 'numMembers' field in the channel document accordingly.
+  /*
+  // When users join a channel, add them to the 'members' subcollection of the
+  // associated channel document and update the 'numMembers' field in the
+  // channel document accordingly.
+  */
   const handleEnterChannel = async (): Promise<void> => {
     const currentUser = auth.currentUser
 
-    if (!currentUser) {
-      router.push("/")
-      return
-    }
+    if (!currentUser || isFull) return
 
-    // Authorize users.
-    if (!isFull) {
-      // Log where the user is in.
-      try {
-        const res = await updateChannel(
-          props.channel.id,
-          currentUser.uid,
-          "enter",
-        )
+    try {
+      // Update the channel document with the user's ID.
+      const res = await updateChannel(
+        props.channel.id,
+        currentUser.uid,
+        "enter",
+      )
 
-        // Store the channel ID in the global state.
+      if (res) {
+        // Set the current channel state.
         channelState.set(props.channel.id)
-
-        // Redriect to the selected channel page.
-        if (res) router.push(`/chats/channel/${props.channel.id}/`)
-      } catch (err) {
-        console.error(err)
-        messageDialog.show("data_retrieval")
+        router.push(`/chats/channel/${props.channel.id}/`)
       }
+    } catch (err) {
+      console.error(err)
+      messageDialog.show("data_retrieval")
     }
   }
 
@@ -80,7 +61,7 @@ export const Channel = (props: ChannelProps): JSX.Element => {
         {props.channel.name}
       </h3>
       <p className="text-sm text-gray-600">
-        Capacity: {value?.numMembers} / {props.channel.capacity}
+        Capacity: {numMembers} / {props.channel.capacity}
       </p>
     </div>
   )
