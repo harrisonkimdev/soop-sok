@@ -1,10 +1,10 @@
 import { TChat } from "@/types"
 import useDialogs from "@/utils/dispatcher"
-import { firestore, auth } from "@/utils/firebase/firebase"
+import { firestore } from "@/utils/firebase/firebase"
 import { collection, query, where } from "firebase/firestore"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
+import useAuthCheck from "./useAuthCheck"
 
 type TProps = {
   channelId: string
@@ -13,19 +13,8 @@ type TProps = {
 const useFetchChatsInRealTime = (props: TProps): TChat[] | null => {
   const { messageDialog } = useDialogs()
   const [fetchedChats, setFetchedChats] = useState<TChat[]>([])
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-  const router = useRouter()
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsAuthenticated(!!user)
-      if (!user) {
-        router.push("/")
-      }
-    })
-
-    return () => unsubscribe()
-  }, [router])
+  const isAuthenticated = useAuthCheck()
 
   // Fetch channle data in real time only if a user is authorized.
   const chatsRef = collection(firestore, "chats")
