@@ -1,57 +1,24 @@
-import { TMessage, TPrivateChat } from "@/types"
-import useDialogs from "@/utils/dispatcher" // Adjust the import path as necessary
-import { auth, firestore } from "@/utils/firebase/firebase"
+import { TPrivateChat, TMessage } from "@/types"
+import { auth } from "@/utils/firebase/firebase"
 import { formatTimeAgo } from "@/utils/functions"
-import { collection, limit, orderBy, query, where } from "firebase/firestore"
+import useFirebaseHookMessages from "@/utils/hooks/fetchData/useFirebaseHookMessages"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 import type { JSX } from "react"
-import { useCollection } from "react-firebase-hooks/firestore"
 
-type PrivateChatProps = {
+type TProps = {
   privateChat: TPrivateChat
 }
 
-const PrivateChat = (props: PrivateChatProps): JSX.Element => {
-  const [latestMessage, setLatestMessage] = useState<TMessage | null>(null)
-
+const PrivateChat = (props: TProps): JSX.Element => {
   const router = useRouter()
-  const { messageDialog } = useDialogs()
 
-  const messageRef = query(
-    collection(firestore, "messages"),
-    where("cid", "==", props.privateChat.id),
-    orderBy("createdAt", "desc"),
-    limit(1),
-  )
-
-  const [snapshot, loading, error] = useCollection(messageRef, {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  })
-
-  useEffect(() => {
-    if (snapshot && !loading) {
-      const latestMessage = snapshot.empty
-        ? []
-        : snapshot.docs.map((doc) => doc.data())
-      if (latestMessage.length > 0) {
-        setLatestMessage((latestMessage[0] as TMessage) || null)
-      }
-    }
-
-    if (error) {
-      console.error(error)
-      messageDialog.show("data_retrieval")
-    }
-  }, [snapshot, loading, error, messageDialog])
-
-  // fetch the latest message associated with this private chat
-  // to display when it is sent and the content of it.
+  const chatId = props.privateChat.id
+  const latestMessage = useFirebaseHookMessages({ chatId }) as TMessage | null
 
   const enterPrivateChat = (): void => {
     if (auth && auth.currentUser) {
-      router.push(`/chats/private-chat/${props.privateChat.id}`)
+      router.push(`/chats/private-chat/${chatId}`)
     }
   }
 
@@ -59,7 +26,6 @@ const PrivateChat = (props: PrivateChatProps): JSX.Element => {
     <div onClick={enterPrivateChat}>
       <div className="flex items-center gap-3 rounded-lg bg-white p-4 shadow-sm">
         <Image
-          // TODO: Add a default profile picture
           src={latestMessage?.senderPhotoURL || "/default-profile.png"}
           alt=""
           width={1324}
