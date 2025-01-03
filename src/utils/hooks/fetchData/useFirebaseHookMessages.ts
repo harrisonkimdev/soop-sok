@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
 
 type TProps = {
-  chatId: string
+  chatId?: string
 }
 
 const useFirebaseHookMessages = (
