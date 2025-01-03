@@ -1,3 +1,5 @@
+"use client"
+
 import useAuthCheck from "./useAuthCheck"
 import { TFriend } from "@/types"
 import useDialogs from "@/utils/dispatcher"

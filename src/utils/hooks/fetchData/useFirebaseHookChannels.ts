@@ -1,3 +1,5 @@
+"use client"
+
 import useAuthCheck from "./useAuthCheck"
 import { TChannel } from "@/types"
 import useDialogs from "@/utils/dispatcher"
@@ -25,18 +27,13 @@ const useFirebaseHookChannels = (): TChannel[] | null => {
     }
 
     if (snapshot) {
-      const fetchedChannels: TChannel[] = snapshot.docs.map((doc) => {
-        const data = doc.data()
-        return {
-          id: doc.id,
-          capacity: data.capacity,
-          members: data.members,
-          name: data.name,
-          numMembers: data.numMembers,
-          order: data.order,
-          updatedAt: data.updatedAt,
-        }
-      })
+      const fetchedChannels: TChannel[] = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          }) as TChannel,
+      )
       setFetchedChannels(fetchedChannels)
     }
   }, [snapshot, loading, error, messageDialog])
