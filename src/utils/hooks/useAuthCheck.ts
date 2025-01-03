@@ -1,11 +1,11 @@
 import { auth } from "@/utils/firebase/firebase"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
-const useAuthCheck = (
-  setIsAuthenticated: (isAuthenticated: boolean) => void,
-): void => {
+const useAuthCheck = (): boolean => {
   const router = useRouter()
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -16,7 +16,9 @@ const useAuthCheck = (
     })
 
     return () => unsubscribe()
-  }, [router, setIsAuthenticated])
+  }, [router])
+
+  return isAuthenticated
 }
 
 export default useAuthCheck

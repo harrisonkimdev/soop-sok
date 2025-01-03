@@ -1,6 +1,6 @@
-import useAuthCheck from "./useAuthCheck"
 import useDialogs from "@/utils/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { doc } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useDocumentData } from "react-firebase-hooks/firestore"

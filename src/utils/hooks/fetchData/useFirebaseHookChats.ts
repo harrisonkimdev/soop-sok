@@ -1,7 +1,7 @@
-import useAuthCheck from "./useAuthCheck"
 import { TChat } from "@/types"
 import useDialogs from "@/utils/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
