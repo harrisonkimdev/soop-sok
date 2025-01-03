@@ -2,7 +2,7 @@
 
 import Chat from "@/app/(pages)/chats/[type]/[id]/chat-list/Chat"
 import { TChat } from "@/types"
-import useFetchChatsInRealTime from "@/utils/hooks/fetchData/useFetchChatsInRealTime"
+import useFirebaseHookChats from "@/utils/hooks/fetchData/useFirebaseHookChats"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 
@@ -16,7 +16,7 @@ type pageProps = {
 const ChatListPage = ({ params }: pageProps): JSX.Element => {
   const router = useRouter()
 
-  const fetchedChat = useFetchChatsInRealTime({ channelId: params.id })
+  const fetchedChat = useFirebaseHookChats({ channelId: params.id })
 
   const handleCancelClick = (): void => {
     console.log("handleCancelClick")

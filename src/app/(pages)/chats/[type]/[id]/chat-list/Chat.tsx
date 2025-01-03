@@ -3,7 +3,7 @@ import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChat } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
-import useFetchChatInRealTime from "@/utils/hooks/fetchData/useFetchChatInRealTime"
+import useFirebaseHookChat from "@/utils/hooks/fetchData/useFirebaseHookChat"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 
@@ -15,7 +15,7 @@ const Chat = ({ chat }: ChatProps): JSX.Element => {
   const router = useRouter()
   const { messageDialog } = useDialogs()
 
-  const channelData = useFetchChatInRealTime({
+  const channelData = useFirebaseHookChat({
     chatId: chat.id,
   })
 

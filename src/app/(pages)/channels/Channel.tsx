@@ -2,7 +2,7 @@ import { TChannel } from "@/types"
 import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel } from "@/utils/firebase/firestore"
-import useFetchChannelInRealTime from "@/utils/hooks/fetchData/useFetchChannelInRealTime"
+import useFirebaseHookChannel from "@/utils/hooks/fetchData/useFirebaseHookChannel"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 
@@ -16,7 +16,7 @@ export const Channel = (props: ChannelProps): JSX.Element => {
   const { messageDialog, channelState } = useDialogs()
 
   const channelData: { isFull: boolean; numMembers: number } | null =
-    useFetchChannelInRealTime({ channelId: props.channel.id })
+    useFirebaseHookChannel({ channelId: props.channel.id })
 
   const isFull =
     channelData && "isFull" in channelData ? channelData.isFull : false

@@ -1,14 +1,9 @@
 "use client"
 
 import User from "@/app/(pages)/chats/[type]/[id]/user-list/User"
-import useDialogs from "@/utils/dispatcher"
-import { auth, firestore } from "@/utils/firebase/firebase"
-import useAuthCheck from "@/utils/hooks/useAuthCheck"
-import { doc } from "firebase/firestore"
+import useFirebaseHookUsersInChannel from "@/utils/hooks/fetchData/useFirebaseHookUsersInChannel"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 import type { JSX } from "react"
-import { useDocument } from "react-firebase-hooks/firestore"
 
 type userListPageProps = {
   params: {
@@ -18,39 +13,19 @@ type userListPageProps = {
 }
 
 const UserListPage = ({ params }: userListPageProps): JSX.Element => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [users, setUsers] = useState([])
-
   const router = useRouter()
 
-  const { messageDialog } = useDialogs()
+  const userData = useFirebaseHookUsersInChannel({
+    channelId: params.id,
+  })
 
-  useAuthCheck(setIsAuthenticated)
-
-  const chatRef = doc(firestore, "chats", params.id)
-  const [snapshot, loading, error] = useDocument(
-    isAuthenticated ? chatRef : null,
-  )
-
-  // Handling retrieved data
-  useEffect(() => {
-    if (snapshot && snapshot.exists() && !loading) {
-      setUsers(snapshot.data().members)
-    }
-  }, [loading, snapshot])
+  const users = userData?.members || []
 
   // Error handling
-  useEffect(() => {
-    if (error !== undefined) {
-      messageDialog.show("data_retrieval")
-      router.push(`/chats/${params.type}/${params.id}/features`)
-    }
-  }, [router, error, params.type, params.id, messageDialog])
+  // router.push(`/chats/${params.type}/${params.id}/features`)
 
   const redirectToFeaturesPage = (): void => {
-    if (auth) {
-      router.push(`/chats/${params.type}/${params.id}/features`)
-    }
+    router.push(`/chats/${params.type}/${params.id}/features`)
   }
 
   return (
@@ -61,7 +36,7 @@ const UserListPage = ({ params }: userListPageProps): JSX.Element => {
         </h1>
 
         <ul className="flex flex-col gap-3">
-          {users.map((user: any) => (
+          {users.map((user: string) => (
             <User key={user} uid={user} />
           ))}
         </ul>
@@ -72,8 +47,7 @@ const UserListPage = ({ params }: userListPageProps): JSX.Element => {
         onClick={redirectToFeaturesPage}
         className="w-full rounded-lg bg-white py-4 text-xl font-semibold text-earth-400 shadow transition duration-300 ease-in-out hover:bg-earth-50"
       >
-        {" "}
-        Cancel{" "}
+        Cancel
       </button>
     </div>
   )

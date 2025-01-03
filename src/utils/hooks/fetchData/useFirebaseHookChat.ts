@@ -1,15 +1,15 @@
+import useAuthCheck from "./useAuthCheck"
 import useDialogs from "@/utils/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
 import { doc } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useDocumentData } from "react-firebase-hooks/firestore"
-import useAuthCheck from "./useAuthCheck"
 
 type TProps = {
-  channelId: string
+  chatId: string
 }
 
-const useFetchChannelInRealTime = (
+const useFirebaseHookChat = (
   props: TProps,
 ): { isFull: boolean; numMembers: number } | null => {
   const { messageDialog } = useDialogs()
@@ -17,8 +17,9 @@ const useFetchChannelInRealTime = (
 
   const isAuthenticated = useAuthCheck()
 
-  const channelsRef = doc(firestore, "channels", props.channelId)
-  const [value, loading, error] = useDocumentData(channelsRef)
+  // Fetch channle data in real time only if a user is authorized.
+  const chatRef = doc(firestore, "chats", props.chatId)
+  const [value, loading, error] = useDocumentData(chatRef)
 
   useEffect(() => {
     if (!loading && error) {
@@ -35,4 +36,4 @@ const useFetchChannelInRealTime = (
   return isAuthenticated ? { isFull, numMembers: value?.numMembers ?? 0 } : null
 }
 
-export default useFetchChannelInRealTime
+export default useFirebaseHookChat

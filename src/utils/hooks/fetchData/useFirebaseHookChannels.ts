@@ -1,12 +1,12 @@
+import useAuthCheck from "./useAuthCheck"
 import { TChannel } from "@/types"
 import useDialogs from "@/utils/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
 import { collection } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
-import useAuthCheck from "./useAuthCheck"
 
-const useFetchChannelsInRealTime = (): TChannel[] | null => {
+const useFirebaseHookChannels = (): TChannel[] | null => {
   const { messageDialog } = useDialogs()
   const [fetchedChannels, setFetchedChannels] = useState<TChannel[]>([])
 
@@ -44,4 +44,4 @@ const useFetchChannelsInRealTime = (): TChannel[] | null => {
   return isAuthenticated ? fetchedChannels : null
 }
 
-export default useFetchChannelsInRealTime
+export default useFirebaseHookChannels

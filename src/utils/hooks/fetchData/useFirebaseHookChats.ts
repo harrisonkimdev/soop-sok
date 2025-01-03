@@ -1,16 +1,16 @@
+import useAuthCheck from "./useAuthCheck"
 import { TChat } from "@/types"
 import useDialogs from "@/utils/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
 import { collection, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
-import useAuthCheck from "./useAuthCheck"
 
 type TProps = {
   channelId: string
 }
 
-const useFetchChatsInRealTime = (props: TProps): TChat[] | null => {
+const useFirebaseHookChats = (props: TProps): TChat[] | null => {
   const { messageDialog } = useDialogs()
   const [fetchedChats, setFetchedChats] = useState<TChat[]>([])
 
@@ -54,4 +54,4 @@ const useFetchChatsInRealTime = (props: TProps): TChat[] | null => {
   return isAuthenticated ? fetchedChats : null
 }
 
-export default useFetchChatsInRealTime
+export default useFirebaseHookChats

@@ -3,11 +3,11 @@
 import PageTitle from "@/app/(components)/PageTitle"
 import { Channel } from "@/app/(pages)/channels/Channel"
 import { TChannel } from "@/types"
-import useFetchChannelsInRealTime from "@/utils/hooks/fetchData/useFetchChannelsInRealTime"
+import useFirebaseHookChannels from "@/utils/hooks/fetchData/useFirebaseHookChannels"
 import type { JSX } from "react"
 
 const ChannelPage = (): JSX.Element => {
-  const fetchedChannels = useFetchChannelsInRealTime()
+  const fetchedChannels = useFirebaseHookChannels()
 
   if (fetchedChannels) {
     return (
