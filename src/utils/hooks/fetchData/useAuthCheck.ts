@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { auth } from "@/utils/firebase/firebase"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 
 const useAuthCheck = () => {
   const router = useRouter()
