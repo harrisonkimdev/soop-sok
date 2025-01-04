@@ -56,7 +56,10 @@ const NavBar = (): JSX.Element => {
 
     redirectURL = tabURLs[tab] || ""
 
-    if (redirectURL) router.push(redirectURL)
+    if (redirectURL) {
+      router.push(redirectURL)
+      return
+    }
   }
 
   return (

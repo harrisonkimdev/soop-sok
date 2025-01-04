@@ -27,6 +27,7 @@ const User = (props: UserProps): JSX.Element => {
   const redirectToProfile = (uid: string | undefined): void => {
     if (uid && auth) {
       router.push(`/profile/${uid}`)
+      return
     }
   }
 

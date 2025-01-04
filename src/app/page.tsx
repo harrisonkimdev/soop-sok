@@ -38,7 +38,7 @@ export default function Home(): JSX.Element | null {
       callbacks: {
         signInSuccessWithAuthResult: (authResult: any): boolean => {
           // eslint-disable-next-line prettier/prettier
-          (async (): Promise<void> => {
+          ;(async (): Promise<void> => {
             cookies.set("auth-token", authResult.credential.accessToken)
 
             const isNewUser = authResult.additionalUserInfo.isNewUser
@@ -87,6 +87,7 @@ export default function Home(): JSX.Element | null {
             }
 
             router.push("/channels")
+            return
           })()
           // https://firebaseopensource.com/projects/firebase/firebaseui-web/#available-callbacks
           // whether we leave that to developer to handle.

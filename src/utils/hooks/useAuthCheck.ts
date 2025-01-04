@@ -12,6 +12,7 @@ const useAuthCheck = (): boolean => {
       setIsAuthenticated(!!user)
       if (!user) {
         router.push("/")
+        return
       }
     })
 
