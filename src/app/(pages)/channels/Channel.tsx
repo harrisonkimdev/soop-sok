@@ -45,6 +45,7 @@ export const Channel = (props: ChannelProps): JSX.Element => {
         // Set the current channel state.
         channelState.set(props.channel.id)
         router.push(`/chats/channel/${props.channel.id}/`)
+        return
       }
     } catch (err) {
       console.error(err)

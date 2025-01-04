@@ -39,6 +39,7 @@ const FeaturesPage = ({ params }: PageProps): JSX.Element => {
     if (auth) {
       const path = feature === "cancel" ? "" : `/${feature}`
       router.push(`/chats/${params.type}/${params.id}${path}`)
+      return
     }
   }
 

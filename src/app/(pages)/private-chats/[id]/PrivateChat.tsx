@@ -19,6 +19,7 @@ const PrivateChat = (props: TProps): JSX.Element => {
   const enterPrivateChat = (): void => {
     if (auth && auth.currentUser) {
       router.push(`/chats/private-chat/${chatId}`)
+      return
     }
   }
 

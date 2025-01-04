@@ -21,9 +21,9 @@ const Settings = (): JSX.Element => {
         console.error("Session expired or update failed")
         return
       }
-
       await signOut()
       router.push("/")
+      return
     } catch (err) {
       console.error("Error during sign out:", err)
     }

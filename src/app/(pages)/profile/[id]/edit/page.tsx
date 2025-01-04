@@ -56,8 +56,8 @@ const ProfileEditPage = (): JSX.Element => {
       if (currentUser?.uid && user) {
         try {
           await updateUserProfile(currentUser.uid, user)
-
           router.push(`/profile/${id}`)
+          return
         } catch (err) {
           console.error(err)
           messageDialog.show("data_update")

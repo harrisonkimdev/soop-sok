@@ -21,6 +21,7 @@ const ChatListPage = ({ params }: pageProps): JSX.Element => {
   const handleCancelClick = (): void => {
     console.log("handleCancelClick")
     router.push(`/chats/${params.type}/${params.id}/features`)
+    return
   }
 
   return (

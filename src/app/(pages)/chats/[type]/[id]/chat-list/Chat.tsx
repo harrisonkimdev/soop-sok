@@ -25,7 +25,10 @@ const Chat = ({ chat }: ChatProps): JSX.Element => {
     if (auth.currentUser && !isFull) {
       try {
         const res = await updateChat(chat.id, auth.currentUser.uid, "enter")
-        if (res) router.push(`/chats/chatroom/${chat.id}`)
+        if (res) {
+          router.push(`/chats/chatroom/${chat.id}`)
+          return
+        }
       } catch (err) {
         console.error(err)
         messageDialog.show("general")

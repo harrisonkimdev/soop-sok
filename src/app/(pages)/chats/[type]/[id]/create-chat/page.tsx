@@ -94,6 +94,7 @@ const CreateChatPage = ({ params }: pageProps): JSX.Element => {
   const redirectToFeaturesPage = (): void => {
     if (auth) router.push(`/chats/${params.type}/${params.id}/features`)
     else router.push("/")
+    return
   }
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {

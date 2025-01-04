@@ -13,7 +13,10 @@ const ChatMessage = (props: ChatMessageProps): JSX.Element => {
   const router = useRouter()
 
   const redirectToProfile = (): void => {
-    if (auth) router.push(`/profile/${props.message?.uid}`)
+    if (auth) {
+      router.push(`/profile/${props.message?.uid}`)
+      return
+    }
   }
 
   return (
