@@ -1,15 +1,14 @@
-const SettingsLayout = ({
-  children
-}: {
+import React from "react"
+import type { JSX } from "react"
+
+type SettingsLayoutProps = {
   children: React.ReactNode
-}) => {
-  return (
-    <div className="p-4">
-      {children}
-    </div>
-  );
-};
+}
 
-SettingsLayout.displayName = 'SettingsLayout';
+const SettingsLayout = ({ children }: SettingsLayoutProps): JSX.Element => {
+  return <div className="p-4">{children}</div>
+}
 
-export default SettingsLayout;
+SettingsLayout.displayName = "SettingsLayout"
+
+export default SettingsLayout

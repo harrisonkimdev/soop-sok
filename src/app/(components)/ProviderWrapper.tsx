@@ -1,37 +1,34 @@
+import NavBar from "@/app/(components)/NavBar"
+import { AppStateProvider } from "@/utils/AppStateProvider"
+import theme from "@/utils/ThemeProvider"
+import { ThemeProvider } from "@mui/material"
+import CssBaseline from "@mui/material/CssBaseline"
+import dynamic from "next/dynamic"
+import React from "react"
+import type { JSX } from "react"
 
-import { AppStateProvider } from "@/utils/AppStateProvider";
-import { ThemeProvider } from "@mui/material";
-import theme from "@/utils/ThemeProvider";
-import CssBaseline from "@mui/material/CssBaseline";
+const DialogWrapper = dynamic(
+  () => import("@/app/(components)/dialogs/DialogWrapper"),
+  { ssr: false },
+)
 
-import NavBar from "@/app/(components)/NavBar";
-
-import dynamic from "next/dynamic";
-const DialogWrapper = dynamic(() => import("@/app/(components)/dialogs/DialogWrapper"), { ssr: false });
-
-interface IWrapperProps {
-  children: React.ReactNode;
+type wrapperProps = {
+  children: React.ReactNode
 }
 
-const Wrapper = ({ children }: IWrapperProps) => {
+const Wrapper = ({ children }: wrapperProps): JSX.Element => {
   return (
-  <AppStateProvider>
-    {/* mui-material */}
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {/* TODO: doesn"t fit on iphones. */}
-      <main className="w-screen h-screen mx-auto bg-stone-50">
-        <div className="h-[calc(100vh-3.5rem)">
-          { children }
-        </div>
-        
-        <NavBar />
-      </main>
-
-      <DialogWrapper />
-    </ThemeProvider>
-  </AppStateProvider>
+    <AppStateProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <main className="mx-auto h-screen w-screen bg-stone-50">
+          <div className="h-[calc(100vh-3.5rem)]">{children}</div>
+          <NavBar />
+        </main>
+        <DialogWrapper />
+      </ThemeProvider>
+    </AppStateProvider>
   )
-};
+}
 
-export default Wrapper;
+export default Wrapper

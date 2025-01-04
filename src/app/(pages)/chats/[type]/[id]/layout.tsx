@@ -1,15 +1,14 @@
-const FeaturesLayout = ({
-  children
-}: {
+import React from "react"
+import type { JSX } from "react"
+
+type FeaturesLayoutProps = {
   children: React.ReactNode
-}) => {
-  return (
-    <div className="h-full py-8">
-      {children}
-    </div>
-  );
-};
+}
 
-FeaturesLayout.displayName = 'FeaturesLayout';
+const FeaturesLayout = ({ children }: FeaturesLayoutProps): JSX.Element => {
+  return <div className="h-full py-8">{children}</div>
+}
 
-export default FeaturesLayout;
+FeaturesLayout.displayName = "FeaturesLayout"
+
+export default FeaturesLayout

@@ -1,15 +1,14 @@
-const FriendsLayout = ({
-  children
-}: {
+import React from "react"
+import type { JSX } from "react"
+
+type FriendsLayoutProps = {
   children: React.ReactNode
-}) => {
-  return (
-    <div className="p-4">
-      {children}
-    </div>
-  );
-};
+}
 
-FriendsLayout.displayName = 'FriendsLayout';
+const FriendsLayout = ({ children }: FriendsLayoutProps): JSX.Element => {
+  return <div className="p-4">{children}</div>
+}
 
-export default FriendsLayout;
+FriendsLayout.displayName = "FriendsLayout"
+
+export default FriendsLayout

@@ -1,8 +1,9 @@
-import ProgressIndicator from '@/app/(components)/ProgressIndicator';
+import ProgressIndicator from "@/app/(components)/ProgressIndicator"
+import type { JSX } from "react"
 
-const PublicChatLoading = () => {
+const PublicChatLoading = (): JSX.Element => {
   return (
-    <div className='h-full flex justify-center items-center'>
+    <div className="flex h-full items-center justify-center">
       <ProgressIndicator />
     </div>
   )

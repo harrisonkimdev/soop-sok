@@ -1,93 +1,55 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { TPrivateChat, TMessage } from "@/types"
+import { auth } from "@/utils/firebase/firebase"
+import { formatTimeAgo } from "@/utils/functions"
+import useFirebaseHookMessages from "@/utils/hooks/fetchData/useFirebaseHookMessages"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import type { JSX } from "react"
 
-import { useAppState } from '@/utils/AppStateProvider';
-import { auth } from '@/utils/firebase/firebase';
-import { fetchLatestMessage } from '@/utils/firebase/firestore/services';
-
-import { formatTimeAgo } from '@/utils/functions';
-import { TMessage, TPrivateChat, TUser } from '@/types';
-
-type PrivateChatProps = {
+type TProps = {
   privateChat: TPrivateChat
-};
+}
 
-const PrivateChat = ({ privateChat } : PrivateChatProps ) => {
-  const [latestMessage, setLatestMessage] = useState<TMessage | null>(null);
+const PrivateChat = (props: TProps): JSX.Element => {
+  const router = useRouter()
 
-  const router = useRouter();
+  const chatId = props.privateChat.id
+  const latestMessage = useFirebaseHookMessages({ chatId }) as TMessage | null
 
-  const { state, dispatch } = useAppState();
-
-  // fetch user data based on the given user id,
-  // or, store user data into the private_chat collection.
-  useEffect(() => {
-    let isMounted = true;
-
-    const getLatestMessage = async () => {
-      if (auth) {
-        try {
-          const latestMessage = await fetchLatestMessage(privateChat.id);
-          if (isMounted && latestMessage.length > 0) {
-            setLatestMessage(latestMessage);
-          }
-        } catch (err) {
-          if (isMounted) {
-            console.error(err);
-            dispatch({ type: 'SHOW_MESSAGE_DIALOG', payload: { show: true, type: 'data_retrieval' } });
-          }
-        }
-      }
-    };
-
-    getLatestMessage();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [dispatch, privateChat]);
-
-  // fetch the latest message associated with this private chat
-  // to display when it is sent and the content of it.
-
-  const enterPrivateChat = () => {
+  const enterPrivateChat = (): void => {
     if (auth && auth.currentUser) {
-      router.push(`/chats/private-chat/${privateChat.id}`);
+      router.push(`/chats/private-chat/${chatId}`)
     }
-  };
+  }
 
-  if (latestMessage) return (
+  return (
     <div onClick={enterPrivateChat}>
-      <div className='
-        p-4 rounded-lg shadow-sm bg-white
-        flex gap-3 items-center
-      '>
+      <div className="flex items-center gap-3 rounded-lg bg-white p-4 shadow-sm">
         <Image
-          src={latestMessage.senderPhotoURL} alt=''
-          width={1324} height={1827}
-          className='object-cover w-16 h-16 rounded-full'
+          src={latestMessage?.senderPhotoURL || "/default-profile.png"}
+          alt=""
+          width={1324}
+          height={1827}
+          className="h-16 w-16 rounded-full object-cover"
         />
 
-        <div className='grow w-min'>
-          <div className='flex justify-between'>
+        <div className="w-min grow">
+          <div className="flex justify-between">
             {/* Sender's name. */}
-            <p className='font-medium'>{ latestMessage.senderName }</p>
+            <p className="font-medium">{latestMessage?.senderName}</p>
 
             {/* the time last message was received. */}
-            { latestMessage && (
-              <p>{ formatTimeAgo(latestMessage.createdAt) }</p>
-            )}
+            {latestMessage && <p>{formatTimeAgo(latestMessage?.createdAt)}</p>}
           </div>
 
           {/* the content of the last message. */}
-          <p className='mt-1 h-[3rem] overflow-hidden line-clamp-2'>
-            { latestMessage.message }
+          <p className="mt-1 line-clamp-2 h-[3rem] overflow-hidden">
+            {latestMessage?.message}
           </p>
         </div>
       </div>
     </div>
   )
-};
+}
 
-export default PrivateChat;
+export default PrivateChat

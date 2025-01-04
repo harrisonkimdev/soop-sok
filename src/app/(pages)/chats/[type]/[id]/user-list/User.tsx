@@ -1,56 +1,53 @@
-'use client';
+"use client"
 
-import { Avatar, } from '@mui/material';
-
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-
-import { auth } from '@/utils/firebase/firebase';
-import { useRouter } from 'next/navigation';
-import { fetchUser } from '@/utils/firebase/firestore/services';
-
-import { TUser } from '@/types';
+import { TUser } from "@/types"
+import { auth } from "@/utils/firebase/firebase"
+import { fetchUser } from "@/utils/firebase/firestore"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import type { JSX } from "react"
 
 type UserProps = {
   uid: string
-};
+}
 
-const User = ({ uid }: UserProps) => {
-  const [user, setUser] = useState<TUser | null>(null);
-  const router = useRouter();
+const User = (props: UserProps): JSX.Element => {
+  const [user, setUser] = useState<TUser | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    const getuser = async () => {
-      const user = await fetchUser(uid);
-      setUser(user);
-    };
-    getuser()
-  }, [uid]);
-
-  const redirectToProfile = (uid: string) => {
-    if (auth) {
-      router.push(`/profile/${uid}`);
+    const getuser = async (): Promise<void> => {
+      const user = await fetchUser(props.uid)
+      setUser(user)
     }
-  };
+    getuser()
+  }, [props.uid])
 
-  if (user) return (
+  const redirectToProfile = (uid: string | undefined): void => {
+    if (uid && auth) {
+      router.push(`/profile/${uid}`)
+    }
+  }
+
+  return (
     <li
-      onClick={() => redirectToProfile(user.uid)}
-      className='
-        p-3 rounded-lg shadow-sm bg-stone-200
-        flex items-center justify-between
-    '>
-      <div className='w-full px-2 py-1 flex items-center gap-3'>
-        {/* <Avatar src={user.profilePicUrl} alt='Profile Picture' sx={{ width: 52, height: 52 }} /> */}
+      onClick={() => redirectToProfile(user?.uid)}
+      className="flex cursor-pointer items-center justify-between rounded-lg bg-stone-200 p-3 shadow-sm"
+    >
+      <div className="flex w-full items-center gap-3 px-2 py-1">
         <Image
-          src={user.photoURL} alt='Profile Picture'
-          width={64} height={64}
-          className='object-cover rounded-full'
+          // TODO: Add a default profile picture
+          src={user?.photoURL || "/default-profile.png"}
+          alt="Profile Picture"
+          width={64}
+          height={64}
+          className="rounded-full object-cover"
         />
-        <p className='text-lg'>{ user.displayName }</p>
+        <p className="text-lg">{user?.displayName}</p>
       </div>
     </li>
   )
-};
+}
 
-export default User;
+export default User

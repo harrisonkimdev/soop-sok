@@ -1,11 +1,12 @@
-import ProgressIndicator from '@/app/(components)/ProgressIndicator';
+import ProgressIndicator from "@/app/(components)/ProgressIndicator"
+import type { JSX } from "react"
 
-const Loading = () => {
+const CreateChatPageLoading = (): JSX.Element => {
   return (
-    <div className='h-full flex justify-center items-center'>
+    <div className="flex h-full items-center justify-center">
       <ProgressIndicator />
     </div>
   )
 }
 
-export default Loading
+export default CreateChatPageLoading

@@ -1,15 +1,14 @@
-const PublicChatLayout = ({
-  children
-}: {
+import React from "react"
+import type { JSX } from "react"
+
+type PublicChatLayoutProps = {
   children: React.ReactNode
-}) => {
-  return (
-    <div className="h-full p-4">
-      {children}
-    </div>
-  );
-};
+}
 
-PublicChatLayout.displayName = 'PublicChatLayout';
+const PublicChatLayout = ({ children }: PublicChatLayoutProps): JSX.Element => {
+  return <div className="h-full p-4">{children}</div>
+}
 
-export default PublicChatLayout;
+PublicChatLayout.displayName = "PublicChatLayout"
+
+export default PublicChatLayout

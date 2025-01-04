@@ -1,12 +1,13 @@
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
+import type { JSX } from "react"
 
-const ProgressIndicator = () => {
+const ProgressIndicator = (): JSX.Element => {
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CircularProgress color="primary" />
     </Box>
   )
-};
+}
 
-export default ProgressIndicator;
+export default ProgressIndicator

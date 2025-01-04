@@ -1,89 +1,58 @@
-'use client';
+"use client"
 
+import User from "@/app/(pages)/chats/[type]/[id]/user-list/User"
+import useFirebaseHookUsersInChannel from "@/utils/hooks/fetchData/useFirebaseHookUsersInChannel"
+import { useRouter } from "next/navigation"
+import type { JSX } from "react"
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-import { auth, firestore } from '@/utils/firebase/firebase';
-import { useDocument } from 'react-firebase-hooks/firestore';
-import { doc } from 'firebase/firestore';
-import useDialogs from '@/utils/dispatcher';
-
-import User from '@/app/(pages)/chats/[type]/[id]/user-list/User';
-
-type pageProps = {
+type userListPageProps = {
   params: {
-    type: string,
-    id: string,
+    type: string
+    id: string
   }
-};
+}
 
-const Page = ({ params }: pageProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [users, setUsers] = useState([]);
+const UserListPage = ({ params }: userListPageProps): JSX.Element => {
+  const router = useRouter()
 
-  const router = useRouter();
+  const userData = useFirebaseHookUsersInChannel({
+    channelId: params.id,
+  })
 
-  const { messageDialog } = useDialogs();
-
-  // Authenticate a user
-  useEffect(() => {
-    if (!auth) {
-      router.push('/');
-    } else {
-      setIsAuthenticated(true);
-    }
-  }, [router]);
-
-  const chatRef = doc(firestore, 'chats', params.id);
-  const [FSValue, FSLoading, FSError] = useDocument(
-    isAuthenticated ? chatRef : null
-  );
-
-  // Handling retrieved data
-  useEffect(() => {
-    if (FSValue && FSValue.exists()) {
-      setUsers(FSValue.data().members);
-    }
-  }, [FSValue]);
+  const users = userData?.members || []
 
   // Error handling
-  useEffect(() => {
-    if (FSError !== undefined) {
-      messageDialog.show('data_retrieval');
+  // router.push(`/chats/${params.type}/${params.id}/features`)
 
-      router.push(`/chats/${params.type}/${params.id}/features`);
-    }
-  }, [router, FSError, params.type, params.id]);
-
-  const redirectToFeaturesPage = () => {
-    if (auth) {
-      router.push(`/chats/${params.type}/${params.id}/features`);
-    }
-  };
+  const redirectToFeaturesPage = (): void => {
+    router.push(`/chats/${params.type}/${params.id}/features`)
+  }
 
   return (
-    <div className='h-full flex flex-col gap-4'>
-      <div className='
-        grow p-4 overflow-y-auto rounded-lg shadow-sm bg-white
-        flex flex-col gap-4
-      '>
-        <h1 className='font-semibold capitalize text-center text-2xl text-earth-600'>Users in this channel</h1>
-        
-        <ul className='flex flex-col gap-3'>
-          { users.map((user: any) => (
+    <div className="flex h-full flex-col gap-4">
+      <div className="flex grow flex-col gap-4 overflow-y-auto rounded-lg bg-white p-4 shadow-sm">
+        <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
+          Users in this channel
+        </h1>
+
+        <ul className="flex flex-col gap-3">
+          {users.map((user: string) => (
             <User key={user} uid={user} />
-          )) }
+          ))}
         </ul>
       </div>
 
-      <button type="button" onClick={redirectToFeaturesPage} className='
-        w-full py-4 rounded-lg shadow bg-white
-        font-semibold text-xl text-earth-400
-        transition duration-300 ease-in-out hover:bg-earth-50
-      '> Cancel </button>
+      <button
+        type="button"
+        onClick={redirectToFeaturesPage}
+        className="w-full rounded-lg bg-white py-4 text-xl font-semibold text-earth-400 shadow transition duration-300 ease-in-out hover:bg-earth-50"
+      >
+        Cancel
+      </button>
     </div>
   )
-};
+}
 
-export default Page;
+UserListPage.displayName = "UserListPage"
+
+export default UserListPage

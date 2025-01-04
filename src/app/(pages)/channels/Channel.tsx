@@ -1,95 +1,70 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-import { auth, firestore } from '@/utils/firebase/firebase';
-import { updateChannel } from '@/utils/firebase/firestore/services';
-import { doc } from 'firebase/firestore';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
-import useDialogs from '@/utils/dispatcher';
-
-import { TChannel } from '@/types';
+import { TChannel } from "@/types"
+import useDialogs from "@/utils/dispatcher"
+import { auth } from "@/utils/firebase/firebase"
+import { updateChannel } from "@/utils/firebase/firestore"
+import useFirebaseHookChannel from "@/utils/hooks/fetchData/useFirebaseHookChannel"
+import { useRouter } from "next/navigation"
+import type { JSX } from "react"
 
 interface ChannelProps {
   channel: TChannel
-};
+}
 
-export const Channel = ({ channel }: ChannelProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isFull, setIsFull] = useState(false);
-  
-  const router = useRouter();
+export const Channel = (props: ChannelProps): JSX.Element => {
+  const router = useRouter()
 
-  const { messageDialog, channelState } = useDialogs();
-  
-  // Authorize users before rendering the page.
-  useEffect(() => {
-    if (!auth) {
-      router.push('/');
-    } else {
-      setIsAuthenticated(true);
-    }
-  }, [router]);
+  const { messageDialog, channelState } = useDialogs()
 
-  // Fetch channle data in real time only if a user is authorized.
-  const channelRef = doc(firestore, 'channels', channel.id);
-  const [FSValue, FSLoading, FSError] = useDocumentData(
-    isAuthenticated ? channelRef : null
-  );
+  const channelData: { isFull: boolean; numMembers: number } | null =
+    useFirebaseHookChannel({ channelId: props.channel.id })
 
-  useEffect(() => {
-    if (FSValue?.numMembers >= FSValue?.capacity) {
-      setIsFull(true);
-    }
-  }, [FSValue]);
+  const isFull =
+    channelData && "isFull" in channelData ? channelData.isFull : false
+  const numMembers =
+    channelData && "numMembers" in channelData ? channelData.numMembers : 0
 
-  // Error: real time data fetching
-  useEffect(() => {
-    if (FSError !== undefined) {
-      messageDialog.show('data_retrieval');
-    }
-  }, [FSError, messageDialog]);
-  
-  // When users join a channel, add them to the 'members' subcollection of the associated channel document and update the 'numMembers' field in the channel document accordingly.
-  const handleEnterChannel = async () => {
-    const currentUser = auth.currentUser;
-    
-    if (!currentUser) {
-      router.push('/');
-      return;
-    }
+  /*
+  // When users join a channel, add them to the 'members' subcollection of the
+  // associated channel document and update the 'numMembers' field in the
+  // channel document accordingly.
+  */
+  const handleEnterChannel = async (): Promise<void> => {
+    const currentUser = auth.currentUser
 
-    // Authorize users.
-    if (!isFull) {
-      // Log where the user is in.
-      try {
-        const res = await updateChannel(channel.id, currentUser.uid, 'enter');
-    
-        // Store the channel ID in the global state.
-        channelState.set(channel.id);
+    if (!currentUser || isFull) return
 
-        // Redriect to the selected channel page.
-        if (res) router.push(`/chats/channel/${channel.id}/`);
-      } catch (err) {
-        console.error(err);
-        messageDialog.show('data_retrieval');
+    try {
+      // Update the channel document with the user's ID.
+      const res = await updateChannel(
+        props.channel.id,
+        currentUser.uid,
+        "enter",
+      )
+
+      if (res) {
+        // Set the current channel state.
+        channelState.set(props.channel.id)
+        router.push(`/chats/channel/${props.channel.id}/`)
       }
+    } catch (err) {
+      console.error(err)
+      messageDialog.show("data_retrieval")
     }
-  };
+  }
 
   return (
     <div
-      onClick={handleEnterChannel} 
-      className={`
-        ${!isFull ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}
-        p-4 rounded-lg shadow-md bg-white
-        transition duration-300 ease-in-out hover:bg-gray-100
-        flex flex-col gap-2
-      `}
+      onClick={handleEnterChannel}
+      className={` ${!isFull ? "cursor-pointer" : "cursor-not-allowed opacity-50"} flex flex-col gap-2 rounded-lg bg-white p-4 shadow-md transition duration-300 ease-in-out hover:bg-gray-100`}
     >
-      <h3 className='font-semibold text-lg text-gray-800'>{ channel.name }</h3>
-      <p className='text-sm text-gray-600'>Capacity: { FSValue?.numMembers } / { channel.capacity }</p>
+      <h3 className="text-lg font-semibold text-gray-800">
+        {props.channel.name}
+      </h3>
+      <p className="text-sm text-gray-600">
+        Capacity: {numMembers} / {props.channel.capacity}
+      </p>
     </div>
   )
-};
+}
 
-export default Channel;
+export default Channel

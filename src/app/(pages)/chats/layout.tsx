@@ -1,15 +1,14 @@
-const ChatLayout = ({
-  children
-}: {
+import React from "react"
+import type { JSX } from "react"
+
+type ChatLayoutProps = {
   children: React.ReactNode
-}) => {
-  return (
-    <div className="h-full p-4">
-      {children}
-    </div>
-  );
-};
+}
 
-ChatLayout.displayName = 'ChatLayout';
+const ChatLayout = ({ children }: ChatLayoutProps): JSX.Element => {
+  return <div className="h-full p-4">{children}</div>
+}
 
-export default ChatLayout;
+ChatLayout.displayName = "ChatLayout"
+
+export default ChatLayout

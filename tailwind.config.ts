@@ -1,11 +1,7 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
 const config: Config = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       backgroundImage: {
@@ -28,11 +24,11 @@ const config: Config = {
           600: "#B38168",
           700: "#A86F53",
           800: "#9D5D3E",
-          900: "#924B29"
-        }
-      }
+          900: "#924B29",
+        },
+      },
     },
   },
   plugins: [],
-};
-export default config;
+}
+export default config

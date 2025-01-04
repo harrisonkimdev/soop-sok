@@ -1,32 +1,28 @@
-import { fetchWithAuth } from './fetchWithAuth';
+import { fetchWithAuth } from "./fetchWithAuth"
 
 export async function sendMessage(
   uid: string,
   cid: string,
   senderName: string | null,
   senderPhotoURL: string | null,
-  message: string
-) {
+  message: string,
+): Promise<any> {
   try {
-    const sendMessageAck = await fetchWithAuth('/api/messages', {
-      method: 'POST',
+    const response = await fetchWithAuth("/api/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ uid, cid, senderName, senderPhotoURL, message }),
-    });
-    console.log(sendMessageAck);
-    return sendMessageAck;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
+    })
 
-export async function fetchLatestMessage(cid: string) {
-  try {
-    const data = await fetchWithAuth(`/api/messages/latest?cid=${cid}`, { method: 'GET' });
-    console.log(data.latestMessage);
-    return data.latestMessage;
+    if (!response.ok) throw new Error(`Error: ${response.statusText}`)
+
+    const sendMessageAck = await response.json()
+    console.log(sendMessageAck)
+    return sendMessageAck
   } catch (err) {
-    console.error(err);
-    return null;
+    console.error("Failed to send message:", err)
+    return null
   }
 }

@@ -1,15 +1,14 @@
-const ProfileLayout = ({
-  children
-}: {
+import React from "react"
+import type { JSX } from "react"
+
+type ProfileLayoutProps = {
   children: React.ReactNode
-}) => {
-  return (
-    <div className="p-4">
-      {children}
-    </div>
-  );
-};
+}
 
-ProfileLayout.displayName = 'ProfileLayout';
+const ProfileLayout = ({ children }: ProfileLayoutProps): JSX.Element => {
+  return <div className="p-4">{children}</div>
+}
 
-export default ProfileLayout;
+ProfileLayout.displayName = "ProfileLayout"
+
+export default ProfileLayout
