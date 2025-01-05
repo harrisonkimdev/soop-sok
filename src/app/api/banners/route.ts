@@ -1,14 +1,8 @@
 import { TBanner } from "@/types"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
+export async function GET(): Promise<NextResponse> {
   const bannerRef = firestore.collection("banners")
   const bannerQuery = bannerRef.where("selected", "==", true)
   try {
@@ -29,11 +23,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const { cid, content, tagOptions } = await req.json()
 
   try {

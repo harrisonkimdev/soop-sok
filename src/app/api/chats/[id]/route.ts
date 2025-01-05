@@ -1,19 +1,11 @@
 import { TChat } from "@/types"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  params: { id: string },
 ): Promise<NextResponse> {
-  console.log("Received PUT request")
-  const token = getToken(req)
-  if (!token) {
-    console.log("No token provided")
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const chatId = (await params).id
   console.log(`Chat ID: ${chatId}`)
   const { uid } = await req.json()

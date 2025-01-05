@@ -1,13 +1,7 @@
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const searchParams = req.nextUrl.searchParams
   const id = searchParams.get("id")
 
@@ -26,19 +20,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(res.data(), { status: 200 })
   } catch (error) {
     console.error(error)
-    return NextResponse.json(error, { status: 500 })
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    )
   }
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  params: { id: string },
 ): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const id = (await params).id
   // const searchParams = req.nextUrl.searchParams;
   const { displayName, email, photoURL } = await req.json()
@@ -69,16 +61,10 @@ export async function POST(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  params: { id: string },
 ): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const id = (await params).id
   const searchParams = req.nextUrl.searchParams
-
   const userRef = firestore.collection("users").doc(id)
 
   try {

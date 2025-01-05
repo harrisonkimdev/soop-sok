@@ -1,13 +1,7 @@
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const { uid, cid, senderName, senderPhotoURL, message } = await req.json()
 
   try {

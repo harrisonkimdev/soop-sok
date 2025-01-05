@@ -1,31 +1,8 @@
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
-/**
- * Handles GET requests to check for the existence of a private chat between two users.
- *
- * @param {NextRequest} req - The incoming request object.
- * @returns {Promise<NextResponse>} - A promise that resolves to a NextResponse object.
- *
- * This function performs the following steps:
- * 1. Retrieves the authentication token from the request.
- * 2. If no token is provided, returns a 401 Unauthorized response.
- * 3. Extracts the `myId` and `friendId` from the request's query parameters.
- * 4. Checks if a private chat exists between the two users in the Firestore database.
- * 5. If no private chat exists, returns a response indicating that the chat does not exist.
- * 6. If a private chat exists, returns a response with the chat ID.
- * 7. Handles any errors that occur during the process and returns a 500 Internal Server Error response.
- */
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
-  console.log("GET request received")
   const searchParams = req.nextUrl.searchParams
-
   // extract the user ids from the query parameters
   const mId = searchParams.get("myId")
   const fId = searchParams.get("friendId")
@@ -69,13 +46,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   // extract the user ids from the query parameters
-  console.log("POST request received")
   const searchParams = req.nextUrl.searchParams
 
   try {
