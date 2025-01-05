@@ -1,38 +1,35 @@
-import { TChannel } from "@/types"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params: { id: channelId } }: { params: { id: string } },
 ): Promise<NextResponse> {
-  console.log("Received PUT request")
-  const token = getToken(req)
-  if (!token) {
-    console.log("No token provided")
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
-  const channelId = (await params).id
-  console.log(`Channel ID: ${channelId}`)
   const { uid } = await req.json()
-  console.log(`User ID: ${uid}`)
-  const searchParams = req.nextUrl.searchParams
-  const action = searchParams.get("action")
-  console.log(`Action: ${action}`)
+  const action = req.nextUrl.searchParams.get("action")
+  console.log(`Channel ID: ${channelId}, User ID: ${uid}, Action: ${action}`)
 
   const channelRef = firestore.collection("channels").doc(channelId)
 
   try {
     const channelDoc = await channelRef.get()
-    const channelData: TChannel = channelDoc.data() as TChannel
+    const channelData = channelDoc.data()
+    if (!channelData) {
+      console.error("Channel does not exist")
+      return NextResponse.json(
+        { error: "Channel does not exist" },
+        { status: 404 },
+      )
+    }
     console.log("Channel data:", channelData)
 
     if (action === "enter") {
-      if (channelData.numMembers >= channelData.capacity) {
-        console.log("Channel is full")
-        return NextResponse.json({ error: "Channel is full" }, { status: 400 })
+      if (channelData.members.includes(uid)) {
+        console.log("User already in the channel")
+        return NextResponse.json(
+          { error: "User already in the channel" },
+          { status: 400 },
+        )
       }
 
       const newMembers = [...channelData.members, uid]
@@ -46,7 +43,17 @@ export async function PUT(
         updatedAt: FieldValue.serverTimestamp(),
       })
     } else if (action === "leave") {
-      const newMembers = channelData.members.filter((member) => member !== uid)
+      if (!channelData.members.includes(uid)) {
+        console.error("User is not a member of the channel")
+        return NextResponse.json(
+          { error: "User is not a member of the channel" },
+          { status: 400 },
+        )
+      }
+
+      const newMembers = channelData.members.filter(
+        (member: string) => member !== uid,
+      )
       const newNumMembers = channelData.numMembers - 1
       console.log("New members:", newMembers)
       console.log("New number of members:", newNumMembers)
@@ -56,10 +63,19 @@ export async function PUT(
         numMembers: newNumMembers,
         updatedAt: FieldValue.serverTimestamp(),
       })
+
+      await channelRef.update({
+        members: newMembers,
+        numMembers: newNumMembers,
+        updatedAt: FieldValue.serverTimestamp(),
+      })
     }
 
     console.log("Chat updated successfully")
-    return NextResponse.json({ message: "chat updated!" }, { status: 200 })
+    return NextResponse.json(
+      { message: "Chat updated successfully!" },
+      { status: 200 },
+    )
   } catch (error) {
     console.error("Error updating chat:", error)
     return NextResponse.json(error, { status: 500 })

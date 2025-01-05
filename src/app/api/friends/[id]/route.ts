@@ -1,21 +1,14 @@
 import { firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { Filter } from "firebase-admin/firestore"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(
   req: NextRequest,
-  params: Promise<{ id: string }>,
+  params: { id: string },
 ): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided." }, { status: 401 })
-  }
-
   const friendId = (await params).id
   const searchParams = req.nextUrl.searchParams
   const senderId = searchParams.get("senderId")
-
   const friendRef = firestore.collection("friend_list")
 
   try {

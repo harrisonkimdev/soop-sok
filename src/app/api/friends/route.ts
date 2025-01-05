@@ -1,13 +1,7 @@
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided." }, { status: 401 })
-  }
-
   const { senderId, friendId } = await req.json()
 
   try {
@@ -17,7 +11,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       senderId,
     })
 
-    return NextResponse.json({ message: "friend added!" }, { status: 200 })
+    return NextResponse.json(
+      { message: "Friend successfully added!" },
+      { status: 200 },
+    )
   } catch (error) {
     console.error(error)
     return NextResponse.json(error, { status: 500 })
