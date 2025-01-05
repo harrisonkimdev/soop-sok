@@ -27,6 +27,12 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  // Apply middleware to all /api paths
-  matcher: ["/api/:path*"],
+  // Apply middleware to all /api paths except /api/users (PUT)
+  matcher: [
+    "/api/(?!users$).*",
+    "/api/users(?!$|/.*$|\\?.*$)",
+    "/api/users(?!\\?.*$)",
+    "/api/users(?!$|/.*$|\\?.*$):path*",
+  ],
+  methods: ["GET", "POST", "DELETE", "PATCH"],
 }
