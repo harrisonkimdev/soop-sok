@@ -11,8 +11,15 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 
   try {
     const decodedToken = await auth.verifyIdToken(token)
-    req.headers.set("userId", decodedToken.uid)
-    return NextResponse.next()
+    const requestHeaders = new Headers(req.headers)
+    requestHeaders.set("userId", decodedToken.uid)
+    const modifiedReq = new Request(req.url, {
+      headers: requestHeaders,
+      method: req.method,
+      body: req.body,
+      redirect: req.redirect,
+    })
+    return NextResponse.next({ request: modifiedReq })
   } catch (error) {
     console.error("Token verification failed:", error)
     return NextResponse.json({ error: "Invalid token" }, { status: 401 })
@@ -20,5 +27,6 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  matcher: ["/api/:path*"], // Apply middleware to all /api paths
+  // Apply middleware to all /api paths
+  matcher: ["/api/:path*"],
 }

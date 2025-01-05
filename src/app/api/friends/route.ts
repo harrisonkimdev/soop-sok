@@ -11,7 +11,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       senderId,
     })
 
-    return NextResponse.json({ message: "friend added!" }, { status: 200 })
+    return NextResponse.json(
+      { message: "Friend successfully added!" },
+      { status: 200 },
+    )
   } catch (error) {
     console.error(error)
     return NextResponse.json(error, { status: 500 })

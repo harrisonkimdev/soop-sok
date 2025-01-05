@@ -23,7 +23,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     if (querySnapshot.empty) {
       console.log("No existing private chat found")
       return NextResponse.json(
-        { message: "chat does not exist!" },
+        { message: "No private chat exists between the specified users." },
         { status: 200 },
       )
     }
@@ -31,7 +31,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     else {
       console.log("Private chat already exists")
       return NextResponse.json(
-        { message: "chat exists!", id: querySnapshot.docs[0].id },
+        {
+          message: "Private chat already exists!",
+          chatId: querySnapshot.docs[0].id,
+        },
         { status: 200 },
       )
     }
@@ -48,16 +51,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // extract the user ids from the query parameters
   const searchParams = req.nextUrl.searchParams
+  const mId = searchParams.get("myId")
+  const fId = searchParams.get("friendId")
 
   try {
-    // extract the user ids from the query parameters
-    const mId = searchParams.get("myId")
-    const fId = searchParams.get("friendId")
-
-    // reference to the private chats collection
-    const privateChatRef = firestore.collection("private_chats")
-
     // create a new private chat between the two users
+    const privateChatRef = firestore.collection("private_chats")
     const chatRef = await privateChatRef.add({
       from: mId,
       to: fId,
@@ -67,8 +66,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // log the chat ID and return a success message
     console.log("New private chat created with id:", chatRef.id)
     return NextResponse.json(
-      { message: "private chat created!", id: chatRef.id },
-      { status: 200 },
+      { message: "Private chat created successfully!", chatId: chatRef.id },
+      { status: 201 },
     )
   } catch (error) {
     // handle any errors that occur during the process

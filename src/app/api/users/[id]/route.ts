@@ -4,15 +4,13 @@ import { type NextRequest, NextResponse } from "next/server"
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const searchParams = req.nextUrl.searchParams
   const id = searchParams.get("id")
-
   if (!id) {
     return NextResponse.json({ error: "No user ID provided" }, { status: 400 })
   }
-  const userRef = firestore.collection("users").doc(id)
 
   try {
+    const userRef = firestore.collection("users").doc(id)
     const res = await userRef.get()
-
     if (!res.exists) {
       return NextResponse.json({ error: "No user found" }, { status: 404 })
     }
@@ -31,13 +29,18 @@ export async function POST(
   req: NextRequest,
   params: { id: string },
 ): Promise<NextResponse> {
-  const id = (await params).id
-  // const searchParams = req.nextUrl.searchParams;
-  const { displayName, email, photoURL } = await req.json()
-
-  const userRef = firestore.collection("users").doc(id)
+  const id = params.id
+  const body = await req.json()
+  const { displayName, email, photoURL } = body
+  if (!displayName || !email || !photoURL) {
+    return NextResponse.json(
+      { error: "Missing required fields" },
+      { status: 400 },
+    )
+  }
 
   try {
+    const userRef = firestore.collection("users").doc(id)
     await userRef.set({
       createdAt: FieldValue.serverTimestamp(),
       displayName,
@@ -55,7 +58,10 @@ export async function POST(
     return NextResponse.json({ message: "User registered!" }, { status: 200 })
   } catch (error) {
     console.error(error)
-    return NextResponse.json(error, { status: 500 })
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    )
   }
 }
 
@@ -63,13 +69,14 @@ export async function PUT(
   req: NextRequest,
   params: { id: string },
 ): Promise<NextResponse> {
-  const id = (await params).id
+  const id = params.id
   const searchParams = req.nextUrl.searchParams
   const userRef = firestore.collection("users").doc(id)
+  const reqType: string | null = searchParams.get("type")
 
   try {
     // user sign in
-    if (searchParams.get("type") === "signin") {
+    if (reqType === "signin") {
       await userRef.update({
         isOnline: true,
         lastLoginTime: FieldValue.serverTimestamp(),
@@ -77,15 +84,20 @@ export async function PUT(
     }
 
     // user sign out
-    else if (searchParams.get("type") === "signout") {
-      await userRef.update({
-        isOnline: false,
-      })
+    else if (reqType === "signout") {
+      await userRef.update({ isOnline: false })
     }
 
     // user profile update
-    else if (searchParams.get("type") === null) {
-      const { user } = await req.json()
+    else if (reqType === null) {
+      const body = await req.json()
+      const { user } = body
+      if (!user) {
+        return NextResponse.json(
+          { error: "Missing user data" },
+          { status: 400 },
+        )
+      }
       await userRef.update(user)
     }
 
@@ -95,6 +107,9 @@ export async function PUT(
     )
   } catch (error) {
     console.error(error)
-    return NextResponse.json(error, { status: 500 })
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    )
   }
 }

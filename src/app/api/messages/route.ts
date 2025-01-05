@@ -13,7 +13,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       message,
       createdAt: FieldValue.serverTimestamp(),
     })
-    return NextResponse.json({ ack: "message sent!" }, { status: 200 })
+    return NextResponse.json(
+      {
+        message: "Message sent successfully!",
+        timestamp: new Date().toISOString(),
+      },
+      { status: 200 },
+    )
   } catch (error) {
     console.error(error)
     return NextResponse.json(error, { status: 500 })
