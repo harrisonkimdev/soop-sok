@@ -1,6 +1,6 @@
-import useDialog from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { sendMessage } from "@/utils/firebase/firestore"
+import useDialog from "@/utils/global-states/dispatcher"
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 import React, { useState } from "react"
 import type { JSX } from "react"

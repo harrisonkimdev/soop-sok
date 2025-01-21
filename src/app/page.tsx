@@ -2,12 +2,12 @@
 
 import "firebaseui/dist/firebaseui.css"
 
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import {
   registerUserWithUID,
   updateUserStatus,
 } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { GoogleAuthProvider } from "firebase/auth"
 import firebaseui from "firebaseui"
 import Image from "next/image"

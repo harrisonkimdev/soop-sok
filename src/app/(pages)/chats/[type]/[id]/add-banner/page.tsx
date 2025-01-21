@@ -1,8 +1,8 @@
 "use client"
 
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { addBanner } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { BackspaceIcon } from "@heroicons/react/24/outline"
 import { Button, TextField } from "@mui/material"
 import { useRouter } from "next/navigation"

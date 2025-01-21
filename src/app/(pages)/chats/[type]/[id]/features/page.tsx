@@ -1,9 +1,9 @@
 "use client"
 
-import { useAppState } from "@/utils/AppStateProvider"
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel, updateChat } from "@/utils/firebase/firestore"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
+import useDialogs from "@/utils/global-states/dispatcher"
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowLeftStartOnRectangleIcon,

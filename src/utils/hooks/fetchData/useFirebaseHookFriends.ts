@@ -1,7 +1,7 @@
 "use client"
 
 import { TFriend } from "@/app/types"
-import useDialogs from "@/utils/dispatcher"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection, or, query, where } from "firebase/firestore"

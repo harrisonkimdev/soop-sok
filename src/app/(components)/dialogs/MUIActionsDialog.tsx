@@ -1,6 +1,6 @@
 "use client"
 
-import { useAppState } from "@/utils/AppStateProvider"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
 import Button from "@mui/material/Button"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"

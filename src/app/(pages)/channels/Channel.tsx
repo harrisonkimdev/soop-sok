@@ -1,7 +1,7 @@
 import { TChannel } from "@/app/types"
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import useFirebaseHookChannel from "@/utils/hooks/fetchData/useFirebaseHookChannel"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"

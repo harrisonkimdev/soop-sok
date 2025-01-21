@@ -1,9 +1,9 @@
 "use client"
 
 import { TBanner } from "@/app/types"
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { createChat, getBanner } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import {
   FormControl,
   InputLabel,

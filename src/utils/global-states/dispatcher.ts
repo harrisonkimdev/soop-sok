@@ -1,5 +1,5 @@
 import { TBanner } from "@/app/types"
-import { useAppState } from "@/utils/AppStateProvider"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
 import { useMemo } from "react"
 
 const useDialogs = (): {

@@ -1,7 +1,7 @@
 "use client"
 
-import { useAppState } from "@/utils/AppStateProvider"
 import { auth } from "@/utils/firebase/firebase"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
 import {
   ChatBubbleBottomCenterIcon,
   Cog6ToothIcon,
