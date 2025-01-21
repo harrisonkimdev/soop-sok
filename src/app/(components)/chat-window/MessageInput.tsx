@@ -18,14 +18,10 @@ const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
 
     if (!auth?.currentUser || !message.trim()) return
 
-    const {
-      uid,
-      displayName: senderName,
-      photoURL: senderPhotoURL,
-    } = auth.currentUser
+    const { uid } = auth.currentUser
 
     try {
-      await sendMessage(uid, cid, senderName, senderPhotoURL, message.trim())
+      await sendMessage(uid, cid, message.trim())
       setMessage("")
     } catch (err) {
       console.error(err)

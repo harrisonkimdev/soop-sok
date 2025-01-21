@@ -29,8 +29,6 @@ export type TPrivateChat = {
 export type TMessage = {
   id: string
   uid: string
-  senderName: string
-  senderPhotoURL: string
   message: string
   cid: string
   createdAt: FirestoreTimestamp
