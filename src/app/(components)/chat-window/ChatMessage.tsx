@@ -1,4 +1,4 @@
-import { TMessage } from "@/types"
+import { TMessage } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import Image from "next/image"
 import { useRouter } from "next/navigation"

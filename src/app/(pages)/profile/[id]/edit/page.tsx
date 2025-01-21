@@ -5,7 +5,7 @@ import MBTISelect from "@/app/(pages)/profile/[id]/edit/(components)/MBTISelecto
 import ProfilePicture from "@/app/(pages)/profile/[id]/edit/(components)/ProfilePicture"
 import UpdateButton from "@/app/(pages)/profile/[id]/edit/(components)/UpdateButton"
 import UsernameField from "@/app/(pages)/profile/[id]/edit/(components)/UsernameField"
-import { TUser } from "@/types"
+import { TUser } from "@/app/types"
 import { useAppState } from "@/utils/AppStateProvider"
 import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"

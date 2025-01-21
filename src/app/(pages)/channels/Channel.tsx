@@ -1,4 +1,4 @@
-import { TChannel } from "@/types"
+import { TChannel } from "@/app/types"
 import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel } from "@/utils/firebase/firestore"

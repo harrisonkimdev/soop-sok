@@ -1,6 +1,6 @@
 "use client"
 
-import { TUser } from "@/types"
+import { TUser } from "@/app/types"
 import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser, getOrCreateChatId } from "@/utils/firebase/firestore"

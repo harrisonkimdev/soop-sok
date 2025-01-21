@@ -1,4 +1,4 @@
-import { TBanner } from "@/types"
+import { TBanner } from "@/app/types"
 import { useAppState } from "@/utils/AppStateProvider"
 import { useMemo } from "react"
 

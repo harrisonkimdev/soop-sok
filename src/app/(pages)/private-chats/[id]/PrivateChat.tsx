@@ -1,4 +1,4 @@
-import { TPrivateChat, TMessage } from "@/types"
+import { TPrivateChat, TMessage } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { formatTimeAgo } from "@/utils/functions"
 import useFirebaseHookMessages from "@/utils/hooks/fetchData/useFirebaseHookMessages"

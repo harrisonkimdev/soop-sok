@@ -1,4 +1,4 @@
-import { TBanner } from "@/types"
+import { TBanner } from "@/app/types"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 

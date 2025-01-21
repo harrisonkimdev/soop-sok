@@ -1,4 +1,4 @@
-import { TChat } from "@/types"
+import { TChat } from "@/app/types"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 

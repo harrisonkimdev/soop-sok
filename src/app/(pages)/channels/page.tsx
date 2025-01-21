@@ -2,7 +2,7 @@
 
 import PageTitle from "@/app/(components)/PageTitle"
 import { Channel } from "@/app/(pages)/channels/Channel"
-import { TChannel } from "@/types"
+import { TChannel } from "@/app/types"
 import useFirebaseHookChannels from "@/utils/hooks/fetchData/useFirebaseHookChannels"
 import type { JSX } from "react"
 

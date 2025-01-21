@@ -1,5 +1,5 @@
 import { fetchWithAuth } from "./fetchWithAuth"
-import { TUser } from "@/types"
+import { TUser } from "@/app/types"
 
 export async function registerUserWithUID(
   displayName: string,

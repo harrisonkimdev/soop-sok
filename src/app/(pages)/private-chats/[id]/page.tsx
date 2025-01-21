@@ -2,7 +2,7 @@
 
 import SearchBar from "@/app/(components)/SearchBar"
 import PrivateChat from "@/app/(pages)/private-chats/[id]/PrivateChat"
-import { TPrivateChat } from "@/types"
+import { TPrivateChat } from "@/app/types"
 import useFirebaseHookPrivateChats from "@/utils/hooks/fetchData/useFirebaseHookPrivateChats"
 import type { JSX } from "react"
 

@@ -1,4 +1,4 @@
-import { TPrivateChat } from "@/types"
+import { TPrivateChat } from "@/app/types"
 import useDialogs from "@/utils/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
