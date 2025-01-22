@@ -1,9 +1,12 @@
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
-  const searchParams = req.nextUrl.searchParams
-  const id = searchParams.get("id")
+export async function GET({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<NextResponse> {
+  const id = (await params).id
   if (!id) {
     return NextResponse.json({ error: "No user ID provided" }, { status: 400 })
   }
