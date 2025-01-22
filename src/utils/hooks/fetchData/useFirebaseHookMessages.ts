@@ -1,6 +1,6 @@
 import { TMessage } from "@/app/types"
-import useDialogs from "@/utils/global-states/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
+import useDialogs from "@/utils/global-states/dispatcher"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection, limit, orderBy, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
