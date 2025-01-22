@@ -3,13 +3,17 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function PUT(
   req: NextRequest,
-  { params: { id: channelId } }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
-  const { uid } = await req.json()
+  // Dynamic route from the URL
+  const cid = (await params).id
+  // Query parameters from the URL
   const action = req.nextUrl.searchParams.get("action")
-  console.log(`Channel ID: ${channelId}, User ID: ${uid}, Action: ${action}`)
+  // Through the request body
+  const { uid } = await req.json()
+  console.log(`Channel ID: ${cid}, User ID: ${uid}, Action: ${action}`)
 
-  const channelRef = firestore.collection("channels").doc(channelId)
+  const channelRef = firestore.collection("channels").doc(cid)
 
   try {
     const channelDoc = await channelRef.get()

@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(
   req: NextRequest,
-  params: { id: string },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   const friendId = (await params).id
   const searchParams = req.nextUrl.searchParams

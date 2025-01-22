@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function PUT(
   req: NextRequest,
-  params: { id: string },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   const chatId = (await params).id
   console.log(`Chat ID: ${chatId}`)

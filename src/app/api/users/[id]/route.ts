@@ -3,11 +3,7 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: Promise<{ id: string }>
-  },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   const id = (await params).id
   if (!id) {
@@ -33,11 +29,10 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  params: { id: string },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
-  const id = params.id
-  const body = await req.json()
-  const { displayName, email, photoURL } = body
+  const id = (await params).id
+  const { displayName, email, photoURL } = await req.json()
   if (!displayName || !email || !photoURL) {
     return NextResponse.json(
       { error: "Missing required fields" },
@@ -73,9 +68,9 @@ export async function POST(
 
 export async function PUT(
   req: NextRequest,
-  params: { id: string },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
-  const id = params.id
+  const id = (await params).id
   const searchParams = req.nextUrl.searchParams
   const userRef = firestore.collection("users").doc(id)
   const reqType: string | null = searchParams.get("type")
