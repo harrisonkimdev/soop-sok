@@ -21,6 +21,7 @@ const DATA_UPDATE_MESSAGE =
 const SIGN_IN_TITLE = "Sign In Error"
 const SIGN_IN_MESSAGE =
   "Oops! It seems there was an issue with signing in. Please double-check your credentials and try again."
+const ERROR_TITLE = "Error"
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,6 +35,7 @@ const Transition = React.forwardRef(function Transition(
 type DialogComponentProps = {
   show: boolean
   type: string | null
+  message: string | null
   handleClose: (
     event: object,
     reason: "backdropClick" | "escapeKeyDown",
@@ -43,6 +45,7 @@ type DialogComponentProps = {
 const MUIMessageDialog = ({
   show,
   type,
+  message,
   handleClose,
 }: DialogComponentProps): JSX.Element => {
   const [content, setContent] = useState({
@@ -51,7 +54,12 @@ const MUIMessageDialog = ({
   })
 
   useEffect(() => {
-    if (type === "data_retrieval") {
+    if (type === "error" && message) {
+      setContent({
+        title: ERROR_TITLE,
+        message: message,
+      })
+    } else if (type === "data_retrieval") {
       setContent({
         title: DATA_RETRIEVAL_TITLE,
         message: DATA_RETRIEVAL_MESSAGE,
@@ -72,7 +80,7 @@ const MUIMessageDialog = ({
         message: GENERAL_MESSAGE,
       })
     }
-  }, [type])
+  }, [type, message])
 
   return (
     <Dialog
@@ -85,12 +93,14 @@ const MUIMessageDialog = ({
       <DialogTitle>{content.title}</DialogTitle>
       <DialogContent>
         <Typography gutterBottom>{content.message}</Typography>
-        <Typography gutterBottom>
-          <span>
-            If the problem persists, feel free to contact support for
-            assistance.
-          </span>
-        </Typography>
+        {type !== "error" && (
+          <Typography gutterBottom>
+            <span>
+              If the problem persists, feel free to contact support for
+              assistance.
+            </span>
+          </Typography>
+        )}
       </DialogContent>
     </Dialog>
   )

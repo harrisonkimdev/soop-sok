@@ -10,7 +10,8 @@ const useDialogs = (): {
   }
   messageDialog: {
     show: (
-      type: "data_retrieval" | "data_update" | "signin" | "general",
+      type: "data_retrieval" | "data_update" | "signin" | "general" | "error",
+      message?: string | null,
     ) => void
     hide: () => void
   }
@@ -47,17 +48,18 @@ const useDialogs = (): {
   const messageDialog = useMemo(
     () => ({
       show: (
-        type: "data_retrieval" | "data_update" | "signin" | "general",
+        type: "data_retrieval" | "data_update" | "signin" | "general" | "error",
+        message?: string | null,
       ): void => {
         dispatch({
           type: "SHOW_MESSAGE_DIALOG",
-          payload: { show: true, type },
+          payload: { show: true, type, message: message || null },
         })
       },
       hide: (): void => {
         dispatch({
           type: "SHOW_MESSAGE_DIALOG",
-          payload: { show: false, type: null },
+          payload: { show: false, type: null, message: null },
         })
       },
     }),

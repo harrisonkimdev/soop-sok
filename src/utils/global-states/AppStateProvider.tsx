@@ -16,6 +16,7 @@ interface AppState {
   currentBanner: TBanner | null
   showMessageDialog: boolean
   messageDialogType: string | null
+  messageDialogMessage: string | null
   showActionsDialog: boolean
   actionsDialogType: string | null
   actionsDialogResponse: boolean
@@ -37,7 +38,7 @@ type Action =
     }
   | {
       type: "SHOW_MESSAGE_DIALOG"
-      payload: { show: boolean; type: string | null }
+      payload: { show: boolean; type: string | null; message: string | null }
     }
   | {
       type: "SHOW_ACTIONS_DIALOG"
@@ -58,6 +59,7 @@ const initialState: AppState = {
   currentBanner: null,
   showMessageDialog: false,
   messageDialogType: null,
+  messageDialogMessage: null,
   showActionsDialog: false,
   actionsDialogType: null,
   actionsDialogResponse: false,
@@ -85,6 +87,7 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
         ...state,
         showMessageDialog: action.payload.show,
         messageDialogType: action.payload.type,
+        messageDialogMessage: action.payload.message,
       }
     case "SHOW_ACTIONS_DIALOG":
       return {
