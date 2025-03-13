@@ -18,16 +18,14 @@ export const metadata: Metadata = {
   description: "Your favourite chat application",
 }
 
-type Props = {
-  children: React.ReactNode
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
-}: Readonly<Props>): Promise<JSX.Element> {
+}: {
+  children: React.ReactNode
+}): JSX.Element {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${dhurjati.variable}`}>
+      <body className={`${inter.variable} ${dhurjati.variable} font-sans`}>
         <ProviderWrapper>{children}</ProviderWrapper>
       </body>
     </html>

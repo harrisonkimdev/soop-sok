@@ -20,6 +20,9 @@ export default function Home(): JSX.Element {
   const uiConfig = useFirebaseUIConfig(setIsLoading)
 
   useEffect(() => {
+    // 클라이언트 사이드에서만 실행
+    if (typeof window === "undefined") return
+
     let ui: firebaseui.auth.AuthUI | null = null
     let mounted = true
 
