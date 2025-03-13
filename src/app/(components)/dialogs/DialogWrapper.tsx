@@ -3,9 +3,26 @@
 import MUIActionsDialog from "./MUIActionsDialog"
 import MUIMessageDialog from "./MUIMessageDialog"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
+import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@mui/material"
 import type { JSX } from "react"
 
-const DialogWrapper = (): JSX.Element => {
+interface DialogWrapperProps {
+  show: boolean
+  handleClose: () => void
+  message: string
+}
+
+const DialogWrapper = ({
+  show,
+  handleClose,
+  message,
+}: DialogWrapperProps): JSX.Element => {
   const { state, dispatch } = useAppState()
 
   return (
@@ -15,10 +32,11 @@ const DialogWrapper = (): JSX.Element => {
         handleClose={() => {
           dispatch({
             type: "SHOW_MESSAGE_DIALOG",
-            payload: { show: false, type: null },
+            payload: { show: false, type: null, message: null },
           })
         }}
         type={state.messageDialogType}
+        message={state.messageDialogMessage}
       />
 
       <MUIActionsDialog
@@ -31,6 +49,15 @@ const DialogWrapper = (): JSX.Element => {
         }}
         type={state.actionsDialogType}
       />
+
+      <Dialog open={show} onClose={handleClose}>
+        <DialogContent>
+          <DialogContentText>{message}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
