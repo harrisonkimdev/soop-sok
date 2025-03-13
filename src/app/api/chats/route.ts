@@ -1,3 +1,4 @@
+import { responseCreated, responseServerError } from "@/app/api/(responses)"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -19,15 +20,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       updatedAt: FieldValue.serverTimestamp(),
     })
 
-    return NextResponse.json(
-      { message: "chat created!", cid: chatDoc.id },
-      { status: 200 },
-    )
+    return responseCreated("chat", chatDoc.id)
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    )
+    return responseServerError(error)
   }
 }

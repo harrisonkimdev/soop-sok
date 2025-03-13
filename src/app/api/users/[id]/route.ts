@@ -1,29 +1,34 @@
+import {
+  responseBadRequest,
+  responseCreated,
+  responseFetched,
+  responseNotFound,
+  responseServerError,
+  responseUpdated,
+} from "@/app/api/(responses)"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-): Promise<NextResponse> {
+export async function GET({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<NextResponse> {
   const id = (await params).id
   if (!id) {
-    return NextResponse.json({ error: "No user ID provided" }, { status: 400 })
+    return responseBadRequest("No user ID provided")
   }
 
   try {
     const userRef = firestore.collection("users").doc(id)
     const res = await userRef.get()
     if (!res.exists) {
-      return NextResponse.json({ error: "No user found" }, { status: 404 })
+      return responseNotFound("user")
     }
 
-    return NextResponse.json(res.data(), { status: 200 })
+    return responseFetched(res.data())
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    )
+    return responseServerError(error)
   }
 }
 
@@ -34,10 +39,7 @@ export async function POST(
   const id = (await params).id
   const { displayName, email, photoURL } = await req.json()
   if (!displayName || !email || !photoURL) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 },
-    )
+    return responseBadRequest("Missing required fields")
   }
 
   try {
@@ -56,13 +58,9 @@ export async function POST(
       uid: id,
     })
 
-    return NextResponse.json({ message: "User registered!" }, { status: 200 })
+    return responseCreated("user")
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    )
+    return responseServerError(error)
   }
 }
 
@@ -94,23 +92,13 @@ export async function PUT(
       const body = await req.json()
       const { user } = body
       if (!user) {
-        return NextResponse.json(
-          { error: "Missing user data" },
-          { status: 400 },
-        )
+        return responseBadRequest("Missing user data")
       }
       await userRef.update(user)
     }
 
-    return NextResponse.json(
-      { message: "User status updated!" },
-      { status: 200 },
-    )
+    return responseUpdated("user")
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    )
+    return responseServerError(error)
   }
 }

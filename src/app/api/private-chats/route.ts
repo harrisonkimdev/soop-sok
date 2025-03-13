@@ -1,3 +1,4 @@
+import { responseBadRequest, responseNotFound } from "../(responses)"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -21,21 +22,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     // if no private chat exists, return a message indicating that the chat does not exist
     if (querySnapshot.empty) {
-      console.log("No existing private chat found")
-      return NextResponse.json(
-        { message: "No private chat exists between the specified users." },
-        { status: 200 },
-      )
+      return responseNotFound("private chat")
     }
     // if a private chat already exists, return the chat ID
     else {
-      console.log("Private chat already exists")
-      return NextResponse.json(
-        {
-          message: "Private chat already exists!",
-          chatId: querySnapshot.docs[0].id,
-        },
-        { status: 200 },
+      return responseBadRequest(
+        `Private chat already exists with the id of ${querySnapshot.docs[0].id}`,
       )
     }
   } catch (err) {

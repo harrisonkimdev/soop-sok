@@ -1,3 +1,4 @@
+import { responseFetched, responseServerError } from "@/app/api/(responses)"
 import { firestore } from "@/utils/firebase/firebaseAdmin"
 import { Filter } from "firebase-admin/firestore"
 import { type NextRequest, NextResponse } from "next/server"
@@ -27,12 +28,9 @@ export async function GET(
       )
       .get()
 
-    if (res.empty)
-      return NextResponse.json({ isMyFriend: false }, { status: 200 })
-
-    return NextResponse.json({ isMyFriend: true }, { status: 200 })
+    const isMyFriend = res.empty ? false : true
+    return responseFetched(isMyFriend)
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(error, { status: 500 })
+    return responseServerError(error)
   }
 }
