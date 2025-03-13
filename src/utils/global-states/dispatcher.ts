@@ -2,19 +2,22 @@ import { TBanner } from "@/app/types"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
 import { useMemo } from "react"
 
+interface DialogComponentProps {
+  show: boolean
+  handleClose: () => void
+  type: string | null
+  message: string
+}
+
 const useDialogs = (): {
   actionsDialog: {
     show: (type: "confirm" | "") => void
     hide: () => void
     setResponse: (option: boolean) => void
   }
-  messageDialog: {
-    show: (
-      type: "data_retrieval" | "data_update" | "signin" | "general" | "error",
-      message?: string | null,
-    ) => void
-    hide: () => void
-  }
+  messageDialog: DialogComponentProps
+  showMessageDialog: (type: string, message: string) => void
+  hideMessageDialog: () => void
   channelState: {
     set: (cid: string | null) => void
   }
@@ -22,7 +25,7 @@ const useDialogs = (): {
     set: (banner: TBanner) => void
   }
 } => {
-  const { dispatch } = useAppState()
+  const { state, dispatch } = useAppState()
 
   const actionsDialog = useMemo(
     () => ({
@@ -45,24 +48,40 @@ const useDialogs = (): {
     [dispatch],
   )
 
-  const messageDialog = useMemo(
+  const messageDialogMemo = useMemo(
     () => ({
-      show: (
-        type: "data_retrieval" | "data_update" | "signin" | "general" | "error",
-        message?: string | null,
-      ): void => {
-        dispatch({
-          type: "SHOW_MESSAGE_DIALOG",
-          payload: { show: true, type, message: message || null },
-        })
-      },
-      hide: (): void => {
+      show: state.showMessageDialog,
+      type: state.messageDialogType,
+      message: state.messageDialogMessage || "",
+      handleClose: () =>
         dispatch({
           type: "SHOW_MESSAGE_DIALOG",
           payload: { show: false, type: null, message: null },
-        })
-      },
+        }),
     }),
+    [
+      state.showMessageDialog,
+      state.messageDialogType,
+      state.messageDialogMessage,
+      dispatch,
+    ],
+  )
+
+  const showMessageDialog = useMemo(
+    () => (type: string, message: string) =>
+      dispatch({
+        type: "SHOW_MESSAGE_DIALOG",
+        payload: { show: true, type, message },
+      }),
+    [dispatch],
+  )
+
+  const hideMessageDialog = useMemo(
+    () => () =>
+      dispatch({
+        type: "SHOW_MESSAGE_DIALOG",
+        payload: { show: false, type: null, message: null },
+      }),
     [dispatch],
   )
 
@@ -86,7 +105,9 @@ const useDialogs = (): {
 
   return {
     actionsDialog,
-    messageDialog,
+    messageDialog: messageDialogMemo,
+    showMessageDialog,
+    hideMessageDialog,
     channelState,
     bannerState,
   }

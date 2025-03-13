@@ -30,7 +30,7 @@ export const useFirebaseUIConfig = (
   signInOptions: "google.com"[]
 } => {
   const router = useRouter()
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   return useMemo(() => {
     const cookies = new Cookies()
@@ -92,7 +92,7 @@ export const useFirebaseUIConfig = (
             } catch (err) {
               const error = handleFirebaseError(err as any)
               logError(error)
-              messageDialog.show("error", error.message)
+              showMessageDialog("error", error.message)
             } finally {
               setIsLoading(false)
             }
@@ -103,5 +103,5 @@ export const useFirebaseUIConfig = (
       signinFlow: "popup",
       signInOptions: [GoogleAuthProvider.PROVIDER_ID],
     }
-  }, [router, messageDialog, setIsLoading])
+  }, [router, showMessageDialog, setIsLoading])
 }
