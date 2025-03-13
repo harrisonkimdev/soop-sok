@@ -1,3 +1,9 @@
+import {
+  responseBadRequest,
+  responseNotFound,
+  responseServerError,
+  responseUpdated,
+} from "@/app/api/(responses)"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -18,27 +24,18 @@ export async function PUT(
   try {
     const channelDoc = await channelRef.get()
     const channelData = channelDoc.data()
-    if (!channelData) {
-      console.error("Channel does not exist")
-      return NextResponse.json(
-        { error: "Channel does not exist" },
-        { status: 404 },
-      )
-    }
+    if (!channelData) return responseNotFound()
     console.log("Channel data:", channelData)
 
     if (action === "enter") {
       if (channelData.members.includes(uid)) {
-        console.log("User already in the channel")
-        return NextResponse.json(
-          { error: "User already in the channel" },
-          { status: 400 },
-        )
+        return responseBadRequest("User already in the channel")
       }
 
       const newMembers = [...channelData.members, uid]
-      const newNumMembers = channelData.numMembers + 1
       console.log("New members:", newMembers)
+
+      const newNumMembers = channelData.numMembers + 1
       console.log("New number of members:", newNumMembers)
 
       await channelRef.update({
@@ -48,19 +45,14 @@ export async function PUT(
       })
     } else if (action === "leave") {
       if (!channelData.members.includes(uid)) {
-        console.error("User is not a member of the channel")
-        return NextResponse.json(
-          { error: "User is not a member of the channel" },
-          { status: 400 },
-        )
+        return responseBadRequest("User is not a member of the channel")
       }
 
       const newMembers = channelData.members.filter(
         (member: string) => member !== uid,
       )
       const newNumMembers = channelData.numMembers - 1
-      console.log("New members:", newMembers)
-      console.log("New number of members:", newNumMembers)
+      console.log(`New members (${newNumMembers}): ${newMembers}`)
 
       await channelRef.update({
         members: newMembers,
@@ -75,13 +67,8 @@ export async function PUT(
       })
     }
 
-    console.log("Chat updated successfully")
-    return NextResponse.json(
-      { message: "Chat updated successfully!" },
-      { status: 200 },
-    )
+    return responseUpdated()
   } catch (error) {
-    console.error("Error updating chat:", error)
-    return NextResponse.json(error, { status: 500 })
+    return responseServerError(error)
   }
 }

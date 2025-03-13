@@ -1,3 +1,4 @@
+import { responseCreated, responseServerError } from "../(responses)"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -11,12 +12,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       senderId,
     })
 
-    return NextResponse.json(
-      { message: "Friend successfully added!" },
-      { status: 200 },
-    )
+    return responseCreated("friend")
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(error, { status: 500 })
+    return responseServerError(error)
   }
 }
