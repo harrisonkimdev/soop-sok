@@ -1,6 +1,8 @@
+"use client"
+
 import { TBanner } from "@/app/types"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
 
 interface DialogComponentProps {
   show: boolean
@@ -67,8 +69,8 @@ const useDialogs = (): {
     ],
   )
 
-  const showMessageDialog = useMemo(
-    () => (type: string, message: string) =>
+  const showMessageDialog = useCallback(
+    (type: string, message: string) =>
       dispatch({
         type: "SHOW_MESSAGE_DIALOG",
         payload: { show: true, type, message },
@@ -76,8 +78,8 @@ const useDialogs = (): {
     [dispatch],
   )
 
-  const hideMessageDialog = useMemo(
-    () => () =>
+  const hideMessageDialog = useCallback(
+    () =>
       dispatch({
         type: "SHOW_MESSAGE_DIALOG",
         payload: { show: false, type: null, message: null },
