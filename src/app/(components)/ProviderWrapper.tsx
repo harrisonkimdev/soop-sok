@@ -25,7 +25,7 @@ const Wrapper = ({ children }: wrapperProps): JSX.Element => {
           <div className="h-[calc(100vh-3.5rem)]">{children}</div>
           <NavBar />
         </main>
-        <DialogWrapper />
+        <DialogWrapper show={false} handleClose={() => {}} message="" />
       </ThemeProvider>
     </AppStateProvider>
   )
