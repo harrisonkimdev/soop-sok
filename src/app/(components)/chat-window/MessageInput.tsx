@@ -1,6 +1,6 @@
 import { auth } from "@/utils/firebase/firebase"
 import { sendMessage } from "@/utils/firebase/firestore"
-import useDialog from "@/utils/global-states/dispatcher"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 import React, { useState } from "react"
 import type { JSX } from "react"
@@ -11,7 +11,7 @@ type MessageInputProps = {
 
 const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
   const [message, setMessage] = useState("")
-  const { showMessageDialog } = useDialog()
+  const { showMessageDialog } = useDialogs()
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
