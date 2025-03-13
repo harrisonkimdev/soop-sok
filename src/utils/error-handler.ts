@@ -2,7 +2,7 @@ import { AuthError, AUTH_ERROR_MESSAGES, FirebaseError } from "./types/error"
 
 export const handleFirebaseError = (error: FirebaseError): AuthError => {
   // Auth 관련 에러 처리
-  if (error.code.startsWith("auth/")) {
+  if (error.code && error.code.startsWith("auth/")) {
     return {
       type: "auth",
       message:
@@ -15,10 +15,11 @@ export const handleFirebaseError = (error: FirebaseError): AuthError => {
 
   // Firestore 관련 에러 처리
   if (
-    error.code.startsWith("permission-denied") ||
-    error.code.startsWith("not-found") ||
-    error.code.startsWith("already-exists") ||
-    error.code.startsWith("unavailable")
+    error.code &&
+    (error.code.startsWith("permission-denied") ||
+      error.code.startsWith("not-found") ||
+      error.code.startsWith("already-exists") ||
+      error.code.startsWith("unavailable"))
   ) {
     return {
       type: "firestore",

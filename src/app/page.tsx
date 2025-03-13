@@ -14,7 +14,7 @@ import {
   UserCredential,
   AuthCredential,
 } from "firebase/auth"
-import firebaseui from "firebaseui"
+import * as firebaseui from "firebaseui"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
@@ -28,16 +28,12 @@ interface ExtendedUserCredential extends UserCredential {
   }
 }
 
-type TFirebaseUI = {
-  default: typeof firebaseui
-  auth: typeof firebaseui.auth
-}
-
 const BACKGROUND_IMAGE_URL: string = "/images/background.png"
 
-export default function Home(): JSX.Element | null {
-  const [firebaseui, setFirebaseUI] = useState<TFirebaseUI | null>(null)
+export default function Home(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isUIInitialized, setIsUIInitialized] = useState<boolean>(false)
+  const [initError, setInitError] = useState<string | null>(null)
 
   const router = useRouter()
   const { messageDialog } = useDialogs()
@@ -116,65 +112,84 @@ export default function Home(): JSX.Element | null {
   }, [router, messageDialog])
 
   useEffect(() => {
-    const loadFirebaseUI = async (): Promise<void> => {
+    let ui: firebaseui.auth.AuthUI | null = null
+    let mounted = true
+
+    const initializeUI = async () => {
       try {
-        const firebaseui = await import("firebaseui")
-        setFirebaseUI(firebaseui)
+        // 기존 UI 인스턴스가 있다면 삭제
+        const existingUI = firebaseui.auth.AuthUI.getInstance()
+        if (existingUI) {
+          existingUI.delete()
+        }
+
+        // 새로운 UI 인스턴스 생성
+        ui = new firebaseui.auth.AuthUI(auth)
+
+        // UI 시작
+        await ui.start("#firebaseui-auth-container", uiConfig)
+
+        if (mounted) {
+          setIsUIInitialized(true)
+          setInitError(null)
+        }
       } catch (error) {
-        const err = handleFirebaseError(error as any)
-        logError(err)
-        messageDialog.show("error", err.message)
+        console.error("FirebaseUI 초기화 에러:", error)
+        if (mounted) {
+          const err = handleFirebaseError(error as any)
+          logError(err)
+          setInitError(err.message)
+          setIsUIInitialized(false)
+        }
       }
     }
-    loadFirebaseUI()
-  }, [messageDialog])
 
-  useEffect(() => {
-    if (firebaseui) {
-      // 기존 UI 인스턴스가 있다면 삭제
-      // eslint-disable-next-line import/no-named-as-default-member
-      const existingUI = firebaseui.auth.AuthUI.getInstance()
-      if (existingUI) {
-        existingUI.delete()
-      }
+    // 약간의 지연 후 초기화 시도
+    const timer = setTimeout(initializeUI, 100)
 
-      // 새로운 UI 인스턴스 생성
-      // eslint-disable-next-line import/no-named-as-default-member
-      const ui = new firebaseui.auth.AuthUI(auth)
-      ui.start("#firebaseui-auth-container", uiConfig)
-
-      // 컴포넌트 언마운트 시 UI 인스턴스 정리
-      return () => {
+    return () => {
+      mounted = false
+      clearTimeout(timer)
+      if (ui) {
         ui.delete()
       }
     }
-  }, [firebaseui, uiConfig])
+  }, [uiConfig])
 
-  return firebaseui ? (
-    <>
-      <div className="relative">
-        <div className="absolute left-0 right-0 z-10 flex h-screen flex-col gap-96 py-40 text-center">
-          <h1 className="bg-gradient-to-r from-green-400 via-white to-yellow-400 bg-clip-text font-dhurjati text-7xl font-bold text-transparent">
-            Soop Sok
-          </h1>
+  return (
+    <div className="relative h-screen">
+      <div className="absolute left-0 right-0 z-10 flex h-full flex-col items-center justify-center gap-20">
+        <h1 className="bg-gradient-to-r from-green-400 via-white to-yellow-400 bg-clip-text font-dhurjati text-7xl font-bold text-transparent">
+          Soop Sok
+        </h1>
 
-          <div id="firebaseui-auth-container" />
-          {isLoading && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="text-white">로딩 중...</div>
+        <div id="firebaseui-auth-container" className="w-full max-w-md" />
+
+        {!isUIInitialized && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="text-white">
+              {initError
+                ? "로그인 UI를 불러오는데 실패했습니다."
+                : "로딩 중..."}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        <Image
-          src={BACKGROUND_IMAGE_URL}
-          alt="background image"
-          width={1024}
-          height={1792}
-          className="h-screen object-cover"
-          priority
-        />
+        {isLoading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="text-white">로딩 중...</div>
+          </div>
+        )}
       </div>
-    </>
-  ) : null
+
+      <Image
+        src={BACKGROUND_IMAGE_URL}
+        alt="background image"
+        width={1024}
+        height={1792}
+        className="h-full w-full object-cover"
+        priority
+      />
+    </div>
+  )
 }
