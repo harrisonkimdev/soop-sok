@@ -6,34 +6,35 @@ import { useEffect, useState } from "react"
 import { useDocumentData } from "react-firebase-hooks/firestore"
 
 type TProps = {
-  chatId: string
+  cid: string
 }
 
-const useFirebaseHookChat = (
+export const useFirebaseHookChat = (
   props: TProps,
 ): { isFull: boolean; numMembers: number } | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
   const [isFull, setIsFull] = useState<boolean>(false)
 
   const isAuthenticated = useAuthCheck()
 
-  // Fetch channle data in real time only if a user is authorized.
-  const chatRef = doc(firestore, "chats", props.chatId)
-  const [value, loading, error] = useDocumentData(chatRef)
+  const [value, loading, error] = useDocumentData(
+    doc(firestore, "channels", props.cid),
+  )
 
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "채팅 정보를 불러오는데 실패했습니다.",
+      )
       return
     }
 
-    if (value?.numMembers >= value?.capacity) {
+    if (value) {
       setIsFull(true)
     }
-  }, [value, loading, error, messageDialog])
+  }, [value, loading, error, showMessageDialog])
 
   return isAuthenticated ? { isFull, numMembers: value?.numMembers ?? 0 } : null
 }
-
-export default useFirebaseHookChat

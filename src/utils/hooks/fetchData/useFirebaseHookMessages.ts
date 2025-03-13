@@ -13,7 +13,7 @@ type TProps = {
 const useFirebaseHookMessages = (
   props: TProps,
 ): TMessage[] | TMessage | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
   const [fetched, setFetched] = useState<TMessage[]>([])
 
   const isAuthenticated = useAuthCheck()
@@ -36,7 +36,10 @@ const useFirebaseHookMessages = (
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "메시지 목록을 불러오는데 실패했습니다.",
+      )
       return
     }
 
@@ -50,7 +53,7 @@ const useFirebaseHookMessages = (
       )
       setFetched(fetched)
     }
-  }, [snapshot, loading, error, messageDialog])
+  }, [snapshot, loading, error, showMessageDialog])
 
   return isAuthenticated ? (props?.chatId ? fetched[0] : fetched) : null
 }

@@ -37,7 +37,7 @@ const CreateChatPage = ({ params }: pageProps): JSX.Element => {
 
   const router = useRouter()
 
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   useEffect(() => {
     const fetchBannerOptions = async (): Promise<void> => {
@@ -52,12 +52,15 @@ const CreateChatPage = ({ params }: pageProps): JSX.Element => {
           }
         } catch (err) {
           console.error(err)
-          messageDialog.show("data_retrieval")
+          showMessageDialog(
+            "data_retrieval",
+            "채팅방 정보를 불러오는데 실패했습니다.",
+          )
         }
       }
     }
     fetchBannerOptions()
-  }, [messageDialog])
+  }, [showMessageDialog])
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target
@@ -118,7 +121,7 @@ const CreateChatPage = ({ params }: pageProps): JSX.Element => {
         if (cid) router.push(`/chats/chatroom/${cid}`)
       } catch (err) {
         console.error(err)
-        messageDialog.show("general")
+        showMessageDialog("general", "채팅방 생성에 실패했습니다.")
       }
     }
   }

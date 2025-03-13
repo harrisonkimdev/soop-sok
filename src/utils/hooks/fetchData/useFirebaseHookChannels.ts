@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
 
 const useFirebaseHookChannels = (): TChannel[] | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
   const [fetchedChannels, setFetchedChannels] = useState<TChannel[]>([])
 
   const isAuthenticated = useAuthCheck()
@@ -22,7 +22,10 @@ const useFirebaseHookChannels = (): TChannel[] | null => {
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "채널 목록을 불러오는데 실패했습니다.",
+      )
       return
     }
 
@@ -36,7 +39,7 @@ const useFirebaseHookChannels = (): TChannel[] | null => {
       )
       setFetchedChannels(fetchedChannels)
     }
-  }, [snapshot, loading, error, messageDialog])
+  }, [snapshot, loading, error, showMessageDialog])
 
   return isAuthenticated ? fetchedChannels : null
 }

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
 
 const useFirebaseHookChannels = (): TPrivateChat[] | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
   const [fetchedPrivateChats, setFetchedPrivateChats] = useState<
     TPrivateChat[]
   >([])
@@ -22,7 +22,10 @@ const useFirebaseHookChannels = (): TPrivateChat[] | null => {
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "개인 채팅 목록을 불러오는데 실패했습니다.",
+      )
       return
     }
 
@@ -36,7 +39,7 @@ const useFirebaseHookChannels = (): TPrivateChat[] | null => {
       )
       setFetchedPrivateChats(fetchedChannels)
     }
-  }, [snapshot, loading, error, messageDialog])
+  }, [snapshot, loading, error, showMessageDialog])
 
   return isAuthenticated ? fetchedPrivateChats : null
 }

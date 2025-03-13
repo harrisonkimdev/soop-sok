@@ -3,7 +3,7 @@ import { auth } from "@/utils/firebase/firebase"
 import { updateChat } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
 import useDialogs from "@/utils/global-states/dispatcher"
-import useFirebaseHookChat from "@/utils/hooks/fetchData/useFirebaseHookChat"
+import { useFirebaseHookChat } from "@/utils/hooks/fetchData/useFirebaseHookChat"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 
@@ -13,10 +13,10 @@ type ChatProps = {
 
 const Chat = ({ chat }: ChatProps): JSX.Element => {
   const router = useRouter()
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   const channelData = useFirebaseHookChat({
-    chatId: chat.id,
+    cid: chat.id,
   })
 
   const isFull = channelData?.isFull ?? false
@@ -31,7 +31,7 @@ const Chat = ({ chat }: ChatProps): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("general")
+        showMessageDialog("general", "채팅방 정보를 불러오는데 실패했습니다.")
       }
     }
   }

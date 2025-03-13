@@ -11,7 +11,7 @@ type MessageInputProps = {
 
 const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
   const [message, setMessage] = useState("")
-  const { messageDialog } = useDialog()
+  const { showMessageDialog } = useDialog()
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
@@ -25,7 +25,7 @@ const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
       setMessage("")
     } catch (err) {
       console.error(err)
-      messageDialog.show("general")
+      showMessageDialog("general", "메시지 전송에 실패했습니다.")
     }
   }
 

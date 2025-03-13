@@ -13,7 +13,7 @@ type TProps = {
 }
 
 const useFirebaseHookChats = (props: TProps): TFriend[] | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
   const [fetched, setFetched] = useState<TFriend[]>([])
 
   const isAuthenticated = useAuthCheck()
@@ -33,7 +33,10 @@ const useFirebaseHookChats = (props: TProps): TFriend[] | null => {
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "친구 목록을 불러오는데 실패했습니다.",
+      )
       return
     }
 
@@ -47,7 +50,7 @@ const useFirebaseHookChats = (props: TProps): TFriend[] | null => {
       )
       setFetched(fetched)
     }
-  }, [snapshot, loading, error, messageDialog])
+  }, [snapshot, loading, error, showMessageDialog])
 
   return isAuthenticated ? fetched : null
 }

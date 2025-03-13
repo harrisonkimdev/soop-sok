@@ -23,7 +23,7 @@ const Page = ({ params }: pageProps): JSX.Element => {
 
   const router = useRouter()
 
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   const addToList = (): void => {
     if (tagOptions.length < 5) {
@@ -66,7 +66,7 @@ const Page = ({ params }: pageProps): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("general")
+        showMessageDialog("general", "배너 추가에 실패했습니다.")
       }
     }
   }

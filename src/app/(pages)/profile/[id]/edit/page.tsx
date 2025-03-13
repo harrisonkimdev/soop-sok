@@ -21,7 +21,7 @@ const ProfileEditPage = (): JSX.Element => {
   const [user, setUser] = useState<TUser | null>(null)
 
   const { state } = useAppState()
-  const { actionsDialog, messageDialog } = useDialogs()
+  const { actionsDialog, showMessageDialog } = useDialogs()
 
   useEffect(() => {
     const getUser = async (): Promise<void | null> => {
@@ -40,13 +40,16 @@ const ProfileEditPage = (): JSX.Element => {
           setUser(user)
         } catch (err) {
           console.error(err)
-          messageDialog.show("data_retrieval")
+          showMessageDialog(
+            "data_retrieval",
+            "프로필 정보를 불러오는데 실패했습니다.",
+          )
         }
       }
     }
 
     getUser()
-  }, [messageDialog, router])
+  }, [showMessageDialog, router])
 
   // Update user profile when the user confirms the action dialog.
   useEffect(() => {
@@ -60,7 +63,7 @@ const ProfileEditPage = (): JSX.Element => {
           return
         } catch (err) {
           console.error(err)
-          messageDialog.show("data_update")
+          showMessageDialog("data_update", "프로필 업데이트에 실패했습니다.")
         }
       }
     }
@@ -75,7 +78,7 @@ const ProfileEditPage = (): JSX.Element => {
     state.actionsDialogResponse,
     actionsDialog,
     id,
-    messageDialog,
+    showMessageDialog,
     router,
     user,
   ])

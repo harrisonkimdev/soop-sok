@@ -17,7 +17,7 @@ const ProfilePage = (): JSX.Element => {
 
   const { id } = useParams()
 
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   useEffect(() => {
     const getUser = async (): Promise<void> => {
@@ -32,11 +32,14 @@ const ProfilePage = (): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        showMessageDialog(
+          "data_retrieval",
+          "프로필 정보를 불러오는데 실패했습니다.",
+        )
       }
     }
     getUser()
-  }, [id, messageDialog, profile?.uid])
+  }, [id, showMessageDialog, profile?.uid])
 
   return (
     <div className="flex flex-col gap-4 pt-10">

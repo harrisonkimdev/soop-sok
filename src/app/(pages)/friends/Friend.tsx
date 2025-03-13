@@ -24,7 +24,7 @@ export const Friend = (props: FriendProp): JSX.Element => {
 
   const router = useRouter()
 
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   useEffect(() => {
     const getUser = async (): Promise<void | null> => {
@@ -37,11 +37,14 @@ export const Friend = (props: FriendProp): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        showMessageDialog(
+          "data_retrieval",
+          "친구 정보를 불러오는데 실패했습니다.",
+        )
       }
     }
     getUser()
-  }, [messageDialog, props.friendId])
+  }, [showMessageDialog, props.friendId])
 
   const redirectToDMChat = async (): Promise<void | null> => {
     const myId = auth.currentUser?.uid
@@ -63,7 +66,10 @@ export const Friend = (props: FriendProp): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        showMessageDialog(
+          "data_retrieval",
+          "친구 정보를 불러오는데 실패했습니다.",
+        )
       }
     }
   }

@@ -12,7 +12,7 @@ type TProps = {
 const useFirebaseHookChannel = (
   props: TProps,
 ): { isFull: boolean; numMembers: number } | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
   const [isFull, setIsFull] = useState<boolean>(false)
 
   const isAuthenticated = useAuthCheck()
@@ -23,14 +23,17 @@ const useFirebaseHookChannel = (
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "채널 정보를 불러오는데 실패했습니다.",
+      )
       return
     }
 
     if (value?.numMembers >= value?.capacity) {
       setIsFull(true)
     }
-  }, [value, loading, error, messageDialog])
+  }, [value, loading, error, showMessageDialog])
 
   return isAuthenticated ? { isFull, numMembers: value?.numMembers ?? 0 } : null
 }

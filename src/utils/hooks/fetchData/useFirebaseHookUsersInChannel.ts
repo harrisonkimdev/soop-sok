@@ -12,7 +12,7 @@ type TProps = {
 const useFirebaseHookUsersInChannel = (
   props: TProps,
 ): { members: string[] } | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   const isAuthenticated = useAuthCheck()
 
@@ -22,10 +22,13 @@ const useFirebaseHookUsersInChannel = (
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "채널 멤버 정보를 불러오는데 실패했습니다.",
+      )
       return
     }
-  }, [value, loading, error, messageDialog])
+  }, [value, loading, error, showMessageDialog])
 
   return isAuthenticated ? { members: value?.members } : null
 }

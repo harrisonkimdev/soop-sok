@@ -15,7 +15,7 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
 
   const router = useRouter()
 
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
 
   useEffect(() => {
     const initCheckIsMyFriend = async (): Promise<void> => {
@@ -30,12 +30,15 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
           }
         } catch (err) {
           console.error(err)
-          messageDialog.show("data_retrieval")
+          showMessageDialog(
+            "data_retrieval",
+            "사용자 정보를 불러오는데 실패했습니다.",
+          )
         }
       }
     }
     initCheckIsMyFriend()
-  }, [messageDialog, profile?.uid])
+  }, [showMessageDialog, profile?.uid])
 
   const redirectToDMChat = async (): Promise<void> => {
     const myId = auth.currentUser?.uid
@@ -57,7 +60,10 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        showMessageDialog(
+          "data_retrieval",
+          "사용자 정보를 불러오는데 실패했습니다.",
+        )
       }
     }
   }
@@ -69,7 +75,7 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
         setIsMyFriend(true)
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_update")
+        showMessageDialog("data_update", "친구 추가에 실패했습니다.")
       }
     }
   }

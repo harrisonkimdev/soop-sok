@@ -11,7 +11,7 @@ type TProps = {
 }
 
 const useFirebaseHookChats = (props: TProps): TChat[] | null => {
-  const { messageDialog } = useDialogs()
+  const { showMessageDialog } = useDialogs()
   const [fetchedChats, setFetchedChats] = useState<TChat[]>([])
 
   const isAuthenticated = useAuthCheck()
@@ -26,7 +26,10 @@ const useFirebaseHookChats = (props: TProps): TChat[] | null => {
   useEffect(() => {
     if (!loading && error) {
       console.error(error)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "채팅 목록을 불러오는데 실패했습니다.",
+      )
       return
     }
 
@@ -49,7 +52,7 @@ const useFirebaseHookChats = (props: TProps): TChat[] | null => {
       })
       setFetchedChats(fetchedChats)
     }
-  }, [snapshot, loading, error, messageDialog])
+  }, [snapshot, loading, error, showMessageDialog])
 
   return isAuthenticated ? fetchedChats : null
 }

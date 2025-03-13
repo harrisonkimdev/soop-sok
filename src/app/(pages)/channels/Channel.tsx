@@ -13,7 +13,7 @@ interface ChannelProps {
 export const Channel = (props: ChannelProps): JSX.Element => {
   const router = useRouter()
 
-  const { messageDialog, channelState } = useDialogs()
+  const { channelState, showMessageDialog } = useDialogs()
 
   const channelData: { isFull: boolean; numMembers: number } | null =
     useFirebaseHookChannel({ channelId: props.channel.id })
@@ -49,7 +49,10 @@ export const Channel = (props: ChannelProps): JSX.Element => {
       }
     } catch (err) {
       console.error(err)
-      messageDialog.show("data_retrieval")
+      showMessageDialog(
+        "data_retrieval",
+        "채널 정보를 불러오는데 실패했습니다.",
+      )
     }
   }
 
