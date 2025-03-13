@@ -131,9 +131,22 @@ export default function Home(): JSX.Element | null {
 
   useEffect(() => {
     if (firebaseui) {
-      const ui =
-        firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth)
+      // 기존 UI 인스턴스가 있다면 삭제
+      // eslint-disable-next-line import/no-named-as-default-member
+      const existingUI = firebaseui.auth.AuthUI.getInstance()
+      if (existingUI) {
+        existingUI.delete()
+      }
+
+      // 새로운 UI 인스턴스 생성
+      // eslint-disable-next-line import/no-named-as-default-member
+      const ui = new firebaseui.auth.AuthUI(auth)
       ui.start("#firebaseui-auth-container", uiConfig)
+
+      // 컴포넌트 언마운트 시 UI 인스턴스 정리
+      return () => {
+        ui.delete()
+      }
     }
   }, [firebaseui, uiConfig])
 
