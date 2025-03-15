@@ -44,10 +44,6 @@ const MUIActionsDialog = ({
 
   const handleButtonClick = (): void => {
     dispatch({ type: "SET_ACTIONS_DIALOG_RESPONSE", payload: true })
-    dispatch({
-      type: "SHOW_ACTIONS_DIALOG",
-      payload: { show: false, type: null },
-    })
   }
 
   return (
