@@ -2,7 +2,13 @@
 
 import { BaseDialog } from "./BaseDialog"
 import { DIALOG_MESSAGES } from "./dialogScript"
-import { DialogTitle, DialogContent, Typography } from "@mui/material"
+import {
+  DialogTitle,
+  DialogContent,
+  Typography,
+  DialogActions,
+  Button,
+} from "@mui/material"
 import { useState, useEffect, JSX } from "react"
 
 type MessageDialogProps = {
@@ -39,13 +45,15 @@ const MUIMessageDialog = ({
 
   return (
     <BaseDialog show={show} handleClose={handleClose}>
-      <DialogTitle>{content.title}</DialogTitle>
-      <DialogContent>
-        {/* TODO: 아래 두개 간격을 좀 띄우면 어떨까 싶다. */}
+      <DialogTitle className="font-bold">{content.title}</DialogTitle>
+      <DialogContent className="flex flex-col gap-2">
         <Typography gutterBottom>{content.message}</Typography>
         <Typography gutterBottom>
           If the problem persists, feel free to contact support for assistance.
         </Typography>
+        <DialogActions className="justify-center">
+          <Button onClick={() => handleClose({}, "backdropClick")}>OK</Button>
+        </DialogActions>
       </DialogContent>
     </BaseDialog>
   )
