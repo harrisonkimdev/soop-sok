@@ -1,37 +1,11 @@
 "use client"
 
-import Dialog from "@mui/material/Dialog"
-import DialogContent from "@mui/material/DialogContent"
-import DialogTitle from "@mui/material/DialogTitle"
-import Slide from "@mui/material/Slide"
-import { TransitionProps } from "@mui/material/transitions"
-import Typography from "@mui/material/Typography"
-import React, { useEffect, useState } from "react"
-import type { JSX } from "react"
+import { BaseDialog } from "./BaseDialog"
+import { DIALOG_MESSAGES } from "./dialogScript"
+import { DialogTitle, DialogContent, Typography } from "@mui/material"
+import { useState, useEffect, JSX } from "react"
 
-const GENERAL_TITLE = "Error: Oops, Something Went Wrong!"
-const GENERAL_MESSAGE =
-  "Oops! It seems there was an error. Please try again later"
-const DATA_RETRIEVAL_TITLE = "Data Retrieval Error"
-const DATA_RETRIEVAL_MESSAGE =
-  "Oops! It seems there was an issue retrieving the data. Please check your internet connection and try again."
-const DATA_UPDATE_TITLE = "Data Update Error"
-const DATA_UPDATE_MESSAGE =
-  "Oops! It seems there was an issue updating the data. Please try again later."
-const SIGN_IN_TITLE = "Sign In Error"
-const SIGN_IN_MESSAGE =
-  "Oops! It seems there was an issue with signing in. Please double-check your credentials and try again."
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
-type DialogComponentProps = {
+type MessageDialogProps = {
   show: boolean
   type: string | null
   handleClose: (
@@ -44,55 +18,36 @@ const MUIMessageDialog = ({
   show,
   type,
   handleClose,
-}: DialogComponentProps): JSX.Element => {
-  const [content, setContent] = useState({
-    title: "",
-    message: "",
-  })
+}: MessageDialogProps): JSX.Element => {
+  const [content, setContent] = useState(DIALOG_MESSAGES.GENERAL_ERROR)
 
   useEffect(() => {
-    if (type === "data_retrieval") {
-      setContent({
-        title: DATA_RETRIEVAL_TITLE,
-        message: DATA_RETRIEVAL_MESSAGE,
-      })
-    } else if (type === "data_update") {
-      setContent({
-        title: DATA_UPDATE_TITLE,
-        message: DATA_UPDATE_MESSAGE,
-      })
-    } else if (type === "signin") {
-      setContent({
-        title: SIGN_IN_TITLE,
-        message: SIGN_IN_MESSAGE,
-      })
-    } else {
-      setContent({
-        title: GENERAL_TITLE,
-        message: GENERAL_MESSAGE,
-      })
+    switch (type) {
+      case "data_retrieval":
+        setContent(DIALOG_MESSAGES.DATA_RETRIEVAL)
+        break
+      case "data_update":
+        setContent(DIALOG_MESSAGES.DATA_UPDATE)
+        break
+      case "signin":
+        setContent(DIALOG_MESSAGES.SIGN_IN)
+        break
+      default:
+        setContent(DIALOG_MESSAGES.GENERAL_ERROR)
     }
   }, [type])
 
   return (
-    <Dialog
-      open={show}
-      TransitionComponent={Transition}
-      keepMounted
-      onClose={handleClose}
-      aria-describedby="alert-dialog-slide-description"
-    >
+    <BaseDialog show={show} handleClose={handleClose}>
       <DialogTitle>{content.title}</DialogTitle>
       <DialogContent>
+        {/* TODO: 아래 두개 간격을 좀 띄우면 어떨까 싶다. */}
         <Typography gutterBottom>{content.message}</Typography>
         <Typography gutterBottom>
-          <span>
-            If the problem persists, feel free to contact support for
-            assistance.
-          </span>
+          If the problem persists, feel free to contact support for assistance.
         </Typography>
       </DialogContent>
-    </Dialog>
+    </BaseDialog>
   )
 }
 
