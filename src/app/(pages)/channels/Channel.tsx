@@ -1,7 +1,7 @@
-import { TChannel } from "@/types"
-import useDialogs from "@/utils/dispatcher"
+import { TChannel } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import useFirebaseHookChannel from "@/utils/hooks/fetchData/useFirebaseHookChannel"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
@@ -45,6 +45,7 @@ export const Channel = (props: ChannelProps): JSX.Element => {
         // Set the current channel state.
         channelState.set(props.channel.id)
         router.push(`/chats/channel/${props.channel.id}/`)
+        return
       }
     } catch (err) {
       console.error(err)

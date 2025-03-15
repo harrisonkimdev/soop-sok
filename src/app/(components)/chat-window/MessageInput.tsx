@@ -1,6 +1,6 @@
-import useDialog from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { sendMessage } from "@/utils/firebase/firestore"
+import useDialog from "@/utils/global-states/dispatcher"
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 import React, { useState } from "react"
 import type { JSX } from "react"
@@ -18,14 +18,10 @@ const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
 
     if (!auth?.currentUser || !message.trim()) return
 
-    const {
-      uid,
-      displayName: senderName,
-      photoURL: senderPhotoURL,
-    } = auth.currentUser
+    const { uid } = auth.currentUser
 
     try {
-      await sendMessage(uid, cid, senderName, senderPhotoURL, message.trim())
+      await sendMessage(uid, cid, message.trim())
       setMessage("")
     } catch (err) {
       console.error(err)

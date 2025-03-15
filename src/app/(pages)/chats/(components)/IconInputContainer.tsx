@@ -17,6 +17,7 @@ const IconInputContainer = (props: IconInputContainerProps): JSX.Element => {
     } else {
       router.push(`/private-chats/${auth.currentUser?.uid}`)
     }
+    return
   }
 
   return (

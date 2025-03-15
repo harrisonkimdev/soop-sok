@@ -1,43 +1,41 @@
-import { TChannel } from "@/types"
+import {
+  responseBadRequest,
+  responseNotFound,
+  responseServerError,
+  responseUpdated,
+} from "@/app/api/(responses)"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
-  console.log("Received PUT request")
-  const token = getToken(req)
-  if (!token) {
-    console.log("No token provided")
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
-  const channelId = (await params).id
-  console.log(`Channel ID: ${channelId}`)
+  // Dynamic route from the URL
+  const cid = (await params).id
+  // Query parameters from the URL
+  const action = req.nextUrl.searchParams.get("action")
+  // Through the request body
   const { uid } = await req.json()
-  console.log(`User ID: ${uid}`)
-  const searchParams = req.nextUrl.searchParams
-  const action = searchParams.get("action")
-  console.log(`Action: ${action}`)
+  console.log(`Channel ID: ${cid}, User ID: ${uid}, Action: ${action}`)
 
-  const channelRef = firestore.collection("channels").doc(channelId)
+  const channelRef = firestore.collection("channels").doc(cid)
 
   try {
     const channelDoc = await channelRef.get()
-    const channelData: TChannel = channelDoc.data() as TChannel
+    const channelData = channelDoc.data()
+    if (!channelData) return responseNotFound()
     console.log("Channel data:", channelData)
 
     if (action === "enter") {
-      if (channelData.numMembers >= channelData.capacity) {
-        console.log("Channel is full")
-        return NextResponse.json({ error: "Channel is full" }, { status: 400 })
+      if (channelData.members.includes(uid)) {
+        return responseBadRequest("User already in the channel")
       }
 
       const newMembers = [...channelData.members, uid]
-      const newNumMembers = channelData.numMembers + 1
       console.log("New members:", newMembers)
+
+      const newNumMembers = channelData.numMembers + 1
       console.log("New number of members:", newNumMembers)
 
       await channelRef.update({
@@ -46,10 +44,21 @@ export async function PUT(
         updatedAt: FieldValue.serverTimestamp(),
       })
     } else if (action === "leave") {
-      const newMembers = channelData.members.filter((member) => member !== uid)
+      if (!channelData.members.includes(uid)) {
+        return responseBadRequest("User is not a member of the channel")
+      }
+
+      const newMembers = channelData.members.filter(
+        (member: string) => member !== uid,
+      )
       const newNumMembers = channelData.numMembers - 1
-      console.log("New members:", newMembers)
-      console.log("New number of members:", newNumMembers)
+      console.log(`New members (${newNumMembers}): ${newMembers}`)
+
+      await channelRef.update({
+        members: newMembers,
+        numMembers: newNumMembers,
+        updatedAt: FieldValue.serverTimestamp(),
+      })
 
       await channelRef.update({
         members: newMembers,
@@ -58,10 +67,8 @@ export async function PUT(
       })
     }
 
-    console.log("Chat updated successfully")
-    return NextResponse.json({ message: "chat updated!" }, { status: 200 })
+    return responseUpdated()
   } catch (error) {
-    console.error("Error updating chat:", error)
-    return NextResponse.json(error, { status: 500 })
+    return responseServerError(error)
   }
 }

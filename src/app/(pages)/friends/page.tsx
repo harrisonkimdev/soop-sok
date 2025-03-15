@@ -2,7 +2,7 @@
 
 import PageTitle from "@/app/(components)/PageTitle"
 import { Friend } from "@/app/(pages)/friends/Friend"
-import { TFriend } from "@/types"
+import { TFriend } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import useFirebaseHookFriends from "@/utils/hooks/fetchData/useFirebaseHookFriends"
 import type { JSX } from "react"

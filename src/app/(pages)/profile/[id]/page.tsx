@@ -1,10 +1,10 @@
 "use client"
 
 import OthersProfile from "./OthersProfile"
-import { TUser } from "@/types"
-import useDialogs from "@/utils/dispatcher"
+import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"

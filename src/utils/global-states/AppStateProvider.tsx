@@ -1,6 +1,6 @@
 "use client"
 
-import { TBanner } from "@/types"
+import { TBanner } from "@/app/types"
 import React, {
   createContext,
   ReactNode,

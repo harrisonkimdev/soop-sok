@@ -2,9 +2,9 @@
 
 import "@/app/(components)/Marquee.css"
 
-import { useAppState } from "@/utils/AppStateProvider"
-import useDialogs from "@/utils/dispatcher"
 import { getBanner } from "@/utils/firebase/firestore"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { useEffect } from "react"
 import type { JSX } from "react"
 

@@ -1,5 +1,5 @@
-import useDialogs from "@/utils/dispatcher"
 import { firestore } from "@/utils/firebase/firebase"
+import useDialogs from "@/utils/global-states/dispatcher"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { doc } from "firebase/firestore"
 import { useEffect } from "react"

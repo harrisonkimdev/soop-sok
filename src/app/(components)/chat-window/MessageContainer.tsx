@@ -1,7 +1,7 @@
 "use client"
 
 import ChatMessage from "@/app/(components)/chat-window/ChatMessage"
-import { TMessage } from "@/types"
+import { TMessage } from "@/app/types"
 import useFirebaseHookMessages from "@/utils/hooks/fetchData/useFirebaseHookMessages"
 import type { JSX } from "react"
 

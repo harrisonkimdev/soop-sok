@@ -21,11 +21,9 @@ const UserListPage = ({ params }: userListPageProps): JSX.Element => {
 
   const users = userData?.members || []
 
-  // Error handling
-  // router.push(`/chats/${params.type}/${params.id}/features`)
-
   const redirectToFeaturesPage = (): void => {
     router.push(`/chats/${params.type}/${params.id}/features`)
+    return
   }
 
   return (

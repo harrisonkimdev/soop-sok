@@ -2,12 +2,12 @@
 
 import "firebaseui/dist/firebaseui.css"
 
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import {
   registerUserWithUID,
   updateUserStatus,
 } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { GoogleAuthProvider } from "firebase/auth"
 import firebaseui from "firebaseui"
 import Image from "next/image"
@@ -38,7 +38,7 @@ export default function Home(): JSX.Element | null {
       callbacks: {
         signInSuccessWithAuthResult: (authResult: any): boolean => {
           // eslint-disable-next-line prettier/prettier
-          (async (): Promise<void> => {
+          ;(async (): Promise<void> => {
             cookies.set("auth-token", authResult.credential.accessToken)
 
             const isNewUser = authResult.additionalUserInfo.isNewUser
@@ -87,6 +87,7 @@ export default function Home(): JSX.Element | null {
             }
 
             router.push("/channels")
+            return
           })()
           // https://firebaseopensource.com/projects/firebase/firebaseui-web/#available-callbacks
           // whether we leave that to developer to handle.

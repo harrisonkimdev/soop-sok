@@ -3,8 +3,6 @@ import { fetchWithAuth } from "./fetchWithAuth"
 export async function sendMessage(
   uid: string,
   cid: string,
-  senderName: string | null,
-  senderPhotoURL: string | null,
   message: string,
 ): Promise<any> {
   try {
@@ -13,7 +11,7 @@ export async function sendMessage(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ uid, cid, senderName, senderPhotoURL, message }),
+      body: JSON.stringify({ uid, cid, message }),
     })
 
     if (!response.ok) throw new Error(`Error: ${response.statusText}`)

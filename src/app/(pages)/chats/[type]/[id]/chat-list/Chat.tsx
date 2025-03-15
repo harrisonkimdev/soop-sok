@@ -1,8 +1,8 @@
-import { TChat } from "@/types"
-import useDialogs from "@/utils/dispatcher"
+import { TChat } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChat } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
+import useDialogs from "@/utils/global-states/dispatcher"
 import useFirebaseHookChat from "@/utils/hooks/fetchData/useFirebaseHookChat"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
@@ -25,7 +25,10 @@ const Chat = ({ chat }: ChatProps): JSX.Element => {
     if (auth.currentUser && !isFull) {
       try {
         const res = await updateChat(chat.id, auth.currentUser.uid, "enter")
-        if (res) router.push(`/chats/chatroom/${chat.id}`)
+        if (res) {
+          router.push(`/chats/chatroom/${chat.id}`)
+          return
+        }
       } catch (err) {
         console.error(err)
         messageDialog.show("general")

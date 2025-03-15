@@ -1,5 +1,5 @@
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { Button } from "@mui/material"
 import Link from "next/link"
 import React, { useCallback } from "react"

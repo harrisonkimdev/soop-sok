@@ -2,7 +2,7 @@
 
 import MUIActionsDialog from "./MUIActionsDialog"
 import MUIMessageDialog from "./MUIMessageDialog"
-import { useAppState } from "@/utils/AppStateProvider"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
 import type { JSX } from "react"
 
 const DialogWrapper = (): JSX.Element => {

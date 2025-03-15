@@ -5,11 +5,11 @@ import MBTISelect from "@/app/(pages)/profile/[id]/edit/(components)/MBTISelecto
 import ProfilePicture from "@/app/(pages)/profile/[id]/edit/(components)/ProfilePicture"
 import UpdateButton from "@/app/(pages)/profile/[id]/edit/(components)/UpdateButton"
 import UsernameField from "@/app/(pages)/profile/[id]/edit/(components)/UsernameField"
-import { TUser } from "@/types"
-import { useAppState } from "@/utils/AppStateProvider"
-import useDialogs from "@/utils/dispatcher"
+import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser, updateUserProfile } from "@/utils/firebase/firestore"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { useParams, useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import type { JSX } from "react"
@@ -56,8 +56,8 @@ const ProfileEditPage = (): JSX.Element => {
       if (currentUser?.uid && user) {
         try {
           await updateUserProfile(currentUser.uid, user)
-
           router.push(`/profile/${id}`)
+          return
         } catch (err) {
           console.error(err)
           messageDialog.show("data_update")

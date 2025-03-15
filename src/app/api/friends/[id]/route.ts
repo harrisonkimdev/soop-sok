@@ -1,21 +1,15 @@
+import { responseFetched, responseServerError } from "@/app/api/(responses)"
 import { firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { Filter } from "firebase-admin/firestore"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(
   req: NextRequest,
-  params: Promise<{ id: string }>,
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided." }, { status: 401 })
-  }
-
   const friendId = (await params).id
   const searchParams = req.nextUrl.searchParams
   const senderId = searchParams.get("senderId")
-
   const friendRef = firestore.collection("friend_list")
 
   try {
@@ -34,12 +28,9 @@ export async function GET(
       )
       .get()
 
-    if (res.empty)
-      return NextResponse.json({ isMyFriend: false }, { status: 200 })
-
-    return NextResponse.json({ isMyFriend: true }, { status: 200 })
+    const isMyFriend = res.empty ? false : true
+    return responseFetched(isMyFriend)
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(error, { status: 500 })
+    return responseServerError(error)
   }
 }

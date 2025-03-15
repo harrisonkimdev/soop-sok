@@ -1,10 +1,10 @@
 "use client"
 
-import { TUser } from "@/types"
-import useDialogs from "@/utils/dispatcher"
+import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser, getOrCreateChatId } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import Link from "next/link"

@@ -1,5 +1,5 @@
 import NavBar from "@/app/(components)/NavBar"
-import { AppStateProvider } from "@/utils/AppStateProvider"
+import { AppStateProvider } from "@/utils/global-states/AppStateProvider"
 import theme from "@/utils/ThemeProvider"
 import { ThemeProvider } from "@mui/material"
 import CssBaseline from "@mui/material/CssBaseline"

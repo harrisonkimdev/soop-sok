@@ -1,19 +1,16 @@
-import { TChat } from "@/types"
+import {
+  responseBadRequest,
+  responseServerError,
+  responseUpdated,
+} from "@/app/api/(responses)"
+import { TChat } from "@/app/types"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
-  console.log("Received PUT request")
-  const token = getToken(req)
-  if (!token) {
-    console.log("No token provided")
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const chatId = (await params).id
   console.log(`Chat ID: ${chatId}`)
   const { uid } = await req.json()
@@ -30,8 +27,7 @@ export async function PUT(
     if (searchParams.get("action") === "enter") {
       console.log("Action: enter")
       if (chatData.numMembers >= chatData.capacity) {
-        console.log("Chat is full")
-        return NextResponse.json({ error: "Chat is full" }, { status: 400 })
+        return responseBadRequest("chat is full.")
       }
 
       const newMembers = [...chatData.members, uid]
@@ -60,10 +56,8 @@ export async function PUT(
       })
     }
 
-    console.log("Chat updated successfully")
-    return NextResponse.json({ message: "chat updated!" }, { status: 200 })
+    return responseUpdated("chat")
   } catch (error) {
-    console.error("Error updating chat:", error)
-    return NextResponse.json(error, { status: 500 })
+    return responseServerError(error)
   }
 }

@@ -1,8 +1,8 @@
 "use client"
 
-import { TChannel } from "@/types"
-import useDialogs from "@/utils/dispatcher"
+import { TChannel } from "@/app/types"
 import { firestore } from "@/utils/firebase/firebase"
+import useDialogs from "@/utils/global-states/dispatcher"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection } from "firebase/firestore"
 import { useEffect, useState } from "react"

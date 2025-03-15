@@ -1,11 +1,11 @@
-import { TUser } from "@/types"
-import useDialogs from "@/utils/dispatcher"
+import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import {
   checkIsMyFriend,
   getOrCreateChatId,
   makeFriend,
 } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 import { useEffect, useState } from "react"

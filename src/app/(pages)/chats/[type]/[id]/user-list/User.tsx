@@ -1,6 +1,6 @@
 "use client"
 
-import { TUser } from "@/types"
+import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser } from "@/utils/firebase/firestore"
 import Image from "next/image"
@@ -27,6 +27,7 @@ const User = (props: UserProps): JSX.Element => {
   const redirectToProfile = (uid: string | undefined): void => {
     if (uid && auth) {
       router.push(`/profile/${uid}`)
+      return
     }
   }
 

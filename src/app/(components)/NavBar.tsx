@@ -1,7 +1,7 @@
 "use client"
 
-import { useAppState } from "@/utils/AppStateProvider"
 import { auth } from "@/utils/firebase/firebase"
+import { useAppState } from "@/utils/global-states/AppStateProvider"
 import {
   ChatBubbleBottomCenterIcon,
   Cog6ToothIcon,
@@ -56,7 +56,10 @@ const NavBar = (): JSX.Element => {
 
     redirectURL = tabURLs[tab] || ""
 
-    if (redirectURL) router.push(redirectURL)
+    if (redirectURL) {
+      router.push(redirectURL)
+      return
+    }
   }
 
   return (

@@ -1,8 +1,8 @@
 "use client"
 
-import useDialogs from "@/utils/dispatcher"
 import { auth } from "@/utils/firebase/firebase"
 import { addBanner } from "@/utils/firebase/firestore"
+import useDialogs from "@/utils/global-states/dispatcher"
 import { BackspaceIcon } from "@heroicons/react/24/outline"
 import { Button, TextField } from "@mui/material"
 import { useRouter } from "next/navigation"
@@ -46,6 +46,7 @@ const Page = ({ params }: pageProps): JSX.Element => {
   const redirectToFeaturesPage = (): void => {
     if (auth) router.push(`/chats/${params.type}/${params.id}/features`)
     else router.push("/")
+    return
   }
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {

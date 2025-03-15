@@ -27,8 +27,8 @@ export async function checkIsMyFriend(
       `/api/friends/${friendId}?senderId=${uid}`,
       { method: "GET" },
     )
-    console.log("checkIsMyFriend", isMyFriend.isMyFriend)
-    return isMyFriend.isMyFriend
+    console.log("checkIsMyFriend", isMyFriend.data)
+    return isMyFriend.data
   } catch (err) {
     console.error(err)
     return null

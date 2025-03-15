@@ -1,39 +1,31 @@
-import { TBanner } from "@/types"
+import {
+  responseCreated,
+  responseFetched,
+  responseNotFound,
+  responseServerError,
+} from "@/app/api/(responses)"
+import { TBanner } from "@/app/types"
 import { FieldValue, firestore } from "@/utils/firebase/firebaseAdmin"
-import { getToken } from "@/utils/serverFunctions"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
+export async function GET(): Promise<NextResponse> {
   const bannerRef = firestore.collection("banners")
   const bannerQuery = bannerRef.where("selected", "==", true)
   try {
     const res = await bannerQuery.get()
 
     if (res.empty) {
-      return NextResponse.json(
-        { error: "No selected banner found" },
-        { status: 404 },
-      )
+      responseNotFound("banner")
     }
 
     const banner = res.docs[0].data() as TBanner
-    return NextResponse.json(banner, { status: 200 })
+    return responseFetched(banner)
   } catch (error) {
-    return NextResponse.json({ error }, { status: 500 })
+    return responseServerError(error)
   }
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const token = getToken(req)
-  if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 })
-  }
-
   const { cid, content, tagOptions } = await req.json()
 
   try {
@@ -44,9 +36,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       selected: false,
       tagOptions,
     })
-    return NextResponse.json({ message: "banner added!" }, { status: 200 })
+    return responseCreated("banner")
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(error, { status: 500 })
+    return responseServerError(error)
   }
 }
