@@ -44,6 +44,10 @@ const MUIActionsDialog = ({
 
   const handleButtonClick = (): void => {
     dispatch({ type: "SET_ACTIONS_DIALOG_RESPONSE", payload: true })
+    dispatch({
+      type: "SHOW_ACTIONS_DIALOG",
+      payload: { show: false, type: null },
+    })
   }
 
   return (
@@ -52,7 +56,6 @@ const MUIActionsDialog = ({
       <DialogContent>
         <DialogContentText>{content.message}</DialogContentText>
       </DialogContent>
-      {/* TODO: 버튼 눌러도 반응이 없다. Dialog 가 사라지던가 해야할거 아녀. */}
       <DialogActions>
         <Button onClick={handleCloseWithButton}>Cancel</Button>
         <Button onClick={handleButtonClick}>{content.buttonText}</Button>
