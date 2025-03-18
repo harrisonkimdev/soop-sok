@@ -2,6 +2,7 @@ import "./globals.css"
 import ProviderWrapper from "@/app/(components)/ProviderWrapper"
 import type { Metadata } from "next"
 import { Dhurjati, Inter } from "next/font/google"
+import Head from "next/head"
 import React from "react"
 import type { JSX } from "react"
 
@@ -27,6 +28,9 @@ export default async function RootLayout({
 }: Readonly<Props>): Promise<JSX.Element> {
   return (
     <html lang="en">
+      <Head>
+        <link rel="icon" href="data:;base64,=" />
+      </Head>
       <body className={`${inter.variable} ${dhurjati.variable}`}>
         <ProviderWrapper>{children}</ProviderWrapper>
       </body>
