@@ -19,7 +19,7 @@ export const Channel = (props: ChannelProps): JSX.Element => {
   const channelData: {
     members: string[]
     isFull: boolean
-  } | null = useFirebaseHookChannel({ channelId: props.channel.id })
+  } | null = useFirebaseHookChannel(props.channel.id)
 
   const isFull = channelData?.isFull ?? false
   const numMembers = channelData?.members.length ?? 0
