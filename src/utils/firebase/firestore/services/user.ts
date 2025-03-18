@@ -16,7 +16,9 @@ export async function registerUserWithUID(
     return true
   } catch (err) {
     console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
 
@@ -32,7 +34,9 @@ export async function updateUserStatus(
     return true
   } catch (err) {
     console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
 
@@ -49,17 +53,21 @@ export async function updateUserProfile(
     return true
   } catch (err) {
     console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
 
-export async function fetchUser(uid: string): Promise<TUser | null> {
+export async function fetchUser(uid: string): Promise<TUser> {
   try {
     const user = await fetchWithAuth(`/api/users/${uid}`, { method: "GET" })
     console.log("fetchUser", user)
     return user
   } catch (err) {
     console.error(err)
-    return null
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }

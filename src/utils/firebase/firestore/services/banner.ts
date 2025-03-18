@@ -14,7 +14,9 @@ export async function addBanner(
     return true
   } catch (err) {
     console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
 
@@ -25,6 +27,8 @@ export async function getBanner(): Promise<any> {
     return banner
   } catch (err) {
     console.error(err)
-    return null
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }

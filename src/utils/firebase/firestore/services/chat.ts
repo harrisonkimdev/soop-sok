@@ -8,7 +8,7 @@ export async function createChat(
   tag: string,
   isPrivate: boolean,
   password: string,
-): Promise<string | null> {
+): Promise<string> {
   try {
     const data = await fetchWithAuth("/api/chats", {
       method: "POST",
@@ -26,7 +26,9 @@ export async function createChat(
     return data.cid
   } catch (err) {
     console.error(err)
-    return null
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
 
@@ -44,6 +46,8 @@ export async function updateChat(
     return true
   } catch (err) {
     console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }

@@ -21,6 +21,8 @@ export async function sendMessage(
     return sendMessageAck
   } catch (err) {
     console.error("Failed to send message:", err)
-    return null
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
