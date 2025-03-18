@@ -18,7 +18,9 @@ const useFirebaseHookChats = (props: TProps): TChat[] | null => {
 
   // Fetch channle data in real time only if a user is authorized.
   const chatsRef = collection(firestore, "chats")
-  const chatsQuery = query(chatsRef, where("cid", "==", props.channelId))
+  const chatsQuery = isAuthenticated
+    ? query(chatsRef, where("cid", "==", props.channelId))
+    : null
   const [snapshot, loading, error] = useCollection(chatsQuery, {
     snapshotListenOptions: { includeMetadataChanges: true },
   })
@@ -51,7 +53,7 @@ const useFirebaseHookChats = (props: TProps): TChat[] | null => {
     }
   }, [snapshot, loading, error, messageDialog])
 
-  return isAuthenticated ? fetchedChats : null
+  return fetchedChats
 }
 
 export default useFirebaseHookChats

@@ -19,12 +19,14 @@ const useFirebaseHookMessages = (
   const isAuthenticated = useAuthCheck()
 
   const messageRef = collection(firestore, "messages")
-  const messageQuery = query(
-    messageRef,
-    where("cid", "==", props?.chatId || ""),
-    orderBy("createdAt", "desc"),
-    limit(1),
-  )
+  const messageQuery = isAuthenticated
+    ? query(
+        messageRef,
+        where("cid", "==", props?.chatId || ""),
+        orderBy("createdAt", "desc"),
+        limit(1),
+      )
+    : null
 
   const [snapshot, loading, error] = useCollection(
     props?.chatId ? messageQuery : messageRef,
@@ -52,7 +54,7 @@ const useFirebaseHookMessages = (
     }
   }, [snapshot, loading, error, messageDialog])
 
-  return isAuthenticated ? (props?.chatId ? fetched[0] : fetched) : null
+  return props?.chatId ? fetched[0] : fetched
 }
 
 export default useFirebaseHookMessages

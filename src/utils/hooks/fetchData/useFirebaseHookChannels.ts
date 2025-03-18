@@ -14,7 +14,7 @@ const useFirebaseHookChannels = (): TChannel[] | null => {
 
   const isAuthenticated = useAuthCheck()
 
-  const channelsRef = collection(firestore, "channels")
+  const channelsRef = isAuthenticated ? collection(firestore, "channels") : null
   const [snapshot, loading, error] = useCollection(channelsRef, {
     snapshotListenOptions: { includeMetadataChanges: true },
   })
@@ -38,7 +38,7 @@ const useFirebaseHookChannels = (): TChannel[] | null => {
     }
   }, [snapshot, loading, error, messageDialog])
 
-  return isAuthenticated ? fetchedChannels : null
+  return fetchedChannels
 }
 
 export default useFirebaseHookChannels

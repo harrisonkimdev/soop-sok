@@ -17,7 +17,11 @@ const useFirebaseHookChannel = (
 
   const isAuthenticated = useAuthCheck()
 
-  const channelsRef = doc(firestore, "channels", props.channelId)
+  // 인증된 경우에만 useDocumentData 훅 사용
+  const channelsRef = isAuthenticated
+    ? doc(firestore, "channels", props.channelId)
+    : null
+
   const [value, loading, error] = useDocumentData(channelsRef)
 
   useEffect(() => {
@@ -32,7 +36,7 @@ const useFirebaseHookChannel = (
     }
   }, [value, loading, error, messageDialog])
 
-  return isAuthenticated ? { isFull, numMembers: value?.numMembers ?? 0 } : null
+  return { isFull, numMembers: value?.numMembers ?? 0 }
 }
 
 export default useFirebaseHookChannel

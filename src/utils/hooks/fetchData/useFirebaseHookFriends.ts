@@ -19,13 +19,15 @@ const useFirebaseHookChats = (props: TProps): TFriend[] | null => {
   const isAuthenticated = useAuthCheck()
 
   const ref = collection(firestore, "friend_list")
-  const chatsQuery = query(
-    ref,
-    or(
-      where("senderId", "==", props.userId),
-      where("friendId", "==", props.userId),
-    ),
-  )
+  const chatsQuery = isAuthenticated
+    ? query(
+        ref,
+        or(
+          where("senderId", "==", props.userId),
+          where("friendId", "==", props.userId),
+        ),
+      )
+    : null
   const [snapshot, loading, error] = useCollection(chatsQuery, {
     snapshotListenOptions: { includeMetadataChanges: true },
   })
@@ -49,7 +51,7 @@ const useFirebaseHookChats = (props: TProps): TFriend[] | null => {
     }
   }, [snapshot, loading, error, messageDialog])
 
-  return isAuthenticated ? fetched : null
+  return fetched
 }
 
 export default useFirebaseHookChats

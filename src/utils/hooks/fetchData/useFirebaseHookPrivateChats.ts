@@ -14,7 +14,9 @@ const useFirebaseHookChannels = (): TPrivateChat[] | null => {
 
   const isAuthenticated = useAuthCheck()
 
-  const privateChatsRef = collection(firestore, "private-chats")
+  const privateChatsRef = isAuthenticated
+    ? collection(firestore, "private-chats")
+    : null
   const [snapshot, loading, error] = useCollection(privateChatsRef, {
     snapshotListenOptions: { includeMetadataChanges: true },
   })
@@ -38,7 +40,7 @@ const useFirebaseHookChannels = (): TPrivateChat[] | null => {
     }
   }, [snapshot, loading, error, messageDialog])
 
-  return isAuthenticated ? fetchedPrivateChats : null
+  return fetchedPrivateChats
 }
 
 export default useFirebaseHookChannels
