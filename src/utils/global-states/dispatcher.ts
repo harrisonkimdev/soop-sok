@@ -16,7 +16,8 @@ const useDialogs = (): {
         | "signin"
         | "general"
         | "network_error"
-        | "access_denied",
+        | "access_denied"
+        | "already_in_channel",
     ) => void
     hide: () => void
   }
@@ -59,7 +60,8 @@ const useDialogs = (): {
           | "signin"
           | "general"
           | "network_error"
-          | "access_denied",
+          | "access_denied"
+          | "already_in_channel",
       ): void => {
         dispatch({
           type: "SHOW_MESSAGE_DIALOG",

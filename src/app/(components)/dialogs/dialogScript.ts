@@ -33,4 +33,9 @@ export const DIALOG_MESSAGES = {
     message:
       "Oops! It seems there was an issue with the access. Please check your access and try again.",
   },
+  ALREADY_IN_CHANNEL: {
+    title: "Already In Channel",
+    message:
+      "We lost you in the system. Please reset your session and try again.",
+  },
 }

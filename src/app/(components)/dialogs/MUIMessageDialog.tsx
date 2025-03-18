@@ -44,6 +44,9 @@ const MUIMessageDialog = ({
       case "access_denied":
         setContent(DIALOG_MESSAGES.ACCESS_DENIED)
         break
+      case "already_in_channel":
+        setContent(DIALOG_MESSAGES.ALREADY_IN_CHANNEL)
+        break
       default:
         setContent(DIALOG_MESSAGES.GENERAL_ERROR)
     }
