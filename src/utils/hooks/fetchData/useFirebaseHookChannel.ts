@@ -11,7 +11,7 @@ type TProps = {
 
 const useFirebaseHookChannel = (
   props: TProps,
-): { isFull: boolean; numMembers: number } | null => {
+): { members: string[]; isFull: boolean } | null => {
   const { messageDialog } = useDialogs()
   const [isFull, setIsFull] = useState<boolean>(false)
 
@@ -36,7 +36,7 @@ const useFirebaseHookChannel = (
     }
   }, [value, loading, error, messageDialog])
 
-  return { isFull, numMembers: value?.numMembers ?? 0 }
+  return { members: value?.members, isFull }
 }
 
 export default useFirebaseHookChannel
