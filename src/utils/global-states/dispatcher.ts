@@ -10,7 +10,13 @@ const useDialogs = (): {
   }
   messageDialog: {
     show: (
-      type: "data_retrieval" | "data_update" | "signin" | "general",
+      type:
+        | "data_retrieval"
+        | "data_update"
+        | "signin"
+        | "general"
+        | "network_error"
+        | "access_denied",
     ) => void
     hide: () => void
   }
@@ -47,7 +53,13 @@ const useDialogs = (): {
   const messageDialog = useMemo(
     () => ({
       show: (
-        type: "data_retrieval" | "data_update" | "signin" | "general",
+        type:
+          | "data_retrieval"
+          | "data_update"
+          | "signin"
+          | "general"
+          | "network_error"
+          | "access_denied",
       ): void => {
         dispatch({
           type: "SHOW_MESSAGE_DIALOG",

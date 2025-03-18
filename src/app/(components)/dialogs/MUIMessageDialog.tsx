@@ -38,6 +38,12 @@ const MUIMessageDialog = ({
       case "signin":
         setContent(DIALOG_MESSAGES.SIGN_IN)
         break
+      case "network_error":
+        setContent(DIALOG_MESSAGES.NETWORK_ERROR)
+        break
+      case "access_denied":
+        setContent(DIALOG_MESSAGES.ACCESS_DENIED)
+        break
       default:
         setContent(DIALOG_MESSAGES.GENERAL_ERROR)
     }

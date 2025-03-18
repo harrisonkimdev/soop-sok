@@ -23,4 +23,14 @@ export const DIALOG_MESSAGES = {
     message:
       "Oops! It seems there was an issue with signing in. Please double-check your credentials and try again.",
   },
+  NETWORK_ERROR: {
+    title: "Network Error",
+    message:
+      "Oops! It seems there was an issue with the network. Please check your internet connection and try again.",
+  },
+  ACCESS_DENIED: {
+    title: "Access Denied",
+    message:
+      "Oops! It seems there was an issue with the access. Please check your access and try again.",
+  },
 }
