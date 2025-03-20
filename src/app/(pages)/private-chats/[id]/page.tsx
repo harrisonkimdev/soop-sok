@@ -3,11 +3,15 @@
 import SearchBar from "@/app/(components)/SearchBar"
 import PrivateChat from "@/app/(pages)/private-chats/[id]/PrivateChat"
 import { TPrivateChat } from "@/app/types"
+import { auth } from "@/utils/firebase/firebase"
 import useFirebaseHookPrivateChats from "@/utils/hooks/fetchData/useFirebaseHookPrivateChats"
 import type { JSX } from "react"
 
 const PrivateChatPage = (): JSX.Element => {
-  const fetchedPrivateChats = useFirebaseHookPrivateChats()
+  const currentUserId = auth.currentUser?.uid
+
+  // uid를 사용하여 특정 사용자와의 채팅 데이터 fetching
+  const privateChats = useFirebaseHookPrivateChats(currentUserId)
 
   return (
     <div className="h-full bg-stone-100">
@@ -19,8 +23,8 @@ const PrivateChatPage = (): JSX.Element => {
 
         {/* private chats */}
         <div className="flex flex-col gap-2">
-          {fetchedPrivateChats && fetchedPrivateChats.length > 0 ? (
-            fetchedPrivateChats?.map((privateChat: TPrivateChat) => (
+          {privateChats && privateChats.length > 0 ? (
+            privateChats?.map((privateChat: TPrivateChat) => (
               <PrivateChat key={privateChat.id} privateChat={privateChat} />
             ))
           ) : (

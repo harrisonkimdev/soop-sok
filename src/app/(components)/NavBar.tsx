@@ -33,16 +33,15 @@ const NavBar = (): JSX.Element => {
     const { currentUser } = auth
     const { publicChatURL, privateChatURL } = state
 
-    let redirectURL = ""
-
-    if (
-      pathname.includes("/chats/channel") ||
-      pathname.includes("/chats/chatroom")
-    ) {
+    // If the pathname includes "/chats/channel" or "/chats/chats", set the publicChatURL to the pathname before redirecting.
+    if (pathname.startsWith("/chats/channel")) {
       dispatch({ type: "SET_PUBLIC_URL", payload: pathname })
-    } else if (
-      pathname.includes("/private-chats") ||
-      pathname.includes("/chats/private-chat")
+    }
+
+    // If the pathname includes "/private-chats" or "/chats/private-chat", set the privateChatURL to the pathname before redirecting.
+    else if (
+      pathname.startsWith("/private-chats") ||
+      pathname.startsWith("/chats/private-chat")
     ) {
       dispatch({ type: "SET_PRIVATE_URL", payload: pathname })
     }
@@ -54,12 +53,7 @@ const NavBar = (): JSX.Element => {
       settings: "/settings",
     }
 
-    redirectURL = tabURLs[tab] || ""
-
-    if (redirectURL) {
-      router.push(redirectURL)
-      return
-    }
+    router.push(tabURLs[tab] || "")
   }
 
   return (

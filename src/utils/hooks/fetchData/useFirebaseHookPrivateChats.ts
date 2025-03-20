@@ -2,21 +2,26 @@ import { TPrivateChat } from "@/app/types"
 import { firestore } from "@/utils/firebase/firebase"
 import useDialogs from "@/utils/global-states/dispatcher"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
-import { collection } from "firebase/firestore"
+import { collection, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
 
-const useFirebaseHookChannels = (): TPrivateChat[] | null => {
-  const { messageDialog } = useDialogs()
-  const [fetchedPrivateChats, setFetchedPrivateChats] = useState<
-    TPrivateChat[]
-  >([])
-
+const useFirebaseHookPrivateChats = (
+  uid: string | undefined,
+): TPrivateChat[] | undefined => {
   const isAuthenticated = useAuthCheck()
+  const { messageDialog } = useDialogs()
+  const [privateChats, setPrivateChats] = useState<TPrivateChat[]>()
 
-  const privateChatsRef = isAuthenticated
-    ? collection(firestore, "private-chats")
-    : null
+  const privateChatsRef =
+    isAuthenticated && uid
+      ? query(
+          collection(firestore, "private-chats"),
+          where("from", "==", uid),
+          where("to", "==", uid),
+        )
+      : null
+
   const [snapshot, loading, error] = useCollection(privateChatsRef, {
     snapshotListenOptions: { includeMetadataChanges: true },
   })
@@ -29,18 +34,18 @@ const useFirebaseHookChannels = (): TPrivateChat[] | null => {
     }
 
     if (snapshot) {
-      const fetchedChannels: TPrivateChat[] = snapshot.docs.map(
+      const fetchedPrivateChats: TPrivateChat[] = snapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
             ...doc.data(),
           }) as TPrivateChat,
       )
-      setFetchedPrivateChats(fetchedChannels)
+      setPrivateChats(fetchedPrivateChats)
     }
   }, [snapshot, loading, error, messageDialog])
 
-  return fetchedPrivateChats
+  return privateChats
 }
 
-export default useFirebaseHookChannels
+export default useFirebaseHookPrivateChats
