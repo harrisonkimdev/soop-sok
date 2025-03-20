@@ -34,7 +34,10 @@ const NavBar = (): JSX.Element => {
     const { publicChatURL, privateChatURL } = state
 
     // If the pathname includes "/chats/channel" or "/chats/chats", set the publicChatURL to the pathname before redirecting.
-    if (pathname.startsWith("/chats/channel")) {
+    if (
+      pathname.startsWith("/channels") ||
+      pathname.startsWith("/chats/channel")
+    ) {
       dispatch({ type: "SET_PUBLIC_URL", payload: pathname })
     }
 
