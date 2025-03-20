@@ -1,7 +1,7 @@
 "use client"
 
-import { auth } from "@/utils/firebase/firebase"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import {
   ChatBubbleBottomCenterIcon,
   Cog6ToothIcon,
@@ -26,11 +26,16 @@ const tabs = [
 const NavBar = (): JSX.Element => {
   const router = useRouter()
   const pathname = usePathname()
-
+  const isAuthenticated = useAuthCheck()
   const { state, dispatch } = useAppState()
 
   const redirectTo = (tab: string): void => {
-    const { currentUser } = auth
+    if (!isAuthenticated) {
+      // TODO: dialog - not authenticated.
+      router.push("/")
+      return
+    }
+
     const { publicChatURL, privateChatURL } = state
 
     // If the pathname includes "/chats/channel" or "/chats/chats", set the publicChatURL to the pathname before redirecting.
@@ -51,7 +56,7 @@ const NavBar = (): JSX.Element => {
 
     const tabURLs: { [key: string]: string } = {
       "public-chat": publicChatURL || "/channels",
-      "private-chat": privateChatURL || `/private-chats/${currentUser?.uid}`,
+      "private-chat": privateChatURL || `/private-chats`,
       friends: "/friends",
       settings: "/settings",
     }
