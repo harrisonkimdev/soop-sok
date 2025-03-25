@@ -69,7 +69,7 @@ const FeaturesPage = ({ params }: PageProps): JSX.Element => {
   ]
 
   return (
-    <div className="flex h-full flex-col gap-4 py-8">
+    <div className="flex h-full flex-col gap-4 py-2">
       <div className="flex grow flex-col gap-4 overflow-y-auto rounded-lg">
         {params.type === "channel" &&
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
