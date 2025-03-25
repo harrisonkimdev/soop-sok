@@ -20,8 +20,11 @@ const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
 
     const { uid } = auth.currentUser
 
+    const trimmedMessage = message.trim()
+
     try {
-      await sendMessage(uid, cid, message.trim())
+      await sendMessage(uid, cid, trimmedMessage)
+      // Clear the text in the input field.
       setMessage("")
     } catch (err) {
       console.error(err)
