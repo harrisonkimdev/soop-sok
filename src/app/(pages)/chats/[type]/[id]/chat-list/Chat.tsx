@@ -24,11 +24,9 @@ const Chat = ({ chat }: ChatProps): JSX.Element => {
   const handleEnterChat = async (): Promise<void> => {
     if (auth.currentUser && !isFull) {
       try {
+        // enter or leave the chat
         const res = await updateChat(chat.id, auth.currentUser.uid, "enter")
-        if (res) {
-          router.push(`/chats/chatroom/${chat.id}`)
-          return
-        }
+        if (res) router.push(`/chats/group/${chat.id}`)
       } catch (err) {
         console.error(err)
         messageDialog.show("general")

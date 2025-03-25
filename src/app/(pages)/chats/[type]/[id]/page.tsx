@@ -16,11 +16,11 @@ interface ChatPageProps {
 const ChatPage = ({ params }: ChatPageProps): JSX.Element => {
   return (
     <div className="grid h-full grid-rows-12">
-      {(params.type === "channel" || params.type === "chatroom") && <Banner />}
+      {(params.type === "channel" || params.type === "group") && <Banner />}
 
       <div
         className={`flex h-full flex-col gap-4 ${
-          params.type === "channel" || params.type === "chatroom"
+          params.type === "channel" || params.type === "group"
             ? // If this is either a channel chat or general chat in a channel, show the banner.
               "row-span-11 row-start-2"
             : // Otherwise no banner.

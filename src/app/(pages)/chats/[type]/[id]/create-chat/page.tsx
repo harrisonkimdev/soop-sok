@@ -115,7 +115,7 @@ const CreateChatPage = ({ params }: pageProps): JSX.Element => {
           formState.password,
         )
 
-        if (cid) router.push(`/chats/chatroom/${cid}`)
+        if (cid) router.push(`/chats/group/${cid}`)
       } catch (err) {
         console.error(err)
         messageDialog.show("general")
