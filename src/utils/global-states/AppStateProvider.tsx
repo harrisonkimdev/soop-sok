@@ -53,8 +53,8 @@ type Action =
     }
 
 const initialState: AppState = {
-  publicChatURL: "",
-  privateChatURL: "",
+  publicChatURL: "/channels",
+  privateChatURL: "/private-chats",
   currentBanner: null,
   showMessageDialog: false,
   messageDialogType: null,
