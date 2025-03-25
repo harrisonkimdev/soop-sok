@@ -69,9 +69,10 @@ export const responseSuccess = (message?: string): NextResponse =>
 export const responseCreated = (
   type: "banner" | "chat" | "channel" | "user" | "friend" | "message",
   id?: string,
-  timestamp?: string,
-): NextResponse =>
-  NextResponse.json(
+): NextResponse => {
+  const timestamp = new Date().toISOString()
+
+  return NextResponse.json(
     {
       message: `A new ${type} has been created!`,
       id,
@@ -79,6 +80,7 @@ export const responseCreated = (
     },
     { status: 201 },
   )
+}
 
 /**
  * Returns a 400 error response with an optional message.

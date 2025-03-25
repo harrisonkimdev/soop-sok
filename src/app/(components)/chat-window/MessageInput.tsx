@@ -5,11 +5,7 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 import React, { useState } from "react"
 import type { JSX } from "react"
 
-type MessageInputProps = {
-  cid: string
-}
-
-const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
+const MessageInput = ({ cid }: { cid: string }): JSX.Element => {
   const [message, setMessage] = useState("")
   const { messageDialog } = useDialog()
 

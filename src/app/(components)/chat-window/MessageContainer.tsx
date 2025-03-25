@@ -5,8 +5,8 @@ import { TMessage } from "@/app/types"
 import useFirebaseHookMessages from "@/utils/hooks/fetchData/useFirebaseHookMessages"
 import type { JSX } from "react"
 
-const MessageContainer = (): JSX.Element => {
-  const messages = useFirebaseHookMessages({})
+const MessageContainer = ({ cid }: { cid: string }): JSX.Element => {
+  const messages = useFirebaseHookMessages(cid)
 
   return (
     <div
