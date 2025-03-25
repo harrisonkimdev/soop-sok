@@ -1,60 +1,42 @@
 import { TMessage } from "@/app/types"
 import { firestore } from "@/utils/firebase/firebase"
-import useDialogs from "@/utils/global-states/dispatcher"
+// import useDialogs from "@/utils/global-states/dispatcher"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import { collection, limit, orderBy, query, where } from "firebase/firestore"
-import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
 
-type TProps = {
-  chatId?: string
-}
-
 const useFirebaseHookMessages = (
-  props: TProps,
-): TMessage[] | TMessage | null => {
-  const { messageDialog } = useDialogs()
-  const [fetched, setFetched] = useState<TMessage[]>([])
-
+  cid: string,
+  latestOnly?: boolean,
+): TMessage[] | null => {
+  // const { messageDialog } = useDialogs()
   const isAuthenticated = useAuthCheck()
-
   const messageRef = collection(firestore, "messages")
+
+  const baseQuery = query(
+    messageRef,
+    where("cid", "==", cid),
+    orderBy("createdAt"),
+  )
   const messageQuery = isAuthenticated
-    ? query(
-        messageRef,
-        where("cid", "==", props?.chatId || ""),
-        orderBy("createdAt", "desc"),
-        limit(1),
-      )
+    ? latestOnly
+      ? query(baseQuery, limit(1))
+      : baseQuery
     : null
 
-  const [snapshot, loading, error] = useCollection(
-    props?.chatId ? messageQuery : messageRef,
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  )
+  const [snapshot, loading, error] = useCollection(messageQuery, {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  })
 
-  useEffect(() => {
-    if (!loading && error) {
-      console.error(error)
-      messageDialog.show("data_retrieval")
-      return
-    }
+  if (!loading && error) {
+    console.log(error)
+    // messageDialog.show("data_retrieval")
+  }
 
-    if (snapshot) {
-      const fetched: TMessage[] = snapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          }) as TMessage,
-      )
-      setFetched(fetched)
-    }
-  }, [snapshot, loading, error, messageDialog])
-
-  return props?.chatId ? fetched[0] : fetched
+  // Data handling
+  return snapshot
+    ? snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as TMessage)
+    : []
 }
 
 export default useFirebaseHookMessages

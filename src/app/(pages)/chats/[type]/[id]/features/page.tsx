@@ -52,8 +52,8 @@ const FeaturesPage = ({ params }: PageProps): JSX.Element => {
       if (params.type === "channel") {
         channelState.set(null)
         if (res) router.push("/channels")
-      } else if (params.type === "chatroom" && res) {
-        router.push(`/chats/channel/${state.channelId}`)
+      } else if (params.type === "group" && res) {
+        router.push(`/chats/group/${state.channelId}`)
       }
     }
   }
@@ -69,7 +69,7 @@ const FeaturesPage = ({ params }: PageProps): JSX.Element => {
   ]
 
   return (
-    <div className="flex h-full flex-col gap-4 py-8">
+    <div className="flex h-full flex-col gap-4 py-2">
       <div className="flex grow flex-col gap-4 overflow-y-auto rounded-lg">
         {params.type === "channel" &&
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -96,7 +96,7 @@ const FeaturesPage = ({ params }: PageProps): JSX.Element => {
           <p className="text-lg font-semibold text-earth-500">User List</p>
         </div>
 
-        {(params.type === "channel" || params.type === "chatroom") && (
+        {(params.type === "channel" || params.type === "group") && (
           <div
             onClick={handleLeave}
             className="flex items-center justify-center gap-4 rounded-lg bg-earth-50 py-5 transition duration-300 ease-in-out hover:bg-earth-100"

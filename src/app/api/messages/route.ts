@@ -13,7 +13,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       createdAt: FieldValue.serverTimestamp(),
     })
 
-    return responseCreated("message", new Date().toISOString())
+    return responseCreated("message")
   } catch (error) {
     return responseServerError(error)
   }
