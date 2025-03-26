@@ -17,7 +17,7 @@ type pageProps = {
 }
 
 const Page = ({ params }: pageProps): JSX.Element => {
-  const [bannerContent, setBannerContent] = useState("")
+  const [bannerTitle, setBannerTitle] = useState("")
   const [tagInput, setTagInput] = useState("")
   const [tagOptions, setTagOptions] = useState<string[]>([])
 
@@ -26,27 +26,36 @@ const Page = ({ params }: pageProps): JSX.Element => {
   const { messageDialog } = useDialogs()
 
   const addToList = (): void => {
-    if (tagOptions.length < 5) {
+    if (tagInput.length > 0 && tagOptions.length < 5) {
       setTagOptions((prev) => {
         if (!prev.includes(tagInput)) {
           return [...prev, tagInput]
         } else return [...prev]
       })
+      setTagInput("")
     } else {
-      // TODO: dialog - too many tag options.
+      // TODO: dialog - empty input field ortoo many tag options.
     }
   }
 
   const deleteFromList = (tagOption: string): void => {
-    if (auth && tagOptions.length > 0) {
+    if (!auth) {
+      // TODO: dialog - not logged in.
+      router.push("/")
+    }
+
+    if (tagOptions.length > 0) {
       setTagOptions((prev) => prev.filter((option) => option !== tagOption))
     }
   }
 
   const redirectToFeaturesPage = (): void => {
-    if (auth) router.push(`/chats/${params.type}/${params.id}/features`)
-    else router.push("/")
-    return
+    if (!auth) {
+      // TODO: dialog - not logged in.
+      router.push("/")
+    }
+
+    router.push(`/chats/${params.type}/${params.id}/features`)
   }
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -55,14 +64,18 @@ const Page = ({ params }: pageProps): JSX.Element => {
     const currentUser = auth.currentUser
     if (!currentUser) return
 
-    if (bannerContent.length > 0) {
+    if (bannerTitle.length > 0) {
       try {
-        const res = await addBanner(params.id, bannerContent, tagOptions)
-
-        //
+        // TODO: add uid, updatedAt
+        const res = await addBanner(
+          params.id,
+          bannerTitle,
+          tagOptions,
+          currentUser.uid,
+        )
 
         if (res) {
-          router.push(`/chats/channel/${params.id}`)
+          router.push(`/chats/${params.type}/${params.id}`)
         }
       } catch (err) {
         console.error(err)
@@ -76,55 +89,49 @@ const Page = ({ params }: pageProps): JSX.Element => {
       onSubmit={(e) => handleSubmit(e)}
       className="flex h-full flex-col gap-4"
     >
-      <div className="flex grow flex-col gap-6 overflow-y-auto rounded-lg bg-white p-4">
+      <div className="flex grow flex-col gap-4 overflow-y-auto rounded-lg bg-white p-4">
+        {/* page title */}
         <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
           add a new banner
         </h1>
 
-        {/* name */}
-        <TextField
-          id="outlined-basic"
-          label="Banner"
-          variant="outlined"
-          value={bannerContent}
-          onChange={(e) => setBannerContent(e.target.value)}
-        />
+        {/* tag container */}
+        <div className="mt-4 flex flex-col gap-6">
+          {/* name */}
+          <TextField
+            id="outlined-basic"
+            label="Title"
+            variant="outlined"
+            value={bannerTitle}
+            onChange={(e) => setBannerTitle(e.target.value)}
+          />
 
-        {/* tag options */}
-        <div className="flex flex-col gap-4">
-          <div className="mt-2 flex gap-2">
+          {/* input field for a new tag */}
+          <div className="flex gap-2">
             <TextField
               id="outlined-basic"
               label="Tag Input"
               variant="outlined"
               value={tagInput}
+              fullWidth
               onChange={(e) => setTagInput(e.target.value)}
-              className="grow"
             />
-            <Button
-              variant="outlined"
-              onClick={() => {
-                addToList()
-                setTagInput("")
-              }}
-            >
+            <Button variant="outlined" onClick={addToList}>
               Add
             </Button>
           </div>
-        </div>
 
-        {/* container for tag options */}
-        <div>
+          {/* entered tag options */}
           {tagOptions.length > 0 && (
-            <>
+            <div>
               <div className="min-h-14 rounded-sm border border-gray-300 p-3">
                 <div className="flex flex-col gap-3">
-                  {tagOptions.map((tagOption, index) => (
+                  {tagOptions.map((tagOption) => (
                     <div
                       key={tagOption}
                       className="flex items-center justify-between"
                     >
-                      <p className="whitespace-nowrap">{`${index + 1}. ${tagOption}`}</p>
+                      <p className="whitespace-nowrap">{`${tagOption}`}</p>
                       <BackspaceIcon
                         className="h-5 cursor-pointer text-gray-500"
                         onClick={() => deleteFromList(tagOption)}
@@ -135,14 +142,14 @@ const Page = ({ params }: pageProps): JSX.Element => {
               </div>
 
               <p className="mt-2 px-1 text-sm text-gray-400">
-                Other users would only be able to choose one of the available
-                options
+                Users are only allowed to choose one of the given options
               </p>
-            </>
+            </div>
           )}
         </div>
       </div>
 
+      {/* action buttons */}
       <div className="grid grid-cols-2 gap-2.5">
         <button
           type="button"

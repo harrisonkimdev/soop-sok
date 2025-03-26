@@ -13,7 +13,9 @@ export async function makeFriend(
     return true
   } catch (err) {
     console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
 
@@ -21,7 +23,7 @@ export async function makeFriend(
 export async function checkIsMyFriend(
   uid: string,
   friendId: string,
-): Promise<boolean | null> {
+): Promise<boolean> {
   try {
     const isMyFriend = await fetchWithAuth(
       `/api/friends/${friendId}?senderId=${uid}`,
@@ -31,6 +33,8 @@ export async function checkIsMyFriend(
     return isMyFriend.data
   } catch (err) {
     console.error(err)
-    return null
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }

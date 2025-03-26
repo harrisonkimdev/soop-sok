@@ -5,11 +5,7 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 import React, { useState } from "react"
 import type { JSX } from "react"
 
-type MessageInputProps = {
-  cid: string
-}
-
-const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
+const MessageInput = ({ cid }: { cid: string }): JSX.Element => {
   const [message, setMessage] = useState("")
   const { messageDialog } = useDialog()
 
@@ -20,8 +16,11 @@ const MessageInput = ({ cid }: MessageInputProps): JSX.Element => {
 
     const { uid } = auth.currentUser
 
+    const trimmedMessage = message.trim()
+
     try {
-      await sendMessage(uid, cid, message.trim())
+      await sendMessage(uid, cid, trimmedMessage)
+      // Clear the text in the input field.
       setMessage("")
     } catch (err) {
       console.error(err)

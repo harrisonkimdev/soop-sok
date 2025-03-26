@@ -25,6 +25,8 @@ export async function getOrCreateChatId(
   } catch (err) {
     // handle any errors that occur during the process
     console.error(err)
-    return
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }

@@ -1,7 +1,7 @@
 "use client"
 
-import { auth } from "@/utils/firebase/firebase"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import {
   ChatBubbleBottomCenterIcon,
   Cog6ToothIcon,
@@ -26,40 +26,42 @@ const tabs = [
 const NavBar = (): JSX.Element => {
   const router = useRouter()
   const pathname = usePathname()
-
+  const isAuthenticated = useAuthCheck()
   const { state, dispatch } = useAppState()
 
   const redirectTo = (tab: string): void => {
-    const { currentUser } = auth
+    if (!isAuthenticated) {
+      // TODO: dialog - not authenticated.
+      router.push("/")
+      return
+    }
+
     const { publicChatURL, privateChatURL } = state
 
-    let redirectURL = ""
-
+    // If the pathname includes "/chats/channel" or "/chats/chats", set the publicChatURL to the pathname before redirecting.
     if (
-      pathname.includes("/chats/channel") ||
-      pathname.includes("/chats/chatroom")
+      pathname.startsWith("/channels") ||
+      pathname.startsWith("/chats/channel")
     ) {
       dispatch({ type: "SET_PUBLIC_URL", payload: pathname })
-    } else if (
-      pathname.includes("/private-chats") ||
-      pathname.includes("/chats/private-chat")
+    }
+
+    // If the pathname includes "/private-chats" or "/chats/private-chat", set the privateChatURL to the pathname before redirecting.
+    else if (
+      pathname.startsWith("/private-chats") ||
+      pathname.startsWith("/chats/private-chat")
     ) {
       dispatch({ type: "SET_PRIVATE_URL", payload: pathname })
     }
 
     const tabURLs: { [key: string]: string } = {
       "public-chat": publicChatURL || "/channels",
-      "private-chat": privateChatURL || `/private-chats/${currentUser?.uid}`,
+      "private-chat": privateChatURL || `/private-chats`,
       friends: "/friends",
       settings: "/settings",
     }
 
-    redirectURL = tabURLs[tab] || ""
-
-    if (redirectURL) {
-      router.push(redirectURL)
-      return
-    }
+    router.push(tabURLs[tab] || "")
   }
 
   return (

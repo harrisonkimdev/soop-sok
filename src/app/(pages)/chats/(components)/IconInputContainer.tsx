@@ -12,7 +12,7 @@ const IconInputContainer = (props: IconInputContainerProps): JSX.Element => {
   const router = useRouter()
 
   const handleClick = (): void => {
-    if (props.type === "channel" || props.type === "chatroom") {
+    if (props.type === "channel" || props.type === "group") {
       router.push(`/chats/${props.type}/${props.cid}/features`)
     } else {
       router.push(`/private-chats/${auth.currentUser?.uid}`)
@@ -25,7 +25,7 @@ const IconInputContainer = (props: IconInputContainerProps): JSX.Element => {
       className="flex items-center rounded-lg bg-white p-2 shadow-sm"
       onClick={handleClick}
     >
-      {props.type === "channel" || props.type === "chatroom" ? (
+      {props.type === "channel" || props.type === "group" ? (
         <Bars3Icon className="h-5 w-5" />
       ) : (
         <ArrowLeftIcon className="h-5 w-5" />

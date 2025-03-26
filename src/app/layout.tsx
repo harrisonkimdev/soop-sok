@@ -1,6 +1,6 @@
 import "./globals.css"
 import ProviderWrapper from "@/app/(components)/ProviderWrapper"
-import type { Metadata } from "next"
+import { Metadata } from "next"
 import { Dhurjati, Inter } from "next/font/google"
 import React from "react"
 import type { JSX } from "react"
@@ -16,6 +16,9 @@ const dhurjati = Dhurjati({
 export const metadata: Metadata = {
   title: "SoopSok",
   description: "Your favourite chat application",
+  icons: {
+    icon: "data:;base64,=",
+  },
 }
 
 type Props = {

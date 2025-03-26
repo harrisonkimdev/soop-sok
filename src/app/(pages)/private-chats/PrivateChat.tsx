@@ -18,7 +18,7 @@ const PrivateChat = (props: TProps): JSX.Element => {
   const [user, setUser] = useState<TUser | null>(null)
 
   const chatId = props.privateChat.id
-  const latestMessage = useFirebaseHookMessages({ chatId }) as TMessage | null
+  const latestMessage = useFirebaseHookMessages(chatId, true) as TMessage | null
 
   useEffect(() => {
     const getuser = async (): Promise<void> => {
@@ -32,8 +32,8 @@ const PrivateChat = (props: TProps): JSX.Element => {
 
   const enterPrivateChat = (): void => {
     if (auth && auth.currentUser) {
+      // URL: "/chats/[type=private-chat]/[id]
       router.push(`/chats/private-chat/${chatId}`)
-      return
     }
   }
 

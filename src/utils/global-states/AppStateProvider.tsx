@@ -53,8 +53,8 @@ type Action =
     }
 
 const initialState: AppState = {
-  publicChatURL: "",
-  privateChatURL: "",
+  publicChatURL: "/channels",
+  privateChatURL: "/private-chats",
   currentBanner: null,
   showMessageDialog: false,
   messageDialogType: null,
@@ -93,7 +93,11 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
         actionsDialogType: action.payload.type,
       }
     case "SET_ACTIONS_DIALOG_RESPONSE":
-      return { ...state, actionsDialogResponse: action.payload }
+      return {
+        ...state,
+        actionsDialogResponse: action.payload,
+        showActionsDialog: false,
+      }
     case "SET_CHANNEL_ID":
       return { ...state, channelId: action.payload }
     default:

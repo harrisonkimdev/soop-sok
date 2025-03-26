@@ -16,7 +16,7 @@ type pageProps = {
 const ChatListPage = ({ params }: pageProps): JSX.Element => {
   const router = useRouter()
 
-  const fetchedChat = useFirebaseHookChats({ channelId: params.id })
+  const chats = useFirebaseHookChats({ cid: params.id })
 
   const handleCancelClick = (): void => {
     console.log("handleCancelClick")
@@ -29,13 +29,11 @@ const ChatListPage = ({ params }: pageProps): JSX.Element => {
       {/* chat list */}
       <div className="row-span-11 flex grow flex-col gap-6 overflow-y-auto rounded-lg bg-white p-4">
         <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
-          Chats
+          Chat List
         </h1>
 
-        <div className="flex flex-col gap-3">
-          {fetchedChat?.map((chat: TChat) => (
-            <Chat key={chat.id} chat={chat} />
-          ))}
+        <div className="flex flex-col gap-4">
+          {chats?.map((chat: TChat) => <Chat key={chat.id} chat={chat} />)}
         </div>
       </div>
 

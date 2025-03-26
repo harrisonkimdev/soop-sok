@@ -18,7 +18,7 @@ const useFirebaseHookChat = (
   const isAuthenticated = useAuthCheck()
 
   // Fetch channle data in real time only if a user is authorized.
-  const chatRef = doc(firestore, "chats", props.chatId)
+  const chatRef = isAuthenticated ? doc(firestore, "chats", props.chatId) : null
   const [value, loading, error] = useDocumentData(chatRef)
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const useFirebaseHookChat = (
     }
   }, [value, loading, error, messageDialog])
 
-  return isAuthenticated ? { isFull, numMembers: value?.numMembers ?? 0 } : null
+  return { isFull, numMembers: value?.numMembers ?? 0 }
 }
 
 export default useFirebaseHookChat

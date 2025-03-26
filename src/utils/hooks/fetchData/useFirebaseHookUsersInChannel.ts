@@ -16,7 +16,9 @@ const useFirebaseHookUsersInChannel = (
 
   const isAuthenticated = useAuthCheck()
 
-  const channelsRef = doc(firestore, "channels", props.channelId)
+  const channelsRef = isAuthenticated
+    ? doc(firestore, "channels", props.channelId)
+    : null
   const [value, loading, error] = useDocumentData(channelsRef)
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const useFirebaseHookUsersInChannel = (
     }
   }, [value, loading, error, messageDialog])
 
-  return isAuthenticated ? { members: value?.members } : null
+  return { members: value?.members }
 }
 
 export default useFirebaseHookUsersInChannel

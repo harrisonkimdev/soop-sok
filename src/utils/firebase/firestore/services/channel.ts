@@ -6,14 +6,15 @@ export async function updateChannel(
   action: string,
 ): Promise<boolean> {
   try {
-    const ack = await fetchWithAuth(`/api/channels/${cid}?action=${action}`, {
+    const res = await fetchWithAuth(`/api/channels/${cid}?action=${action}`, {
       method: "PUT",
       body: JSON.stringify({ uid }),
     })
-    console.log(ack.message)
+    console.log(res.message)
     return true
   } catch (err) {
-    console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }

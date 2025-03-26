@@ -8,7 +8,7 @@ export async function createChat(
   tag: string,
   isPrivate: boolean,
   password: string,
-): Promise<string | null> {
+): Promise<string> {
   try {
     const data = await fetchWithAuth("/api/chats", {
       method: "POST",
@@ -22,28 +22,30 @@ export async function createChat(
         password,
       }),
     })
-    console.log(data.message)
-    return data.cid
+    return data.id
   } catch (err) {
     console.error(err)
-    return null
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }
 
 export async function updateChat(
   cid: string,
   uid: string,
-  action: string,
+  action: "enter" | "leave",
 ): Promise<boolean> {
   try {
-    const ack = await fetchWithAuth(`/api/chats/${cid}?action=${action}`, {
+    await fetchWithAuth(`/api/chats/${cid}?action=${action}`, {
       method: "PUT",
       body: JSON.stringify({ uid }),
     })
-    console.log(ack.message)
     return true
   } catch (err) {
     console.error(err)
-    return false
+    throw new Error(
+      `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
+    )
   }
 }

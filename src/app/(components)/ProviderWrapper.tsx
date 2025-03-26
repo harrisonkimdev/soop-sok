@@ -7,6 +7,9 @@ import dynamic from "next/dynamic"
 import React from "react"
 import type { JSX } from "react"
 
+// DialogWrapper is dynamically imported to avoid loading the component during server-side rendering
+// This is necessary because DialogWrapper uses client-side features like useAppState hook and MUI dialogs
+// Dynamic import with { ssr: false } ensures the component is only loaded on the client side
 const DialogWrapper = dynamic(
   () => import("@/app/(components)/dialogs/DialogWrapper"),
   { ssr: false },
@@ -18,6 +21,7 @@ type wrapperProps = {
 
 const Wrapper = ({ children }: wrapperProps): JSX.Element => {
   return (
+    // TODO: replace it with Zustand.
     <AppStateProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />

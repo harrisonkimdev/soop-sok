@@ -10,7 +10,14 @@ const useDialogs = (): {
   }
   messageDialog: {
     show: (
-      type: "data_retrieval" | "data_update" | "signin" | "general",
+      type:
+        | "data_retrieval"
+        | "data_update"
+        | "signin"
+        | "general"
+        | "network_error"
+        | "access_denied"
+        | "already_in_channel",
     ) => void
     hide: () => void
   }
@@ -18,7 +25,7 @@ const useDialogs = (): {
     set: (cid: string | null) => void
   }
   bannerState: {
-    set: (banner: TBanner) => void
+    set: (banner: TBanner | null) => void
   }
 } => {
   const { dispatch } = useAppState()
@@ -47,7 +54,14 @@ const useDialogs = (): {
   const messageDialog = useMemo(
     () => ({
       show: (
-        type: "data_retrieval" | "data_update" | "signin" | "general",
+        type:
+          | "data_retrieval"
+          | "data_update"
+          | "signin"
+          | "general"
+          | "network_error"
+          | "access_denied"
+          | "already_in_channel",
       ): void => {
         dispatch({
           type: "SHOW_MESSAGE_DIALOG",
@@ -75,8 +89,12 @@ const useDialogs = (): {
 
   const bannerState = useMemo(
     () => ({
-      set: (banner: TBanner): void => {
-        dispatch({ type: "SET_CURRENT_BANNER", payload: banner })
+      set: (banner: TBanner | null): void => {
+        if (banner !== null) {
+          dispatch({ type: "SET_CURRENT_BANNER", payload: banner })
+        } else {
+          dispatch({ type: "SET_CURRENT_BANNER", payload: null as any })
+        }
       },
     }),
     [dispatch],

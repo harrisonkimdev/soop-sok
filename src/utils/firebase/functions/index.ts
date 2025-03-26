@@ -73,9 +73,9 @@ async function updateBanner(): Promise<void> {
 }
 
 exports.scheduledFunction = functions.pubsub
-  .schedule("every 30 minutes")
+  .schedule("every 12 hours")
   .onRun((context) => {
-    console.log("This will be run every hour!", context)
+    console.log("This will be run every 12 hours!", context)
     updateBanner()
     return null
   })
