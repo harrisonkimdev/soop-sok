@@ -25,7 +25,7 @@ const useDialogs = (): {
     set: (cid: string | null) => void
   }
   bannerState: {
-    set: (banner: TBanner) => void
+    set: (banner: TBanner | null) => void
   }
 } => {
   const { dispatch } = useAppState()
@@ -89,8 +89,12 @@ const useDialogs = (): {
 
   const bannerState = useMemo(
     () => ({
-      set: (banner: TBanner): void => {
-        dispatch({ type: "SET_CURRENT_BANNER", payload: banner })
+      set: (banner: TBanner | null): void => {
+        if (banner !== null) {
+          dispatch({ type: "SET_CURRENT_BANNER", payload: banner })
+        } else {
+          dispatch({ type: "SET_CURRENT_BANNER", payload: null as any })
+        }
       },
     }),
     [dispatch],
