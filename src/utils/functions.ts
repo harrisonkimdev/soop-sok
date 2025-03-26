@@ -1,11 +1,35 @@
 import { FirestoreTimestamp } from "@/app/types"
 
 export const formatTimeAgo = (
-  unixSeconds: FirestoreTimestamp | undefined,
+  input:
+    | FirestoreTimestamp
+    | { seconds: number; nanoseconds: number }
+    | string
+    | undefined,
 ): string => {
-  if (!unixSeconds) return ""
+  if (!input) return ""
 
-  const timestamp = unixSeconds._seconds * 1000
+  let timestamp: number
+
+  // Firebase Timestamp 객체 처리 (seconds, nanoseconds 포함)
+  if (input && typeof input === "object" && "seconds" in input) {
+    timestamp = input.seconds * 1000
+  }
+  // 기존 FirestoreTimestamp 처리
+  else if (typeof input !== "string" && "_seconds" in input) {
+    timestamp = input._seconds * 1000
+  }
+  // 문자열 입력 처리
+  else if (typeof input === "string") {
+    try {
+      timestamp = new Date(input).getTime()
+    } catch {
+      return ""
+    }
+  } else {
+    return ""
+  }
+
   const now = Date.now()
   const difference = now - timestamp
 
