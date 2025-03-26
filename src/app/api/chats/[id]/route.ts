@@ -12,10 +12,20 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   const chatId = (await params).id
+  if (!chatId) return responseBadRequest("chat id is required.")
   console.log(`Chat ID: ${chatId}`)
+
   const { uid } = await req.json()
+  if (!uid) return responseBadRequest("user id is required.")
   console.log(`User ID: ${uid}`)
+
   const searchParams = req.nextUrl.searchParams
+  if (
+    searchParams.get("action") !== "enter" &&
+    searchParams.get("action") !== "leave"
+  ) {
+    return responseBadRequest("action value is required.")
+  }
 
   const chatRef = firestore.collection("chats").doc(chatId)
 
@@ -24,6 +34,7 @@ export async function PUT(
     const chatData: TChat = chatDoc.data() as TChat
     console.log("Chat data:", chatData)
 
+    // enter
     if (searchParams.get("action") === "enter") {
       console.log("Action: enter")
       if (chatData.numMembers >= chatData.capacity) {
@@ -41,7 +52,10 @@ export async function PUT(
         numMembers: newNumMembers,
         updatedAt: FieldValue.serverTimestamp(),
       })
-    } else if (searchParams.get("action") === "leave") {
+    }
+
+    // leave
+    else if (searchParams.get("action") === "leave") {
       console.log("Action: leave")
       const newMembers = chatData.members.filter((member) => member !== uid)
       const newNumMembers = chatData.numMembers - 1
