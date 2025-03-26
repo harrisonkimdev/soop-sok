@@ -33,10 +33,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     await firestore.collection("banners").add({
       cid,
       content,
-      createdAt: FieldValue.serverTimestamp(),
       selected: false,
       tagOptions,
       uid,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
     })
     return responseCreated("banner")
   } catch (error) {
