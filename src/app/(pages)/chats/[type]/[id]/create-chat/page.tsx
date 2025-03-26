@@ -11,9 +11,8 @@ import { auth } from "@/utils/firebase/firebase"
 import { createChat, getBanner } from "@/utils/firebase/firestore"
 import useDialogs from "@/utils/global-states/dispatcher"
 import { useChatForm } from "@/utils/hooks/useCreateChatForm"
-import { SelectChangeEvent } from "@mui/material"
 import { useRouter } from "next/navigation"
-import React, { ChangeEvent, useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import type { JSX } from "react"
 
 type TProps = {

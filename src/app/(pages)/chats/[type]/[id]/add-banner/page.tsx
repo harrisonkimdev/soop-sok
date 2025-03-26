@@ -126,7 +126,7 @@ const Page = ({ params }: pageProps): JSX.Element => {
             <div>
               <div className="min-h-14 rounded-sm border border-gray-300 p-3">
                 <div className="flex flex-col gap-3">
-                  {tagOptions.map((tagOption, index) => (
+                  {tagOptions.map((tagOption) => (
                     <div
                       key={tagOption}
                       className="flex items-center justify-between"
