@@ -1,4 +1,5 @@
 import { fetchWithAuth } from "./fetchWithAuth"
+import { TBanner } from "@/app/types"
 
 export async function addBanner(
   cid: string,
@@ -20,13 +21,11 @@ export async function addBanner(
   }
 }
 
-export async function getBanner(): Promise<any> {
+export async function getBanner(): Promise<TBanner | null> {
   try {
     const banner = await fetchWithAuth("/api/banners", { method: "GET" })
-    console.log("getBanner", banner)
     return banner
   } catch (err) {
-    console.error(err)
     throw new Error(
       `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
     )

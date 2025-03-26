@@ -22,8 +22,7 @@ export async function createChat(
         password,
       }),
     })
-    console.log(data.message)
-    return data.cid
+    return data.id
   } catch (err) {
     console.error(err)
     throw new Error(
