@@ -34,14 +34,13 @@ export async function createChat(
 export async function updateChat(
   cid: string,
   uid: string,
-  action: string,
+  action: "enter" | "leave",
 ): Promise<boolean> {
   try {
-    const ack = await fetchWithAuth(`/api/chats/${cid}?action=${action}`, {
+    await fetchWithAuth(`/api/chats/${cid}?action=${action}`, {
       method: "PUT",
       body: JSON.stringify({ uid }),
     })
-    console.log(ack.message)
     return true
   } catch (err) {
     console.error(err)
