@@ -3,14 +3,14 @@ import { TBanner } from "@/app/types"
 
 export async function addBanner(
   cid: string,
-  content: string,
+  title: string,
   tagOptions: string[],
   uid: string,
 ): Promise<boolean> {
   try {
     const addBannerAck = await fetchWithAuth("/api/banners", {
       method: "POST",
-      body: JSON.stringify({ cid, content, tagOptions, uid }),
+      body: JSON.stringify({ cid, title, tagOptions, uid }),
     })
     console.log(addBannerAck)
     return true

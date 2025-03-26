@@ -27,12 +27,12 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const { cid, content, tagOptions, uid } = await req.json()
+  const { cid, title, tagOptions, uid } = await req.json()
 
   try {
     await firestore.collection("banners").add({
       cid,
-      content,
+      title,
       selected: false,
       tagOptions,
       uid,
