@@ -5,11 +5,12 @@ export async function addBanner(
   cid: string,
   content: string,
   tagOptions: string[],
+  uid: string,
 ): Promise<boolean> {
   try {
     const addBannerAck = await fetchWithAuth("/api/banners", {
       method: "POST",
-      body: JSON.stringify({ cid, content, tagOptions }),
+      body: JSON.stringify({ cid, content, tagOptions, uid }),
     })
     console.log(addBannerAck)
     return true

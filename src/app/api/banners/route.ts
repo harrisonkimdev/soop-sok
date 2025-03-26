@@ -27,7 +27,7 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const { cid, content, tagOptions } = await req.json()
+  const { cid, content, tagOptions, uid } = await req.json()
 
   try {
     await firestore.collection("banners").add({
@@ -36,6 +36,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       createdAt: FieldValue.serverTimestamp(),
       selected: false,
       tagOptions,
+      uid,
     })
     return responseCreated("banner")
   } catch (error) {

@@ -57,12 +57,16 @@ const Page = ({ params }: pageProps): JSX.Element => {
 
     if (bannerContent.length > 0) {
       try {
-        const res = await addBanner(params.id, bannerContent, tagOptions)
-
-        //
+        // TODO: add uid, updatedAt
+        const res = await addBanner(
+          params.id,
+          bannerContent,
+          tagOptions,
+          currentUser.uid,
+        )
 
         if (res) {
-          router.push(`/chats/channel/${params.id}`)
+          router.push(`/chats/${params.type}/${params.id}`)
         }
       } catch (err) {
         console.error(err)
@@ -90,8 +94,9 @@ const Page = ({ params }: pageProps): JSX.Element => {
           onChange={(e) => setBannerContent(e.target.value)}
         />
 
-        {/* tag options */}
+        {/* tag container */}
         <div className="flex flex-col gap-4">
+          {/* input field for a new tag */}
           <div className="mt-2 flex gap-2">
             <TextField
               id="outlined-basic"
@@ -111,10 +116,8 @@ const Page = ({ params }: pageProps): JSX.Element => {
               Add
             </Button>
           </div>
-        </div>
 
-        {/* container for tag options */}
-        <div>
+          {/* entered tag options */}
           {tagOptions.length > 0 && (
             <>
               <div className="min-h-14 rounded-sm border border-gray-300 p-3">
