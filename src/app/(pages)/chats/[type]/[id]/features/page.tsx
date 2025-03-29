@@ -2,7 +2,7 @@
 
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel, updateChat } from "@/utils/firebase/firestore"
-import { useAppState } from "@/utils/global-states/AppStateProvider"
+import { useAppState } from "@/app/(context)/AppStateProvider"
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowLeftStartOnRectangleIcon,

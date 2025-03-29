@@ -1,6 +1,6 @@
 "use client"
 
-import { useAppState } from "@/utils/global-states/AppStateProvider"
+import { useAppState } from "@/app/(context)/AppStateProvider"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import {
   ChatBubbleBottomCenterIcon,
