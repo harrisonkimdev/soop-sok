@@ -62,7 +62,11 @@ const ChatList = ({ params }: pageProps): JSX.Element => {
         </h1>
 
         <div className="flex flex-col gap-4">
-          {chats?.map((chat: TChat) => <Chat key={chat.id} chat={chat} />)}
+          {chats.length > 0 ? (
+            chats?.map((chat: TChat) => <Chat key={chat.id} chat={chat} />)
+          ) : (
+            <p>No chats available.</p>
+          )}
         </div>
       </div>
 
