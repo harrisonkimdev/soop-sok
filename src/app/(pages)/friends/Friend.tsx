@@ -4,7 +4,7 @@ import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser, getOrCreateChatId } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
-import useDialogs from "@/utils/global-states/dispatcher"
+
 import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import Link from "next/link"
@@ -24,7 +24,7 @@ export const Friend = (props: FriendProp): JSX.Element => {
 
   const router = useRouter()
 
-  const { messageDialog } = useDialogs()
+  
 
   useEffect(() => {
     const getUser = async (): Promise<void | null> => {
@@ -37,11 +37,11 @@ export const Friend = (props: FriendProp): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        
       }
     }
     getUser()
-  }, [messageDialog, props.friendId])
+  }, )
 
   const redirectToDMChat = async (): Promise<void | null> => {
     const myId = auth.currentUser?.uid
@@ -63,7 +63,7 @@ export const Friend = (props: FriendProp): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        
       }
     }
   }

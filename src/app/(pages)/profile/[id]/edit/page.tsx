@@ -5,80 +5,29 @@ import MBTISelect from "@/app/(pages)/profile/[id]/edit/(components)/MBTISelecto
 import ProfilePicture from "@/app/(pages)/profile/[id]/edit/(components)/ProfilePicture"
 import UpdateButton from "@/app/(pages)/profile/[id]/edit/(components)/UpdateButton"
 import UsernameField from "@/app/(pages)/profile/[id]/edit/(components)/UsernameField"
-import { TUser } from "@/app/types"
+import type { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
-import { fetchUser, updateUserProfile } from "@/utils/firebase/firestore"
-import { useAppState } from "@/utils/global-states/AppStateProvider"
-import useDialogs from "@/utils/global-states/dispatcher"
-import { useParams, useRouter } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
-import type { JSX } from "react"
+import { updateUserProfile } from "@/utils/firebase/firestore"
+import { useRouter, useParams } from "next/navigation"
+import { useState, useCallback } from "react"
 
-const ProfileEditPage = (): JSX.Element => {
-  const { id } = useParams()
+export default function EditProfile() {
   const router = useRouter()
-
+  const { id } = useParams()
   const [user, setUser] = useState<TUser | null>(null)
 
-  const { state } = useAppState()
-  const { actionsDialog, messageDialog } = useDialogs()
+  const handleUpdate = useCallback(async (): Promise<void> => {
+    const currentUser = auth.currentUser
 
-  useEffect(() => {
-    const getUser = async (): Promise<void | null> => {
-      const currentUser = auth.currentUser
-
-      if (currentUser) {
-        try {
-          const user = await fetchUser(currentUser.uid)
-
-          if (!user) {
-            // Handle 404 not found
-            router.push("/404")
-            return
-          }
-
-          setUser(user)
-        } catch (err) {
-          console.error(err)
-          messageDialog.show("data_retrieval")
-        }
+    if (currentUser && user) {
+      try {
+        await updateUserProfile(currentUser.uid, user)
+        router.push(`/profile/${id}`)
+      } catch (error) {
+        console.error("Update error:", error)
       }
     }
-
-    getUser()
-  }, [messageDialog, router])
-
-  // Update user profile when the user confirms the action dialog.
-  useEffect(() => {
-    const handleUpdate = async (): Promise<void> => {
-      const currentUser = auth.currentUser
-
-      if (currentUser?.uid && user) {
-        try {
-          await updateUserProfile(currentUser.uid, user)
-          router.push(`/profile/${id}`)
-          return
-        } catch (err) {
-          console.error(err)
-          messageDialog.show("data_update")
-        }
-      }
-    }
-
-    if (state.actionsDialogResponse) {
-      handleUpdate()
-      actionsDialog.hide()
-    } else {
-      actionsDialog.hide()
-    }
-  }, [
-    state.actionsDialogResponse,
-    actionsDialog,
-    id,
-    messageDialog,
-    router,
-    user,
-  ])
+  }, [id, router, user])
 
   const updateField = useCallback(
     (field: string, value: any, isProfileField = false) => {
@@ -117,11 +66,9 @@ const ProfileEditPage = (): JSX.Element => {
         />
         <MBTISelect mbti={user?.profile.mbti} updateField={updateField} />
       </div>
-      <UpdateButton />
+      <UpdateButton onUpdate={handleUpdate} />
     </div>
   )
 }
 
-ProfileEditPage.displayName = "ProfileEditPage"
-
-export default ProfileEditPage
+EditProfile.displayName = "EditProfile"

@@ -3,7 +3,7 @@
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel, updateChat } from "@/utils/firebase/firestore"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
-import useDialogs from "@/utils/global-states/dispatcher"
+
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowLeftStartOnRectangleIcon,
@@ -43,7 +43,7 @@ type PageProps = {
 const FeaturesPage = ({ params }: PageProps): JSX.Element => {
   const router = useRouter()
   const { state } = useAppState()
-  const { channelState } = useDialogs()
+  
 
   const redirectTo = (feature: TFeatures): void => {
     if (auth) {

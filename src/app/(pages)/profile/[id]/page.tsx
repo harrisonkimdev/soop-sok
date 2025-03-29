@@ -4,7 +4,7 @@ import OthersProfile from "./OthersProfile"
 import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser } from "@/utils/firebase/firestore"
-import useDialogs from "@/utils/global-states/dispatcher"
+
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -17,7 +17,7 @@ const ProfilePage = (): JSX.Element => {
 
   const { id } = useParams()
 
-  const { messageDialog } = useDialogs()
+  
 
   useEffect(() => {
     const getUser = async (): Promise<void> => {
@@ -32,11 +32,11 @@ const ProfilePage = (): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        
       }
     }
     getUser()
-  }, [id, messageDialog, profile?.uid])
+  }, )
 
   return (
     <div className="flex flex-col gap-4 pt-10">

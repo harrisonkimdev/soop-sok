@@ -7,7 +7,6 @@ import {
   registerUserWithUID,
   updateUserStatus,
 } from "@/utils/firebase/firestore"
-import useDialogs from "@/utils/global-states/dispatcher"
 import { GoogleAuthProvider } from "firebase/auth"
 import firebaseui from "firebaseui"
 import Image from "next/image"
@@ -27,8 +26,6 @@ export default function Home(): JSX.Element | null {
   const [firebaseui, setFirebaseUI] = useState<TFirebaseUI | null>(null)
 
   const router = useRouter()
-
-  const { messageDialog } = useDialogs()
 
   const uiConfig = useMemo(() => {
     const cookies = new Cookies()
@@ -66,7 +63,6 @@ export default function Home(): JSX.Element | null {
               } catch (err) {
                 // In case of an error, show an error message.
                 console.error("Error getting document:", err)
-                messageDialog.show("general")
               }
             }
             // If a user is returning,
@@ -82,7 +78,6 @@ export default function Home(): JSX.Element | null {
               } catch (err) {
                 // In case of an error, show an error message.
                 console.error("Error getting document:", err)
-                messageDialog.show("general")
               }
             }
 
@@ -98,7 +93,7 @@ export default function Home(): JSX.Element | null {
       // signInSuccessUrl: '/channels',
       signInOptions: [GoogleAuthProvider.PROVIDER_ID],
     }
-  }, [router, messageDialog])
+  }, [router])
 
   useEffect(() => {
     const loadFirebaseUI = async (): Promise<void> => {

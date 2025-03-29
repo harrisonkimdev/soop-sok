@@ -4,13 +4,13 @@ import "@/app/(components)/Marquee.css"
 
 import { getBanner } from "@/utils/firebase/firestore"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
-import useDialogs from "@/utils/global-states/dispatcher"
+
 import { useEffect } from "react"
 import type { JSX } from "react"
 
 const Banner = (): JSX.Element => {
   const { state } = useAppState()
-  const { bannerState } = useDialogs()
+  
 
   useEffect(() => {
     const fetchBanner = async (): Promise<void> => {

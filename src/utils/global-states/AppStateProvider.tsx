@@ -14,11 +14,6 @@ interface AppState {
   publicChatURL: string
   privateChatURL: string
   currentBanner: TBanner | null
-  showMessageDialog: boolean
-  messageDialogType: string | null
-  showActionsDialog: boolean
-  actionsDialogType: string | null
-  actionsDialogResponse: boolean
   channelId: string | null
 }
 
@@ -36,18 +31,6 @@ type Action =
       payload: TBanner
     }
   | {
-      type: "SHOW_MESSAGE_DIALOG"
-      payload: { show: boolean; type: string | null }
-    }
-  | {
-      type: "SHOW_ACTIONS_DIALOG"
-      payload: { show: boolean; type: string | null }
-    }
-  | {
-      type: "SET_ACTIONS_DIALOG_RESPONSE"
-      payload: boolean
-    }
-  | {
       type: "SET_CHANNEL_ID"
       payload: string | null
     }
@@ -56,11 +39,6 @@ const initialState: AppState = {
   publicChatURL: "/channels",
   privateChatURL: "/private-chats",
   currentBanner: null,
-  showMessageDialog: false,
-  messageDialogType: null,
-  showActionsDialog: false,
-  actionsDialogType: null,
-  actionsDialogResponse: false,
   channelId: null,
 }
 
@@ -80,24 +58,6 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
       return { ...state, privateChatURL: action.payload }
     case "SET_CURRENT_BANNER":
       return { ...state, currentBanner: action.payload }
-    case "SHOW_MESSAGE_DIALOG":
-      return {
-        ...state,
-        showMessageDialog: action.payload.show,
-        messageDialogType: action.payload.type,
-      }
-    case "SHOW_ACTIONS_DIALOG":
-      return {
-        ...state,
-        showActionsDialog: action.payload.show,
-        actionsDialogType: action.payload.type,
-      }
-    case "SET_ACTIONS_DIALOG_RESPONSE":
-      return {
-        ...state,
-        actionsDialogResponse: action.payload,
-        showActionsDialog: false,
-      }
     case "SET_CHANNEL_ID":
       return { ...state, channelId: action.payload }
     default:

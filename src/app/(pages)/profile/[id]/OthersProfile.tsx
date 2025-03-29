@@ -5,7 +5,7 @@ import {
   getOrCreateChatId,
   makeFriend,
 } from "@/utils/firebase/firestore"
-import useDialogs from "@/utils/global-states/dispatcher"
+
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 import { useEffect, useState } from "react"
@@ -15,7 +15,7 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
 
   const router = useRouter()
 
-  const { messageDialog } = useDialogs()
+  
 
   useEffect(() => {
     const initCheckIsMyFriend = async (): Promise<void> => {
@@ -30,12 +30,12 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
           }
         } catch (err) {
           console.error(err)
-          messageDialog.show("data_retrieval")
+          
         }
       }
     }
     initCheckIsMyFriend()
-  }, [messageDialog, profile?.uid])
+  }, )
 
   const redirectToDMChat = async (): Promise<void> => {
     const myId = auth.currentUser?.uid
@@ -57,7 +57,7 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_retrieval")
+        
       }
     }
   }
@@ -69,7 +69,7 @@ const OthersProfile = ({ profile }: { profile: TUser | null }): JSX.Element => {
         setIsMyFriend(true)
       } catch (err) {
         console.error(err)
-        messageDialog.show("data_update")
+        
       }
     }
   }
