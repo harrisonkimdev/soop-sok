@@ -1,8 +1,16 @@
 import { TPrivateChat, TMessage, TUser } from "@/app/types"
-import { auth } from "@/utils/firebase/firebase"
+import { auth, firestore } from "@/utils/firebase/firebase"
 import { fetchUser } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
-import useFirebaseHookMessages from "@/utils/hooks/fetchData/useFirebaseHookMessages"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  QuerySnapshot,
+  DocumentData,
+} from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
@@ -13,12 +21,37 @@ type TProps = {
 }
 
 const PrivateChat = (props: TProps): JSX.Element => {
+  const [user, setUser] = useState<TUser | null>(null)
+  const [latestMessage, setLatestMessage] = useState<TMessage | null>(null)
+
   const router = useRouter()
 
-  const [user, setUser] = useState<TUser | null>(null)
+  const isAuthenticated = useAuthCheck()
 
   const chatId = props.privateChat.id
-  const latestMessage = useFirebaseHookMessages(chatId, true) as TMessage | null
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    const messageRef = collection(firestore, "messages")
+    const q = query(messageRef, where("cid", "==", chatId))
+
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot: QuerySnapshot<DocumentData>) => {
+        const messages = querySnapshot.docs.map((doc) => {
+          const data = doc.data() as TMessage
+          return {
+            ...data,
+            id: doc.id,
+          }
+        })
+        setLatestMessage(messages[messages.length - 1])
+      },
+    )
+
+    return () => unsubscribe()
+  }, [isAuthenticated, chatId])
 
   useEffect(() => {
     const getuser = async (): Promise<void> => {

@@ -34,6 +34,7 @@ export type TMessage = {
   createdAt: FirestoreTimestamp
 }
 export type TUser = {
+  id: string
   createdAt: FirestoreTimestamp
   displayName: string
   email: string

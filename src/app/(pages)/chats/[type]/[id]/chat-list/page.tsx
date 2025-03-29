@@ -2,9 +2,19 @@
 
 import Chat from "@/app/(pages)/chats/[type]/[id]/chat-list/Chat"
 import { TChat } from "@/app/types"
-import useFirebaseHookChats from "@/utils/hooks/fetchData/useFirebaseHookChats"
-import { useRouter } from "next/navigation"
+import RedirectButton from "@/components/RedirectButton"
+import { firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
+import {
+  collection,
+  onSnapshot,
+  query,
+  QuerySnapshot,
+  where,
+  DocumentData,
+} from "firebase/firestore"
 import type { JSX } from "react"
+import { useEffect, useState } from "react"
 
 type pageProps = {
   params: {
@@ -13,41 +23,61 @@ type pageProps = {
   }
 }
 
-const ChatListPage = ({ params }: pageProps): JSX.Element => {
-  const router = useRouter()
+const ChatList = ({ params }: pageProps): JSX.Element => {
+  const [chats, setChats] = useState<TChat[]>([])
+  const isAuthenticated = useAuthCheck()
 
-  const chats = useFirebaseHookChats({ cid: params.id })
+  useEffect(() => {
+    if (!isAuthenticated) return
 
-  const handleCancelClick = (): void => {
-    console.log("handleCancelClick")
-    router.push(`/chats/${params.type}/${params.id}/features`)
-    return
-  }
+    const chatsRef = collection(firestore, "chats")
+    const q = query(chatsRef, where("cid", "==", params.id))
+
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot: QuerySnapshot<DocumentData>) => {
+        const chats = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            }) as TChat,
+        )
+
+        setChats(chats)
+      },
+      (error: Error) => {
+        console.error("채팅 리스닝 중 오류", error)
+      },
+    )
+
+    return () => unsubscribe()
+  }, [params.id, isAuthenticated])
 
   return (
     <div className="flex h-full flex-col gap-4">
-      {/* chat list */}
       <div className="row-span-11 flex grow flex-col gap-6 overflow-y-auto rounded-lg bg-white p-4">
         <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
           Chat List
         </h1>
 
         <div className="flex flex-col gap-4">
-          {chats?.map((chat: TChat) => <Chat key={chat.id} chat={chat} />)}
+          {chats.length > 0 ? (
+            chats?.map((chat: TChat) => <Chat key={chat.id} chat={chat} />)
+          ) : (
+            <p>No chats available.</p>
+          )}
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={handleCancelClick}
-        className="w-full rounded-lg bg-white py-4 text-xl font-semibold text-earth-400 shadow transition duration-300 ease-in-out hover:bg-earth-50"
-      >
-        Cancel
-      </button>
+      <RedirectButton
+        text="Cancel"
+        redirectURL={`/chats/${params.type}/${params.id}/features`}
+      />
     </div>
   )
 }
 
-ChatListPage.displayName = "ChatListPage"
+ChatList.displayName = "ChatList"
 
-export default ChatListPage
+export default ChatList
