@@ -1,7 +1,6 @@
 import { TChannel } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel } from "@/utils/firebase/firestore"
-
 import { FirebaseError } from "firebase/app"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
@@ -12,8 +11,6 @@ interface ChannelProps {
 
 export const Channel = ({ channel }: ChannelProps): JSX.Element => {
   const router = useRouter()
-
-  
 
   const isFull = channel?.capacity == channel.numMembers
   const numMembers = channel?.members.length ?? 0
@@ -32,7 +29,6 @@ export const Channel = ({ channel }: ChannelProps): JSX.Element => {
 
     // Check if the user is already in the channel and only enter the channel if they are not. Otherwise, return.
     if (channel.members.includes(currentUser.uid)) {
-      
       router.push("/channels")
     }
 
@@ -40,10 +36,8 @@ export const Channel = ({ channel }: ChannelProps): JSX.Element => {
       // Update the user list in the channel document.
       const res = await updateChannel(channel.id, currentUser.uid, "enter")
 
-      // If the update is successful, set the current channel state and navigate to the channel page.
+      // If the update is successful, navigate to the channel page.
       if (res) {
-        // TODO: rename the channelState to something more descriptive.
-        channelState.set(channel.id)
         router.push(`/chats/channel/${channel.id}/`)
       }
     } catch (err) {
@@ -53,13 +47,11 @@ export const Channel = ({ channel }: ChannelProps): JSX.Element => {
       if (err instanceof FirebaseError) {
         switch (err.code) {
           case "permission-denied":
-            
             // 홈 화면이나 채널 목록으로 리다이렉트
             router.push("/channels")
             break
 
           case "network-error":
-            
             {
               // 재시도 옵션 제공
               const retry = confirm("네트워크 오류. 다시 시도하시겠습니까?")
@@ -72,13 +64,11 @@ export const Channel = ({ channel }: ChannelProps): JSX.Element => {
             break
 
           default:
-            
             // 채널 목록으로 리다이렉트
             router.push("/channels")
         }
       } else {
         // 예상치 못한 일반 에러
-        
         router.push("/channels")
       }
     }

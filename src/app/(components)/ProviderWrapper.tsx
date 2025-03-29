@@ -1,6 +1,7 @@
 "use client"
 
 import NavBar from "@/app/(components)/NavBar"
+import AuthProvider from "@/components/AuthProvider"
 import { AppStateProvider } from "@/utils/global-states/AppStateProvider"
 import theme from "@/utils/ThemeProvider"
 import CssBaseline from "@mui/material/CssBaseline"
@@ -16,10 +17,12 @@ export default function ProviderWrapper({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AppStateProvider>
-        <main className="mx-auto h-screen w-screen bg-stone-50">
-          <div className="h-[calc(100vh-3.5rem)]">{children}</div>
-          <NavBar />
-        </main>
+        <AuthProvider>
+          <main className="mx-auto h-screen w-screen bg-stone-50">
+            <div className="h-[calc(100vh-3.5rem)]">{children}</div>
+            <NavBar />
+          </main>
+        </AuthProvider>
       </AppStateProvider>
     </ThemeProvider>
   )

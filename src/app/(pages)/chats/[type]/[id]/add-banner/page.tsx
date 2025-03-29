@@ -2,7 +2,6 @@
 
 import { auth } from "@/utils/firebase/firebase"
 import { addBanner } from "@/utils/firebase/firestore"
-
 import { BackspaceIcon } from "@heroicons/react/24/outline"
 import { Button, TextField } from "@mui/material"
 import { useRouter } from "next/navigation"
@@ -22,8 +21,6 @@ const Page = ({ params }: pageProps): JSX.Element => {
   const [tagOptions, setTagOptions] = useState<string[]>([])
 
   const router = useRouter()
-
-  
 
   const addToList = (): void => {
     if (tagInput.length > 0 && tagOptions.length < 5) {
@@ -79,7 +76,6 @@ const Page = ({ params }: pageProps): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        
       }
     }
   }
