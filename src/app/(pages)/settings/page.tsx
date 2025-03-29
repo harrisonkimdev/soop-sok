@@ -2,15 +2,13 @@
 
 import { auth } from "@/utils/firebase/firebase"
 import { updateUserStatus } from "@/utils/firebase/firestore"
+import { signOut } from "firebase/auth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
-import { useSignOut } from "react-firebase-hooks/auth"
 
 const Settings = (): JSX.Element => {
   const router = useRouter()
-
-  const [signOut] = useSignOut(auth)
 
   const handleSignout = async (): Promise<void> => {
     if (!auth?.currentUser) return
@@ -21,7 +19,7 @@ const Settings = (): JSX.Element => {
         console.error("Session expired or update failed")
         return
       }
-      await signOut()
+      await signOut(auth)
       router.push("/")
       return
     } catch (err) {

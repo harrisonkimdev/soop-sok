@@ -4,9 +4,14 @@ import User from "@/app/(pages)/chats/[type]/[id]/user-list/User"
 import RedirectButton from "@/components/RedirectButton"
 import { firestore } from "@/utils/firebase/firebase"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
-import { doc, DocumentData, DocumentReference } from "firebase/firestore"
+import {
+  DocumentData,
+  onSnapshot,
+  doc,
+  DocumentSnapshot,
+} from "firebase/firestore"
 import type { JSX } from "react"
-import { useDocumentData } from "react-firebase-hooks/firestore"
+import { useState, useEffect } from "react"
 
 type userListProps = {
   params: {
@@ -16,18 +21,34 @@ type userListProps = {
 }
 
 const UserList = ({ params }: userListProps): JSX.Element => {
+  // console.log("Params:", {
+  //   type: params.type,
+  //   id: params.id,
+  // })
+
+  const [users, setUsers] = useState<string[]>([])
   const isAuthenticated = useAuthCheck()
 
-  const docRef: DocumentReference<DocumentData> | null =
-    isAuthenticated && params.id
-      ? doc(
-          firestore,
-          params.type === "channel" ? "channels" : "chats",
-          params.id,
-        )
-      : null
+  useEffect(() => {
+    if (!isAuthenticated) return
 
-  const [value, loading, error] = useDocumentData(docRef)
+    const collectionName = params.type === "channel" ? "channels" : "chats"
+
+    const membersRef = doc(firestore, collectionName, params.id)
+
+    // console.log("membersRef", membersRef)
+
+    const unsubscribe = onSnapshot(
+      membersRef,
+      (querySnapshot: DocumentSnapshot<DocumentData>) => {
+        const members = querySnapshot.data()?.members as string[]
+        console.log("members", members)
+        setUsers(members)
+      },
+    )
+
+    return () => unsubscribe()
+  }, [isAuthenticated, params.id, params.type])
 
   return (
     <div className="flex h-full flex-col gap-4">
@@ -36,19 +57,11 @@ const UserList = ({ params }: userListProps): JSX.Element => {
           Users in this channel
         </h1>
 
-        {loading ? (
-          <div>Loading...</div>
-        ) : error ? (
-          <div>Error loading users: {error.message}</div>
-        ) : !value?.members ? (
-          <div>No users found</div>
-        ) : (
-          <ul className="flex flex-col gap-3">
-            {value.members.map((user: string) => (
-              <User key={user} uid={user} />
-            ))}
-          </ul>
-        )}
+        <ul className="flex flex-col gap-3">
+          {users.map((uid: string) => (
+            <User key={uid} uid={uid} />
+          ))}
+        </ul>
       </div>
 
       <RedirectButton
