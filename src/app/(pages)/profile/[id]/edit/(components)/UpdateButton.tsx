@@ -1,4 +1,6 @@
-const UpdateButton = ({ onUpdate }: { onUpdate: () => void }) => {
+import type { JSX } from "react"
+
+const UpdateButton = ({ onUpdate }: { onUpdate: () => void }): JSX.Element => {
   return (
     <button
       onClick={onUpdate}
