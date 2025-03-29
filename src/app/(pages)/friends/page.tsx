@@ -3,13 +3,42 @@
 import PageTitle from "@/app/(components)/PageTitle"
 import { Friend } from "@/app/(pages)/friends/Friend"
 import { TFriend } from "@/app/types"
-import { auth } from "@/utils/firebase/firebase"
-import useFirebaseHookFriends from "@/utils/hooks/fetchData/useFirebaseHookFriends"
+import { auth, firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
+import {
+  collection,
+  DocumentData,
+  onSnapshot,
+  QuerySnapshot,
+} from "firebase/firestore"
 import type { JSX } from "react"
+import { useEffect, useState } from "react"
 
 const FriendsPage = (): JSX.Element => {
+  const [friends, setFriends] = useState<TFriend[]>([])
+  const isAuthenticated = useAuthCheck()
+
   const userId = auth.currentUser?.uid || ""
-  const friends = useFirebaseHookFriends({ userId })
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    const unsubscribe = onSnapshot(
+      collection(firestore, "friend_list"),
+      (querySnapshot: QuerySnapshot<DocumentData>) => {
+        const friends = querySnapshot.docs.map((doc) => {
+          const data = doc.data() as TFriend
+          return {
+            ...data,
+            id: doc.id,
+          }
+        })
+        setFriends(friends)
+      },
+    )
+
+    return () => unsubscribe()
+  }, [isAuthenticated])
 
   return (
     <div className="h-full overflow-y-auto">
