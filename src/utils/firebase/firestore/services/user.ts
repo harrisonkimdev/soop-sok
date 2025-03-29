@@ -61,11 +61,9 @@ export async function updateUserProfile(
 
 export async function fetchUser(uid: string): Promise<TUser> {
   try {
-    const user = await fetchWithAuth(`/api/users/${uid}`, { method: "GET" })
-    console.log("fetchUser", user)
-    return user
+    const userData = await fetchWithAuth(`/api/users/${uid}`, { method: "GET" })
+    return userData.data
   } catch (err) {
-    console.error(err)
     throw new Error(
       `Firestore 작업 중 오류: ${err instanceof Error ? err.message : "알 수 없는 오류 발생..."}`,
     )

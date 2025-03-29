@@ -1,53 +1,36 @@
-"use client"
-
-import { TUser } from "@/app/types"
-import { auth } from "@/utils/firebase/firebase"
 import { fetchUser } from "@/utils/firebase/firestore"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import Link from "next/link"
 import type { JSX } from "react"
 
 type UserProps = {
   uid: string
 }
 
-const User = (props: UserProps): JSX.Element => {
-  const [user, setUser] = useState<TUser | null>(null)
-  const router = useRouter()
+const User = async (props: UserProps): Promise<JSX.Element> => {
+  const userData = await fetchUser(props.uid)
 
-  useEffect(() => {
-    const getuser = async (): Promise<void> => {
-      const user = await fetchUser(props.uid)
-      setUser(user)
-    }
-    getuser()
-  }, [props.uid])
-
-  const redirectToProfile = (uid: string | undefined): void => {
-    if (uid && auth) {
-      router.push(`/profile/${uid}`)
-      return
-    }
+  if (!userData) {
+    return <div>User not found</div>
   }
 
   return (
-    <li
-      onClick={() => redirectToProfile(user?.uid)}
-      className="flex cursor-pointer items-center justify-between rounded-lg bg-stone-200 p-3 shadow-sm"
+    // TODO: auth check
+    <Link
+      href={`/profile/${userData.uid}`}
+      className="flex cursor-pointer items-center justify-between rounded-lg border p-3 shadow"
     >
-      <div className="flex w-full items-center gap-3 px-2 py-1">
+      <div className="flex items-center gap-6 px-2 py-1">
         <Image
-          // TODO: Add a default profile picture
-          src={user?.photoURL || "/default-profile.png"}
+          src={userData.photoURL || "/images/ks.jpeg"}
           alt="Profile Picture"
           width={64}
           height={64}
-          className="rounded-full object-cover"
+          className="aspect-square h-16 w-16 rounded-full object-cover"
         />
-        <p className="text-lg">{user?.displayName}</p>
+        <p className="text-lg">{userData.displayName}</p>
       </div>
-    </li>
+    </Link>
   )
 }
 
