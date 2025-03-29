@@ -3,7 +3,6 @@
 import { auth } from "@/utils/firebase/firebase"
 import { updateChannel, updateChat } from "@/utils/firebase/firestore"
 import { useAppState } from "@/utils/global-states/AppStateProvider"
-
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowLeftStartOnRectangleIcon,
@@ -42,8 +41,7 @@ type PageProps = {
 
 const FeaturesPage = ({ params }: PageProps): JSX.Element => {
   const router = useRouter()
-  const { state } = useAppState()
-  
+  const { state, dispatch } = useAppState()
 
   const redirectTo = (feature: TFeatures): void => {
     if (auth) {
@@ -66,7 +64,7 @@ const FeaturesPage = ({ params }: PageProps): JSX.Element => {
 
     // Redirect users to /channels.
     if (params.type === "channel") {
-      channelState.set(null)
+      dispatch({ type: "SET_CHANNEL_ID", payload: null })
       if (userLeft) router.push("/channels")
     }
 
