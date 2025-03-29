@@ -3,7 +3,6 @@ import { auth } from "@/utils/firebase/firebase"
 import { updateChat } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
 import useDialogs from "@/utils/global-states/dispatcher"
-import useFirebaseHookChat from "@/utils/hooks/fetchData/useFirebaseHookChat"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 
@@ -15,12 +14,8 @@ const Chat = ({ chat }: ChatProps): JSX.Element => {
   const router = useRouter()
   const { messageDialog } = useDialogs()
 
-  const channelData = useFirebaseHookChat({
-    chatId: chat.id,
-  })
-
   const currUser = auth.currentUser
-  const isFull = channelData?.isFull ?? false
+  const isFull = chat.capacity === chat.numMembers
 
   const handleEnterChat = async (): Promise<void> => {
     if (currUser && !isFull) {
