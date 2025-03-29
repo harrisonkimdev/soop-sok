@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
 })
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = (): AuthContextType => useContext(AuthContext)
 
 export default function AuthProvider({
   children,
@@ -55,14 +55,6 @@ export default function AuthProvider({
     user,
     isAuthenticated: !!user,
     loading,
-  }
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white">
-        <div className="spinner">로딩 중...</div>
-      </div>
-    )
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
