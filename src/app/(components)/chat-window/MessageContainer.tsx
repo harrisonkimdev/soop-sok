@@ -11,7 +11,7 @@ const MessageContainer = ({ cid }: { cid: string }): JSX.Element => {
   return (
     <div
       onScroll={() => {}}
-      className="flex grow flex-col gap-5 overflow-y-auto rounded-lg bg-white p-4 shadow-sm"
+      className="flex grow flex-col gap-7 overflow-y-auto rounded-lg bg-white p-4 shadow-sm"
     >
       {Array.isArray(messages) &&
         messages.map((message: TMessage) => (

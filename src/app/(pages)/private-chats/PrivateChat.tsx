@@ -42,11 +42,11 @@ const PrivateChat = (props: TProps): JSX.Element => {
       <div className="flex items-center gap-3 rounded-lg bg-white p-4 shadow-sm">
         {user && (
           <Image
-            src={user?.photoURL || "/default-profile.png"}
+            src={user?.photoURL || "/images/ks.jpeg"}
             alt=""
-            width={1324}
-            height={1827}
-            className="h-16 w-16 rounded-full object-cover"
+            width={64}
+            height={64}
+            className="haspect-square h-16 w-16 rounded-full object-cover"
           />
         )}
 
