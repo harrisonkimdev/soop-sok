@@ -2,7 +2,7 @@
 
 import NavBar from "@/app/(components)/NavBar"
 import { AppStateProvider } from "@/app/(context)/AppStateProvider"
-import AuthProvider, { useAuth } from "@/components/AuthProvider"
+import AuthProvider, { useAuth } from "@/app/(context)/AuthProvider"
 import LoadingScreen from "@/components/LoadingScreen"
 import theme from "@/utils/ThemeProvider"
 import CssBaseline from "@mui/material/CssBaseline"

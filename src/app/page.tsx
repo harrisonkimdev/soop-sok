@@ -2,7 +2,7 @@
 
 import "firebaseui/dist/firebaseui.css"
 
-import { useAuth } from "@/components/AuthProvider"
+import { useAuth } from "@/app/(context)/AuthProvider"
 import LoadingScreen from "@/components/LoadingScreen"
 import { auth } from "@/utils/firebase/firebase"
 import {
