@@ -9,7 +9,6 @@ import { PrivacyRadio } from "@/components/CreateChat/PrivacyRadio"
 import { TagSelect } from "@/components/CreateChat/TagSelect"
 import { auth } from "@/utils/firebase/firebase"
 import { createChat, getBanner } from "@/utils/firebase/firestore"
-
 import { useChatForm } from "@/utils/hooks/useCreateChatForm"
 import { useRouter } from "next/navigation"
 import React, { useEffect } from "react"
@@ -33,7 +32,6 @@ const CreateChatPage = ({ params }: TProps): JSX.Element => {
   } = useChatForm()
 
   const router = useRouter()
-  
 
   // TODO: server side rendering
   useEffect(() => {
@@ -49,12 +47,12 @@ const CreateChatPage = ({ params }: TProps): JSX.Element => {
             }))
           }
         } catch (err) {
-          
+          console.error(err)
         }
       }
     }
     fetchBannerOptions()
-  }, )
+  })
 
   const redirectToFeaturesPage = (): void => {
     if (auth) router.push(`/chats/${params.type}/${params.id}/features`)
@@ -82,7 +80,6 @@ const CreateChatPage = ({ params }: TProps): JSX.Element => {
         if (cid) router.push(`/chats/group/${cid}`)
       } catch (err) {
         console.error(err)
-        
       }
     }
   }
