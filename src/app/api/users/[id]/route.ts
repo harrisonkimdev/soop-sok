@@ -24,12 +24,14 @@ export async function GET(
 
   try {
     const userRef = firestore.collection("users").doc(id)
-    const res = await userRef.get()
-    if (!res.exists) {
+    const userData = await userRef.get()
+    if (!userData.exists) {
       return responseNotFound("user")
     }
 
-    return responseFetched(res.data())
+    console.log(userData)
+
+    return responseFetched(userData.data())
   } catch (error) {
     return responseServerError(error)
   }

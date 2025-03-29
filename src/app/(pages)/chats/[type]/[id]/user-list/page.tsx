@@ -1,30 +1,33 @@
 "use client"
 
 import User from "@/app/(pages)/chats/[type]/[id]/user-list/User"
-import useFirebaseHookUsersInChannel from "@/utils/hooks/fetchData/useFirebaseHookUsersInChannel"
-import { useRouter } from "next/navigation"
+import RedirectButton from "@/components/RedirectButton"
+import { firestore } from "@/utils/firebase/firebase"
+import useAuthCheck from "@/utils/hooks/useAuthCheck"
+import { doc, DocumentData, DocumentReference } from "firebase/firestore"
 import type { JSX } from "react"
+import { useDocumentData } from "react-firebase-hooks/firestore"
 
-type userListPageProps = {
+type userListProps = {
   params: {
     type: string
     id: string
   }
 }
 
-const UserListPage = ({ params }: userListPageProps): JSX.Element => {
-  const router = useRouter()
+const UserList = ({ params }: userListProps): JSX.Element => {
+  const isAuthenticated = useAuthCheck()
 
-  const userData = useFirebaseHookUsersInChannel({
-    channelId: params.id,
-  })
+  const docRef: DocumentReference<DocumentData> | null =
+    isAuthenticated && params.id
+      ? doc(
+          firestore,
+          params.type === "channel" ? "channels" : "chats",
+          params.id,
+        )
+      : null
 
-  const users = userData?.members || []
-
-  const redirectToFeaturesPage = (): void => {
-    router.push(`/chats/${params.type}/${params.id}/features`)
-    return
-  }
+  const [value, loading, error] = useDocumentData(docRef)
 
   return (
     <div className="flex h-full flex-col gap-4">
@@ -33,24 +36,29 @@ const UserListPage = ({ params }: userListPageProps): JSX.Element => {
           Users in this channel
         </h1>
 
-        <ul className="flex flex-col gap-3">
-          {users.map((user: string) => (
-            <User key={user} uid={user} />
-          ))}
-        </ul>
+        {loading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>Error loading users: {error.message}</div>
+        ) : !value?.members ? (
+          <div>No users found</div>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {value.members.map((user: string) => (
+              <User key={user} uid={user} />
+            ))}
+          </ul>
+        )}
       </div>
 
-      <button
-        type="button"
-        onClick={redirectToFeaturesPage}
-        className="w-full rounded-lg bg-white py-4 text-xl font-semibold text-earth-400 shadow transition duration-300 ease-in-out hover:bg-earth-50"
-      >
-        Cancel
-      </button>
+      <RedirectButton
+        text="Cancel"
+        redirectURL={`/chats/${params.type}/${params.id}/features`}
+      />
     </div>
   )
 }
 
-UserListPage.displayName = "UserListPage"
+UserList.displayName = "UserList"
 
-export default UserListPage
+export default UserList
