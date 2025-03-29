@@ -26,12 +26,13 @@ const ChatPage = ({ params }: TParams): JSX.Element => {
             : "row-span-12 row-start-1"
         } `}
       >
-        <MessageContainer cid={params.id} />
-
-        <div className="flex justify-between gap-3">
-          <IconInputContainer type={params.type} cid={params.id} />
-          <MessageInput cid={params.id} />
-        </div>
+        <>
+          <MessageContainer cid={params.id} />
+          <div className="flex justify-between gap-3">
+            <IconInputContainer type={params.type} cid={params.id} />
+            <MessageInput cid={params.id} />
+          </div>
+        </>
       </div>
     </div>
   )

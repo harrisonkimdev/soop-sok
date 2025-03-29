@@ -46,8 +46,6 @@ const PrivateChatPage = (): JSX.Element => {
     return () => unsubscribe()
   }, [isAuthenticated, currentUserId])
 
-  // uid를 사용하여 특정 사용자와의 채팅 데이터 fetching
-
   return (
     <div className="h-full bg-stone-100">
       <div className="flex flex-col gap-6">
