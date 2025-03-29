@@ -9,7 +9,6 @@ import {
   collection,
   DocumentData,
   onSnapshot,
-  query,
   QuerySnapshot,
 } from "firebase/firestore"
 import type { JSX } from "react"
@@ -23,11 +22,8 @@ const ChannelPage = (): JSX.Element => {
   useEffect(() => {
     if (!isAuthenticated) return
 
-    const channelsRef = collection(firestore, "channels")
-    const q = query(channelsRef)
-
     const unsubscribe = onSnapshot(
-      q,
+      collection(firestore, "channels"),
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         const channels = querySnapshot.docs.map(
           (doc) =>

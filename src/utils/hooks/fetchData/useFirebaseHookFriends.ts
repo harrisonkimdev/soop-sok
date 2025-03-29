@@ -12,7 +12,7 @@ type TProps = {
   userId: string
 }
 
-const useFirebaseHookChats = (props: TProps): TFriend[] | null => {
+const useFirebaseHookFriends = (props: TProps): TFriend[] | null => {
   const { messageDialog } = useDialogs()
   const [fetched, setFetched] = useState<TFriend[]>([])
 
@@ -54,4 +54,4 @@ const useFirebaseHookChats = (props: TProps): TFriend[] | null => {
   return fetched
 }
 
-export default useFirebaseHookChats
+export default useFirebaseHookFriends
