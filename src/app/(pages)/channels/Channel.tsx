@@ -32,11 +32,6 @@ export const Channel = ({ channel }: ChannelProps): JSX.Element => {
 
     if (!isAuthenticated || isFull) return
 
-    // Check if the user is already in the channel and only enter the channel if they are not. Otherwise, return.
-    if (channel.members.includes(currentUser.uid)) {
-      router.push("/channels")
-    }
-
     try {
       // Update the user list in the channel document.
       const res = await updateChannel(channel.id, currentUser.uid, "enter")
