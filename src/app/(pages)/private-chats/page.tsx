@@ -47,23 +47,21 @@ const PrivateChatPage = (): JSX.Element => {
   }, [isAuthenticated, currentUserId])
 
   return (
-    <div className="h-full bg-stone-100">
-      <div className="flex flex-col gap-6">
-        {/* interaction area */}
-        <SearchBar
-          onSubmit={(searchQuery: string) => console.log(searchQuery)}
-        />
+    <div className="flex flex-col gap-6">
+      {/* interaction area */}
+      <SearchBar onSubmit={(searchQuery: string) => console.log(searchQuery)} />
 
-        {/* private chats */}
-        <div className="flex flex-col gap-2">
-          {privateChats && privateChats.length > 0 ? (
-            privateChats?.map((privateChat: TPrivateChat) => (
-              <PrivateChat key={privateChat.id} privateChat={privateChat} />
-            ))
-          ) : (
-            <p>You have no messages received. 📭</p>
-          )}
-        </div>
+      {/* private chats */}
+      <div className="space-y-4">
+        {privateChats && privateChats.length > 0 ? (
+          privateChats?.map((privateChat: TPrivateChat) => (
+            <PrivateChat key={privateChat.id} privateChat={privateChat} />
+          ))
+        ) : (
+          <div className="rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 text-center text-slate-400">
+            You have no messages received. 📭
+          </div>
+        )}
       </div>
     </div>
   )
