@@ -35,16 +35,20 @@ const Settings = (): JSX.Element => {
       <div className="flex flex-col gap-4">
         <Link
           href={`/profile/${auth.currentUser?.uid}`}
-          className="w-full rounded-lg border border-slate-700/50 bg-slate-800/60 py-3 text-center text-base font-semibold text-slate-200 shadow transition duration-300 ease-in-out hover:border-slate-600 hover:bg-slate-700/80 hover:text-white"
+          className="group relative z-10 flex w-full items-center justify-center gap-4 rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 transition-all hover:border-teal-500/50"
         >
-          Profile
+          <p className="text-lg font-medium text-slate-300 transition-colors group-hover:text-teal-300">
+            Profile
+          </p>
         </Link>
 
         <button
           onClick={handleSignout}
-          className="w-full rounded-lg border border-slate-700/50 bg-slate-800/60 py-3 text-base font-semibold text-slate-200 shadow transition duration-300 ease-in-out hover:border-red-500/50 hover:bg-red-500/20 hover:text-red-400"
+          className="group relative z-10 flex w-full items-center justify-center gap-4 rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 transition-all hover:border-red-500/50 hover:bg-red-500/20"
         >
-          Sign Out
+          <p className="text-lg font-medium text-slate-300 transition-colors group-hover:text-red-400">
+            Sign Out
+          </p>
         </button>
       </div>
     </div>
