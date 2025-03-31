@@ -3,19 +3,49 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 16, 16, 16;
-  --background-end-rgb: 32, 32, 32;
+  --background-start-rgb: 10, 26, 26;
+  --background-end-rgb: 44, 94, 94;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  color: rgb(209, 213, 219); /* Mist color */
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    to bottom right,
+    rgba(var(--background-start-rgb), 1),
+    rgba(var(--background-end-rgb), 0.9)
+  );
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+
+/* Soft scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(12, 32, 32, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(64, 192, 192, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(64, 192, 192, 0.5);
+}
+
+/* Subtle focus and selection styles */
+*:focus {
+  outline: 2px solid rgba(64, 192, 192, 0.5);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(64, 192, 192, 0.3);
+  color: #b3e0e0;
 }
 
 @layer utilities {

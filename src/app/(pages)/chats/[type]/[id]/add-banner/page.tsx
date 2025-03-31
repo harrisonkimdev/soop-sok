@@ -1,8 +1,8 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import { auth } from "@/utils/firebase/firebase"
 import { addBanner } from "@/utils/firebase/firestore"
-
 import { BackspaceIcon } from "@heroicons/react/24/outline"
 import { Button, TextField } from "@mui/material"
 import { useRouter } from "next/navigation"
@@ -22,8 +22,6 @@ const Page = ({ params }: pageProps): JSX.Element => {
   const [tagOptions, setTagOptions] = useState<string[]>([])
 
   const router = useRouter()
-
-  
 
   const addToList = (): void => {
     if (tagInput.length > 0 && tagOptions.length < 5) {
@@ -79,7 +77,6 @@ const Page = ({ params }: pageProps): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        
       }
     }
   }
@@ -87,13 +84,10 @@ const Page = ({ params }: pageProps): JSX.Element => {
   return (
     <form
       onSubmit={(e) => handleSubmit(e)}
-      className="flex h-full flex-col gap-4"
+      className="flex h-full flex-col gap-4 p-4"
     >
       <div className="flex grow flex-col gap-4 overflow-y-auto rounded-lg bg-white p-4">
-        {/* page title */}
-        <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
-          add a new banner
-        </h1>
+        <PageTitle title="add a new banner" />
 
         {/* tag container */}
         <div className="mt-4 flex flex-col gap-6">

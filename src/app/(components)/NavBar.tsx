@@ -1,6 +1,6 @@
 "use client"
 
-import { useAppState } from "@/utils/global-states/AppStateProvider"
+import { useAppState } from "@/app/(context)/AppStateProvider"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import {
   ChatBubbleBottomCenterIcon,
@@ -43,6 +43,7 @@ const NavBar = (): JSX.Element => {
       pathname.startsWith("/channels") ||
       pathname.startsWith("/chats/channel")
     ) {
+      // TODO: consider implementing this with localStorage.
       dispatch({ type: "SET_PUBLIC_URL", payload: pathname })
     }
 

@@ -3,31 +3,30 @@
 import "@/app/(components)/Marquee.css"
 
 import { getBanner } from "@/utils/firebase/firestore"
-import { useAppState } from "@/utils/global-states/AppStateProvider"
-
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import type { JSX } from "react"
 
 const Banner = (): JSX.Element => {
-  const { state } = useAppState()
-  
+  const [currentBanner, setCurrentBanner] = useState<{
+    content: string
+  } | null>(null)
 
   useEffect(() => {
     const fetchBanner = async (): Promise<void> => {
       try {
         const res = await getBanner()
-        bannerState.set(res)
+        setCurrentBanner(res)
       } catch (err) {
         console.error(err)
       }
     }
     fetchBanner()
-  }, [bannerState])
+  }, [])
 
   return (
     <div className="h-min overflow-hidden rounded-lg bg-white py-2">
       <div className="marquee">
-        <p className="inline-block px-4">{state.currentBanner?.content}</p>
+        <p className="inline-block px-4">{currentBanner?.content}</p>
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import User from "@/app/(pages)/chats/[type]/[id]/user-list/User"
 import RedirectButton from "@/components/RedirectButton"
 import { firestore } from "@/utils/firebase/firebase"
@@ -51,11 +52,9 @@ const UserList = ({ params }: userListProps): JSX.Element => {
   }, [isAuthenticated, params.id, params.type])
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex h-full flex-col gap-4 p-4">
       <div className="flex grow flex-col gap-4 overflow-y-auto rounded-lg bg-white p-4 shadow-sm">
-        <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
-          Users in this channel
-        </h1>
+        <PageTitle title="Users in this channel" />
 
         <ul className="flex flex-col gap-3">
           {users.map((uid: string) => (
