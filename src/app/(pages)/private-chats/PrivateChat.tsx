@@ -1,7 +1,6 @@
 import { TPrivateChat, TMessage, TUser } from "@/app/types"
-import { auth, firestore } from "@/utils/firebase/firebase"
+import { firestore } from "@/utils/firebase/firebase"
 import { fetchUser } from "@/utils/firebase/firestore"
-import { formatTimeAgo } from "@/utils/functions"
 import useAuthCheck from "@/utils/hooks/useAuthCheck"
 import {
   collection,
@@ -20,7 +19,7 @@ type TProps = {
   privateChat: TPrivateChat
 }
 
-const PrivateChat = (props: TProps): JSX.Element => {
+const PrivateChat = ({ privateChat }: TProps): JSX.Element => {
   const [user, setUser] = useState<TUser | null>(null)
   const [latestMessage, setLatestMessage] = useState<TMessage | null>(null)
 
@@ -28,7 +27,7 @@ const PrivateChat = (props: TProps): JSX.Element => {
 
   const isAuthenticated = useAuthCheck()
 
-  const chatId = props.privateChat.id
+  const chatId = privateChat.id
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -55,47 +54,41 @@ const PrivateChat = (props: TProps): JSX.Element => {
 
   useEffect(() => {
     const getuser = async (): Promise<void> => {
-      if (latestMessage?.uid) {
-        const fetchedUser = await fetchUser(latestMessage.uid)
-        setUser(fetchedUser)
-      }
+      const user = await fetchUser(privateChat.to)
+      setUser(user)
     }
     getuser()
-  }, [latestMessage?.uid])
+  }, [privateChat.to])
 
   const enterPrivateChat = (): void => {
-    if (auth && auth.currentUser) {
-      // URL: "/chats/[type=private-chat]/[id]
-      router.push(`/chats/private-chat/${chatId}`)
-    }
+    router.push(`/chats/private/${chatId}`)
   }
 
   return (
-    <div onClick={enterPrivateChat}>
-      <div className="flex items-center gap-3 rounded-lg bg-white p-4 shadow-sm">
-        {user && (
+    <div
+      onClick={enterPrivateChat}
+      className="group relative overflow-hidden rounded-xl transition duration-300 ease-in-out"
+    >
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-teal-500/20 to-blue-500/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+      <div className="relative z-10 flex items-center gap-4 rounded-xl border border-slate-700/30 bg-slate-800/50 p-5 transition-all hover:border-teal-500/50">
+        {user?.photoURL && (
           <Image
-            src={user?.photoURL || "/images/ks.jpeg"}
-            alt=""
-            width={64}
-            height={64}
-            className="haspect-square h-16 w-16 rounded-full object-cover"
+            src={user.photoURL}
+            alt={user.displayName || "User"}
+            width={40}
+            height={40}
+            className="rounded-full"
           />
         )}
-
-        <div className="w-min grow">
-          <div className="flex justify-between">
-            {/* Sender's name. */}
-            <p className="font-medium">{user?.displayName}</p>
-
-            {/* the time last message was received. */}
-            {latestMessage && <p>{formatTimeAgo(latestMessage?.createdAt)}</p>}
-          </div>
-
-          {/* the content of the last message. */}
-          <p className="mt-1 line-clamp-2 h-[3rem] overflow-hidden">
-            {latestMessage?.message}
-          </p>
+        <div className="flex flex-col gap-1">
+          <h3 className="text-lg font-medium text-slate-300 transition-colors group-hover:text-teal-300">
+            {user?.displayName || "Unknown User"}
+          </h3>
+          {latestMessage && (
+            <p className="text-sm text-slate-400 transition-colors group-hover:text-teal-200">
+              {latestMessage.message}
+            </p>
+          )}
         </div>
       </div>
     </div>

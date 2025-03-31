@@ -41,21 +41,27 @@ const FriendsPage = (): JSX.Element => {
   }, [isAuthenticated])
 
   return (
-    <div className="h-full overflow-y-auto">
-      <PageTitle title="Friends" />
-      <div className="flex flex-col gap-2">
-        {friends && friends.length > 0 ? (
-          friends.map((friend: TFriend) => (
-            <Friend
-              key={friend.id}
-              friendId={
-                userId == friend.friendId ? friend.senderId : friend.friendId
-              }
-            />
-          ))
-        ) : (
-          <p>You have no friends. 😭 (just yet)</p>
-        )}
+    <div className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/60 shadow-2xl backdrop-blur-sm">
+      <div className="flex flex-col gap-4 p-4">
+        <PageTitle title="Friends" />
+
+        <div className="space-y-4">
+          {friends && friends.length > 0 ? (
+            friends.map((friend: TFriend) => (
+              <Friend
+                key={friend.id}
+                friendId={
+                  userId == friend.friendId ? friend.senderId : friend.friendId
+                }
+                className="group relative overflow-hidden rounded-xl transition duration-300 ease-in-out"
+              />
+            ))
+          ) : (
+            <div className="rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 text-center text-slate-400">
+              You have no friends. 😭 (just yet)
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

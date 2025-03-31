@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import SearchBar from "@/app/(components)/SearchBar"
 import PrivateChat from "@/app/(pages)/private-chats/PrivateChat"
 import { TPrivateChat } from "@/app/types"
@@ -46,24 +47,25 @@ const PrivateChatPage = (): JSX.Element => {
     return () => unsubscribe()
   }, [isAuthenticated, currentUserId])
 
-  // uid를 사용하여 특정 사용자와의 채팅 데이터 fetching
-
   return (
-    <div className="h-full bg-stone-100">
-      <div className="flex flex-col gap-6">
-        {/* interaction area */}
+    <div className="flex flex-col gap-2">
+      <PageTitle title="Private Chats" />
+
+      <div className="flex flex-col gap-4">
         <SearchBar
           onSubmit={(searchQuery: string) => console.log(searchQuery)}
         />
 
         {/* private chats */}
-        <div className="flex flex-col gap-2">
+        <div className="space-y-4">
           {privateChats && privateChats.length > 0 ? (
             privateChats?.map((privateChat: TPrivateChat) => (
               <PrivateChat key={privateChat.id} privateChat={privateChat} />
             ))
           ) : (
-            <p>You have no messages received. 📭</p>
+            <div className="rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 text-center text-slate-400">
+              You have no messages received. 📭
+            </div>
           )}
         </div>
       </div>

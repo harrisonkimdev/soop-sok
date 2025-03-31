@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import { TBanner } from "@/app/types"
 import { ActionButtons } from "@/components/CreateChat/ActionButtons"
 import { CapacitySlider } from "@/components/CreateChat/CapacitySlider"
@@ -85,12 +86,10 @@ const CreateChatPage = ({ params }: TProps): JSX.Element => {
   }
 
   return (
-    <form onSubmit={() => {}} className="flex h-full flex-col gap-4">
+    <form onSubmit={() => {}} className="flex h-full flex-col gap-4 p-4">
       {/* input fields */}
       <div className="flex grow flex-col gap-6 overflow-y-auto rounded-lg bg-white p-5 shadow-sm">
-        <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
-          create a new chat
-        </h1>
+        <PageTitle title="create a new chat" />
 
         {/* name */}
         <NameInput name={formState.name} onChange={handleInputChange} />
