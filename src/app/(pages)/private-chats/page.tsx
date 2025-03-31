@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import SearchBar from "@/app/(components)/SearchBar"
 import PrivateChat from "@/app/(pages)/private-chats/PrivateChat"
 import { TPrivateChat } from "@/app/types"
@@ -47,21 +48,26 @@ const PrivateChatPage = (): JSX.Element => {
   }, [isAuthenticated, currentUserId])
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* interaction area */}
-      <SearchBar onSubmit={(searchQuery: string) => console.log(searchQuery)} />
+    <div className="flex flex-col gap-2">
+      <PageTitle title="Private Chats" />
 
-      {/* private chats */}
-      <div className="space-y-4">
-        {privateChats && privateChats.length > 0 ? (
-          privateChats?.map((privateChat: TPrivateChat) => (
-            <PrivateChat key={privateChat.id} privateChat={privateChat} />
-          ))
-        ) : (
-          <div className="rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 text-center text-slate-400">
-            You have no messages received. 📭
-          </div>
-        )}
+      <div className="flex flex-col gap-4">
+        <SearchBar
+          onSubmit={(searchQuery: string) => console.log(searchQuery)}
+        />
+
+        {/* private chats */}
+        <div className="space-y-4">
+          {privateChats && privateChats.length > 0 ? (
+            privateChats?.map((privateChat: TPrivateChat) => (
+              <PrivateChat key={privateChat.id} privateChat={privateChat} />
+            ))
+          ) : (
+            <div className="rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 text-center text-slate-400">
+              You have no messages received. 📭
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

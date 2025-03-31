@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import IntroductionField from "@/app/(pages)/profile/[id]/edit/(components)/IntroductionField"
 import MBTISelect from "@/app/(pages)/profile/[id]/edit/(components)/MBTISelector"
 import ProfilePicture from "@/app/(pages)/profile/[id]/edit/(components)/ProfilePicture"
@@ -54,20 +55,26 @@ export default function EditProfile(): JSX.Element {
   )
 
   return (
-    <div className="flex flex-col gap-6 pt-10">
-      <ProfilePicture photoURL={user?.photoURL} updateField={updateField} />
-      <div className="flex flex-col gap-8">
-        <UsernameField
-          displayName={user?.displayName}
-          updateField={updateField}
-        />
-        <IntroductionField
-          introduction={user?.profile.introduction}
-          updateField={updateField}
-        />
-        <MBTISelect mbti={user?.profile.mbti} updateField={updateField} />
+    <div className="flex flex-col gap-6">
+      <PageTitle title="Edit Profile" />
+
+      <div className="space-y-6">
+        <ProfilePicture photoURL={user?.photoURL} updateField={updateField} />
+
+        <div className="space-y-6">
+          <UsernameField
+            displayName={user?.displayName}
+            updateField={updateField}
+          />
+          <IntroductionField
+            introduction={user?.profile.introduction}
+            updateField={updateField}
+          />
+          <MBTISelect mbti={user?.profile.mbti} updateField={updateField} />
+        </div>
+
+        <UpdateButton onUpdate={handleUpdate} />
       </div>
-      <UpdateButton onUpdate={handleUpdate} />
     </div>
   )
 }

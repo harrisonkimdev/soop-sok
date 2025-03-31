@@ -29,26 +29,25 @@ const Settings = (): JSX.Element => {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <PageTitle title="Settings" />
-      <div className="flex flex-col items-center gap-4">
+
+      <div className="flex flex-col gap-4">
         <Link
           href={`/profile/${auth.currentUser?.uid}`}
-          className="w-full rounded-lg border border-earth-300 bg-white py-3 text-center text-base font-semibold text-earth-500 shadow transition duration-300 ease-in-out hover:border-earth-500 hover:bg-earth-500 hover:text-white"
+          className="w-full rounded-lg border border-slate-700/50 bg-slate-800/60 py-3 text-center text-base font-semibold text-slate-200 shadow transition duration-300 ease-in-out hover:border-slate-600 hover:bg-slate-700/80 hover:text-white"
         >
-          {" "}
-          Profile{" "}
+          Profile
         </Link>
 
         <button
           onClick={handleSignout}
-          className="w-full rounded-lg border border-earth-300 bg-white py-3 text-base font-semibold text-earth-500 shadow transition duration-300 ease-in-out hover:border-red-500 hover:bg-red-500 hover:text-white"
+          className="w-full rounded-lg border border-slate-700/50 bg-slate-800/60 py-3 text-base font-semibold text-slate-200 shadow transition duration-300 ease-in-out hover:border-red-500/50 hover:bg-red-500/20 hover:text-red-400"
         >
-          {" "}
-          Sign Out{" "}
+          Sign Out
         </button>
       </div>
-    </>
+    </div>
   )
 }
 
