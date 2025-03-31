@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import { auth } from "@/utils/firebase/firebase"
 import { updateUserStatus } from "@/utils/firebase/firestore"
 import { signOut } from "firebase/auth"
@@ -29,9 +30,7 @@ const Settings = (): JSX.Element => {
 
   return (
     <>
-      <h1 className="my-8 text-center text-3xl font-semibold text-earth-600">
-        Settings
-      </h1>
+      <PageTitle title="Settings" />
       <div className="flex flex-col items-center gap-4">
         <Link
           href={`/profile/${auth.currentUser?.uid}`}

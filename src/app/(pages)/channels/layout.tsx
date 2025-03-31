@@ -6,7 +6,7 @@ type PublicChatLayoutProps = {
 }
 
 const PublicChatLayout = ({ children }: PublicChatLayoutProps): JSX.Element => {
-  return <div className="h-full p-4">{children}</div>
+  return <div className="h-full">{children}</div>
 }
 
 PublicChatLayout.displayName = "PublicChatLayout"

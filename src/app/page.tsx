@@ -22,8 +22,6 @@ type TFirebaseUI = {
   auth: typeof firebaseui.auth
 }
 
-const BACKGROUND_IMAGE_URL: string = "/images/background.png"
-
 export default function Home(): JSX.Element | null {
   const [firebaseui, setFirebaseUI] = useState<TFirebaseUI | null>(null)
   const { loading, isAuthenticated } = useAuth()
@@ -113,7 +111,7 @@ export default function Home(): JSX.Element | null {
   return firebaseui ? (
     <>
       <div className="relative">
-        <div className="absolute left-0 right-0 z-10 flex h-screen flex-col gap-96 py-40 text-center">
+        <div className="absolute left-0 right-0 z-10 flex h-screen flex-col justify-evenly text-center">
           {/* App name */}
           <h1 className="bg-gradient-to-r from-green-400 via-white to-yellow-400 bg-clip-text font-dhurjati text-7xl font-bold text-transparent">
             Soop Sok
@@ -124,7 +122,7 @@ export default function Home(): JSX.Element | null {
         </div>
 
         <Image
-          src={BACKGROUND_IMAGE_URL}
+          src="/images/background.png"
           alt="background image"
           width={1024}
           height={1792}

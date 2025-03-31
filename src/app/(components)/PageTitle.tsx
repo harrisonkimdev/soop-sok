@@ -2,10 +2,11 @@ import type { JSX } from "react"
 
 type PageTitleProps = {
   title: string
+  className?: string
 }
-const PageTitle = ({ title }: PageTitleProps): JSX.Element => {
+const PageTitle = ({ title, className }: PageTitleProps): JSX.Element => {
   return (
-    <h1 className="my-8 text-center text-3xl font-semibold text-earth-600">
+    <h1 className="mb-2 text-center text-lg font-semibold capitalize text-slate-300">
       {title}
     </h1>
   )

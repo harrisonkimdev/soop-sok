@@ -4,16 +4,21 @@ import { updateChannel } from "@/utils/firebase/firestore"
 import { FirebaseError } from "firebase/app"
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
-
+import { useState, useEffect } from "react"
 interface ChannelProps {
   channel: TChannel
 }
 
 export const Channel = ({ channel }: ChannelProps): JSX.Element => {
+  const [isFull, setIsFull] = useState(false)
+  const [numMembers, setNumMembers] = useState(0)
+
   const router = useRouter()
 
-  const isFull = channel?.capacity == channel.numMembers
-  const numMembers = channel?.members.length ?? 0
+  useEffect(() => {
+    setIsFull(channel.capacity == channel.numMembers)
+    setNumMembers(channel.numMembers)
+  }, [channel])
 
   /*
   // When users join a channel, add them to the 'members' subcollection of the
@@ -76,13 +81,18 @@ export const Channel = ({ channel }: ChannelProps): JSX.Element => {
 
   return (
     <div
-      onClick={handleEnterChannel}
-      className={` ${!isFull ? "cursor-pointer" : "cursor-not-allowed opacity-50"} flex flex-col gap-2 rounded-lg bg-white p-4 shadow-md transition duration-300 ease-in-out hover:bg-gray-100`}
+      onClick={!isFull ? handleEnterChannel : undefined}
+      className={`group relative overflow-hidden rounded-xl transition duration-300 ease-in-out ${!isFull ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
     >
-      <h3 className="text-lg font-semibold text-gray-800">{channel.name}</h3>
-      <p className="text-sm text-gray-600">
-        Capacity: {numMembers} / {channel.capacity}
-      </p>
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-teal-500/20 to-blue-500/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+      <div className="relative z-10 flex flex-col gap-2 rounded-xl border border-slate-700/30 bg-slate-800/50 p-5 transition-all hover:border-teal-500/50">
+        <h3 className="text-lg font-medium text-slate-300 transition-colors group-hover:text-teal-300">
+          {channel.name}
+        </h3>
+        <p className="text-sm text-slate-400 transition-colors group-hover:text-teal-200">
+          Capacity: {numMembers} / {channel.capacity}
+        </p>
+      </div>
     </div>
   )
 }

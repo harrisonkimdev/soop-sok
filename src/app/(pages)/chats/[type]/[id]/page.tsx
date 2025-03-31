@@ -15,7 +15,7 @@ type TParams = {
 
 const ChatPage = ({ params }: TParams): JSX.Element => {
   return (
-    <div className="grid h-full grid-rows-12">
+    <div className="grid h-full grid-rows-12 p-4">
       {/* Only channel or group chat shows the banner. */}
       {(params.type === "channel" || params.type === "group") && <Banner />}
 
