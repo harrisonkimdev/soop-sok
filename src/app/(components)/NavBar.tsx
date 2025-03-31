@@ -43,6 +43,7 @@ const NavBar = (): JSX.Element => {
       pathname.startsWith("/channels") ||
       pathname.startsWith("/chats/channel")
     ) {
+      // TODO: consider implementing this with localStorage.
       dispatch({ type: "SET_PUBLIC_URL", payload: pathname })
     }
 
