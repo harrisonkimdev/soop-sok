@@ -2,6 +2,8 @@
 
 import "firebaseui/dist/firebaseui.css"
 
+import { useAuth } from "@/app/(context)/AuthProvider"
+import LoadingScreen from "@/components/LoadingScreen"
 import { auth } from "@/utils/firebase/firebase"
 import {
   registerUserWithUID,
@@ -20,12 +22,17 @@ type TFirebaseUI = {
   auth: typeof firebaseui.auth
 }
 
-const BACKGROUND_IMAGE_URL: string = "/images/background.png"
-
 export default function Home(): JSX.Element | null {
   const [firebaseui, setFirebaseUI] = useState<TFirebaseUI | null>(null)
-
+  const { loading, isAuthenticated } = useAuth()
   const router = useRouter()
+
+  // 인증된 사용자는 채널 페이지로 리다이렉트
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/channels")
+    }
+  }, [isAuthenticated, router])
 
   const uiConfig = useMemo(() => {
     const cookies = new Cookies()
@@ -40,44 +47,24 @@ export default function Home(): JSX.Element | null {
 
             const isNewUser = authResult.additionalUserInfo.isNewUser
 
-            const displayName = authResult.user.displayName
-            const email = authResult.user.email
-            const photoURL = authResult.user.photoURL
-            const uid = authResult.user.uid
+            const { displayName, email, photoURL, uid } = authResult.user
 
             // If this is the first time sign in,
             if (isNewUser) {
               // Register a new user with Firebase.
               try {
-                const res1 = await registerUserWithUID(
-                  displayName,
-                  email,
-                  photoURL,
-                  uid,
-                )
-
-                // Error handling: ?
-                if (!res1) {
-                  //
-                }
+                await registerUserWithUID(displayName, email, photoURL, uid)
               } catch (err) {
-                // In case of an error, show an error message.
-                console.error("Error getting document:", err)
+                console.error("Error registering new user:", err)
               }
             }
             // If a user is returning,
             else {
               // Update the isOnline.
               try {
-                const res2 = await updateUserStatus(uid, "signin")
-
-                // Error handling: Wrong credential
-                if (!res2) {
-                  //
-                }
+                await updateUserStatus(uid, "signin")
               } catch (err) {
-                // In case of an error, show an error message.
-                console.error("Error getting document:", err)
+                console.error("Error updating user status:", err)
               }
             }
 
@@ -116,10 +103,15 @@ export default function Home(): JSX.Element | null {
     }
   }, [firebaseui, uiConfig])
 
+  // 로딩 중일 때 로딩 스크린 표시
+  if (loading) {
+    return <LoadingScreen />
+  }
+
   return firebaseui ? (
     <>
       <div className="relative">
-        <div className="absolute left-0 right-0 z-10 flex h-screen flex-col gap-96 py-40 text-center">
+        <div className="absolute left-0 right-0 z-10 flex h-screen flex-col justify-evenly text-center">
           {/* App name */}
           <h1 className="bg-gradient-to-r from-green-400 via-white to-yellow-400 bg-clip-text font-dhurjati text-7xl font-bold text-transparent">
             Soop Sok
@@ -130,7 +122,7 @@ export default function Home(): JSX.Element | null {
         </div>
 
         <Image
-          src={BACKGROUND_IMAGE_URL}
+          src="/images/background.png"
           alt="background image"
           width={1024}
           height={1792}

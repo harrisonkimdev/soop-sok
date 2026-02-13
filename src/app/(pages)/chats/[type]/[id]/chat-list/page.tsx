@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import Chat from "@/app/(pages)/chats/[type]/[id]/chat-list/Chat"
 import { TChat } from "@/app/types"
 import RedirectButton from "@/components/RedirectButton"
@@ -55,11 +56,9 @@ const ChatList = ({ params }: pageProps): JSX.Element => {
   }, [params.id, isAuthenticated])
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex h-full flex-col gap-4 p-4">
       <div className="row-span-11 flex grow flex-col gap-6 overflow-y-auto rounded-lg bg-white p-4">
-        <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
-          Chat List
-        </h1>
+        <PageTitle title="Chat List" />
 
         <div className="flex flex-col gap-4">
           {chats.length > 0 ? (

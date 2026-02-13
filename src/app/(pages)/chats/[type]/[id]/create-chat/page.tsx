@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import { TBanner } from "@/app/types"
 import { ActionButtons } from "@/components/CreateChat/ActionButtons"
 import { CapacitySlider } from "@/components/CreateChat/CapacitySlider"
@@ -9,7 +10,6 @@ import { PrivacyRadio } from "@/components/CreateChat/PrivacyRadio"
 import { TagSelect } from "@/components/CreateChat/TagSelect"
 import { auth } from "@/utils/firebase/firebase"
 import { createChat, getBanner } from "@/utils/firebase/firestore"
-
 import { useChatForm } from "@/utils/hooks/useCreateChatForm"
 import { useRouter } from "next/navigation"
 import React, { useEffect } from "react"
@@ -33,7 +33,6 @@ const CreateChatPage = ({ params }: TProps): JSX.Element => {
   } = useChatForm()
 
   const router = useRouter()
-  
 
   // TODO: server side rendering
   useEffect(() => {
@@ -49,12 +48,12 @@ const CreateChatPage = ({ params }: TProps): JSX.Element => {
             }))
           }
         } catch (err) {
-          
+          console.error(err)
         }
       }
     }
     fetchBannerOptions()
-  }, )
+  })
 
   const redirectToFeaturesPage = (): void => {
     if (auth) router.push(`/chats/${params.type}/${params.id}/features`)
@@ -82,18 +81,15 @@ const CreateChatPage = ({ params }: TProps): JSX.Element => {
         if (cid) router.push(`/chats/group/${cid}`)
       } catch (err) {
         console.error(err)
-        
       }
     }
   }
 
   return (
-    <form onSubmit={() => {}} className="flex h-full flex-col gap-4">
+    <form onSubmit={() => {}} className="flex h-full flex-col gap-4 p-4">
       {/* input fields */}
       <div className="flex grow flex-col gap-6 overflow-y-auto rounded-lg bg-white p-5 shadow-sm">
-        <h1 className="text-center text-2xl font-semibold capitalize text-earth-600">
-          create a new chat
-        </h1>
+        <PageTitle title="create a new chat" />
 
         {/* name */}
         <NameInput name={formState.name} onChange={handleInputChange} />

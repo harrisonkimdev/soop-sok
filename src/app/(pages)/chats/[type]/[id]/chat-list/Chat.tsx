@@ -2,7 +2,6 @@ import { TChat } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { updateChat } from "@/utils/firebase/firestore"
 import { formatTimeAgo } from "@/utils/functions"
-
 import { useRouter } from "next/navigation"
 import type { JSX } from "react"
 
@@ -12,7 +11,6 @@ type ChatProps = {
 
 const Chat = ({ chat }: ChatProps): JSX.Element => {
   const router = useRouter()
-  
 
   const currUser = auth.currentUser
   const isFull = chat.capacity === chat.numMembers
@@ -24,7 +22,7 @@ const Chat = ({ chat }: ChatProps): JSX.Element => {
         await updateChat(chat.id, currUser.uid, "enter")
         router.push(`/chats/group/${chat.id}`)
       } catch (err) {
-        
+        console.error(err)
       }
     }
   }

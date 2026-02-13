@@ -7,24 +7,30 @@ interface ProfilePictureProps {
   updateField: (field: string, value: any, isProfileField: boolean) => void
 }
 
-const ProfilePicture = (props: ProfilePictureProps): JSX.Element => {
+const ProfilePicture = ({
+  photoURL,
+  updateField,
+}: ProfilePictureProps): JSX.Element => {
   const handlePhotoURLChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      props.updateField("photoURL", e, false)
+      updateField("photoURL", e, false)
     },
-    [props],
+    [updateField],
   )
 
   return (
     <div className="flex justify-center">
-      <label htmlFor="profilePic" className="cursor-pointer">
-        <Image
-          src={props.photoURL || "/images/default-avatar.png"}
-          alt="Profile Picture"
-          width={192}
-          height={192}
-          className="rounded-full object-cover"
-        />
+      <label htmlFor="profilePic" className="group cursor-pointer">
+        <div className="relative">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/30 to-teal-400/30 blur-lg transition-all duration-300 group-hover:blur-xl"></div>
+          <Image
+            src={photoURL || "/images/ks.jpeg"}
+            alt="Profile Picture"
+            width={192}
+            height={192}
+            className="aspect-square h-48 w-48 rounded-full border-4 border-emerald-500/50 object-cover shadow-lg transition-all duration-300 group-hover:border-emerald-400/70"
+          />
+        </div>
       </label>
       <input
         type="file"

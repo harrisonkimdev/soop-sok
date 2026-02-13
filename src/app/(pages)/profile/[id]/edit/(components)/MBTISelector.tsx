@@ -49,6 +49,24 @@ const MBTISelect = React.memo(({ mbti, updateField }: MBTISelectProps) => {
           label="MBTI"
           value={mbti || ""}
           onChange={handleMBTIChange}
+          sx={{
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgb(16 185 129 / 0.5)",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgb(16 185 129 / 0.7)",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgb(16 185 129)",
+            },
+            backgroundColor: "rgb(16 185 129 / 0.05)",
+            "&:hover": {
+              backgroundColor: "rgb(16 185 129 / 0.1)",
+            },
+            "& .MuiSelect-icon": {
+              color: "rgb(16 185 129 / 0.7)",
+            },
+          }}
         >
           {MBTIOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>

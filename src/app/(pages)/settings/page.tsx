@@ -1,5 +1,6 @@
 "use client"
 
+import PageTitle from "@/app/(components)/PageTitle"
 import { auth } from "@/utils/firebase/firebase"
 import { updateUserStatus } from "@/utils/firebase/firestore"
 import { signOut } from "firebase/auth"
@@ -28,28 +29,29 @@ const Settings = (): JSX.Element => {
   }
 
   return (
-    <>
-      <h1 className="my-8 text-center text-3xl font-semibold text-earth-600">
-        Settings
-      </h1>
-      <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col gap-4">
+      <PageTitle title="Settings" />
+
+      <div className="flex flex-col gap-4">
         <Link
           href={`/profile/${auth.currentUser?.uid}`}
-          className="w-full rounded-lg border border-earth-300 bg-white py-3 text-center text-base font-semibold text-earth-500 shadow transition duration-300 ease-in-out hover:border-earth-500 hover:bg-earth-500 hover:text-white"
+          className="group relative z-10 flex w-full items-center justify-center gap-4 rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 transition-all hover:border-teal-500/50"
         >
-          {" "}
-          Profile{" "}
+          <p className="text-lg font-medium text-slate-300 transition-colors group-hover:text-teal-300">
+            Profile
+          </p>
         </Link>
 
         <button
           onClick={handleSignout}
-          className="w-full rounded-lg border border-earth-300 bg-white py-3 text-base font-semibold text-earth-500 shadow transition duration-300 ease-in-out hover:border-red-500 hover:bg-red-500 hover:text-white"
+          className="group relative z-10 flex w-full items-center justify-center gap-4 rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 transition-all hover:border-red-500/50 hover:bg-red-500/20"
         >
-          {" "}
-          Sign Out{" "}
+          <p className="text-lg font-medium text-slate-300 transition-colors group-hover:text-red-400">
+            Sign Out
+          </p>
         </button>
       </div>
-    </>
+    </div>
   )
 }
 

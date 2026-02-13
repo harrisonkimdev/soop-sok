@@ -40,18 +40,23 @@ const ChannelPage = (): JSX.Element => {
   }, [isAuthenticated])
 
   return (
-    <>
-      <PageTitle title="Channels" />
-      <div className="flex h-full flex-col gap-3 overflow-y-auto">
-        {channels.length > 0 ? (
-          channels?.map((channel: TChannel) => (
-            <Channel key={channel.id} channel={channel} />
-          ))
-        ) : (
-          <p>No channels available.</p>
-        )}
+    <div className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/60 shadow-2xl backdrop-blur-sm">
+      <div className="flex flex-col gap-4 p-4">
+        <PageTitle title="Channels" />
+
+        <div className="space-y-4">
+          {channels.length > 0 ? (
+            channels?.map((channel: TChannel) => (
+              <Channel key={channel.id} channel={channel} />
+            ))
+          ) : (
+            <div className="rounded-xl border border-slate-700/30 bg-slate-800/50 py-5 text-center text-slate-400">
+              No channels available.
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 

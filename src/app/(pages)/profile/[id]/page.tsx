@@ -4,7 +4,6 @@ import OthersProfile from "./OthersProfile"
 import { TUser } from "@/app/types"
 import { auth } from "@/utils/firebase/firebase"
 import { fetchUser } from "@/utils/firebase/firestore"
-
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -16,8 +15,6 @@ const ProfilePage = (): JSX.Element => {
   const [profile, setProfile] = useState<TUser | null>(null)
 
   const { id } = useParams()
-
-  
 
   useEffect(() => {
     const getUser = async (): Promise<void> => {
@@ -32,11 +29,10 @@ const ProfilePage = (): JSX.Element => {
         }
       } catch (err) {
         console.error(err)
-        
       }
     }
     getUser()
-  }, )
+  })
 
   return (
     <div className="flex flex-col gap-4 pt-10">
